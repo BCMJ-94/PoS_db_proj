@@ -1,3 +1,3 @@
 CREATE TABLE printer(
-StationID SMALLINT
+StationID SMALLINT PRIMARY KEY
 );
