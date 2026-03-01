@@ -1,7 +1,7 @@
 CREATE TABLE customers(
 customer_id INT PRIMARY KEY AUTO_INCREMENT,
-firstName VARCHAR(50),
-lastName VARCHAR(50),
+firstName VARCHAR(50) NOT NULL,
+lastName VARCHAR(50) NOT NULL,
 dob DATE,
 phoneNumber VARCHAR(20), -- made it a str for formatting purposes e.g. (XXX)-XXX-XXXX
 email VARCHAR(100) UNIQUE,
