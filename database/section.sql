@@ -1,0 +1,3 @@
+CREATE TABLE section (
+  sectionID INT PRIMARY KEY AUTO_INCREMENT
+);
