@@ -5,4 +5,7 @@ CREATE TABLE employees (
   dateOfBirth DATE,
   ShiftRole SMALLINT,
   hourlyRate FLOAT
+
+  sectionID INT NOT NULL,
+  FOREIGN KEY (sectionID) REFERENCES sections(sectionID)
 );
