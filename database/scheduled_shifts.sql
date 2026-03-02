@@ -1,5 +1,5 @@
 CREATE TABLE scheduled_shifts(
-ScheduluedShiftID INT,
+ScheduledShiftID INT PRIMARY KEY,
 StartTime DATETIME,
 EndTime DATETIME,
 ShiftRole SMALLINT
