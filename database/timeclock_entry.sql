@@ -1,4 +1,4 @@
-CREATE TABLE TIMECLOCK_ENTRY(
+CREATE TABLE timeclock_entries(
     entryID INT AUTO_INCREMENT PRIMARY KEY,
     clockIn DATETIME,
     clockOut DATETIME,

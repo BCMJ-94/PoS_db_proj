@@ -1,4 +1,4 @@
-CREATE TABLE product_order(
+CREATE TABLE product_orders(
 quantity SMALLINT,
 productID INT,
 transactionID INT,

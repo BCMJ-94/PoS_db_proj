@@ -1,4 +1,4 @@
-CREATE TABLE PAYROLL_RECORD(
+CREATE TABLE payroll_records(
     emloyeeID INT,
     payPeriodID INT,
     totalHours FLOAT,
