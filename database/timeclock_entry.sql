@@ -4,8 +4,9 @@ CREATE TABLE timeclock_entries(
     clockOut DATETIME,
     payPeriodID INT,
     employeeID INT,
+    scheduledShiftID INT,
 
-    FOREIGN KEY (payPeriodID) REFERENCES pay_period (payPeriodID),
-    FOREIGN KEY (scheduledShiftID) REFERENCES scheduled_shifts (ScheduluedShiftID)
-    -- FOREIGN KEY (employeeID) REFERENCES EMPLOYEES
+    FOREIGN KEY (payPeriodID) REFERENCES pay_periods (payPeriodID),
+    FOREIGN KEY (employeeID) REFERENCES employees (employeeID),
+    FOREIGN KEY (scheduledShiftID) REFERENCES scheduled_shifts (ScheduledShiftID)
 );
