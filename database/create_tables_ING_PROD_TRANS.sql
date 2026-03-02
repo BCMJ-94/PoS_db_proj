@@ -26,13 +26,6 @@ CREATE TABLE transactions(
     paymentMethod SMALLINT
 );
 
-CREATE TABLE product_order(
-	productID INT,
-    transactionID INT,
-    PRIMARY KEY (productID, transactionID),
-    quantity INT
-);
-
 CREATE TABLE recipe(
 	ingredientID INT,
     finished_productID INT,
