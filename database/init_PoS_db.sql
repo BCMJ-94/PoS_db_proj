@@ -69,7 +69,7 @@ CREATE TABLE employees (
   dateOfBirth DATE,
   ShiftRole SMALLINT,
   hourlyRate FLOAT,
-  sectionID INT NOT NULL
+  sectionID INT
 );
 
 CREATE TABLE pay_periods(
@@ -102,7 +102,8 @@ CREATE TABLE scheduled_shifts(
 );
 
 CREATE TABLE sections (
-  sectionID INT PRIMARY KEY AUTO_INCREMENT
+  sectionID INT PRIMARY KEY AUTO_INCREMENT,
+  employeeID INT
 );
 
 CREATE TABLE `tables` (
