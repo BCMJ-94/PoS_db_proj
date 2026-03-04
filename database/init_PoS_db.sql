@@ -7,7 +7,7 @@ CREATE TABLE ingredients(
     quantity FLOAT
 );
 
-CREATE TABLE product(
+CREATE TABLE products(
 	productID INT PRIMARY KEY,
     _name SMALLINT,
     price FLOAT,
@@ -27,7 +27,7 @@ CREATE TABLE transactions(
     paymentMethod SMALLINT
 );
 
-CREATE TABLE purchaseOrder(
+CREATE TABLE purchase_orders(
 	orderID INT,
     supplierName VARCHAR(50),
     ingredientID INT,
@@ -35,18 +35,18 @@ CREATE TABLE purchaseOrder(
     dateOrdered DATETIME
 );
 
-CREATE TABLE productOrders(
+CREATE TABLE product_orders(
 	quantity SMALLINT,
 	productID INT,
 	transactionID INT,
 	PRIMARY KEY (transactionID, productID)
 );
 
-CREATE TABLE recipe(
+CREATE TABLE recipes(
 	recipeID INT PRIMARY KEY,
 	ingredientID INT,
-    finished_productID INT,
-    intermediate_productID INT
+    finishedProductID INT,
+    intermediateProductID INT
 );
 
 CREATE TABLE customers(
@@ -109,4 +109,13 @@ CREATE TABLE `tables` (
   tableID INT PRIMARY KEY AUTO_INCREMENT,
   capacity INT NOT NULL,
   sectionID INT NOT NULL
+);
+
+CREATE TABLE timeclock_entries(
+	entryID INT AUTO_INCREMENT PRIMARY KEY,
+    clockIn DATETIME,
+    clockOUT DATETIME,
+    payPeriodID INT NOT NULL,
+    employeeID INT NOT NULL,
+    scheduledShiftID INT
 );
