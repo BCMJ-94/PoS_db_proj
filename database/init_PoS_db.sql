@@ -2,22 +2,22 @@ CREATE DATABASE RestaurantTestDB;
 
 CREATE TABLE ingredients(
 	ingredientID INT PRIMARY KEY,
-    _name VARCHAR(20) ,
+    _name VARCHAR(15),
     pricePerUnit FLOAT NOT NULL,
     quantity FLOAT
 
-	CONSTRAINT priceCheck CHECK (pricePerUnit > 0)
+    CONSTRAINT priceCheck CHECK (pricePerUnit > 0)
 );
 
 CREATE TABLE products(
 	productID INT PRIMARY KEY,
-    _name VARCHAR(20),
-    price FLOAT,
+    _name SMALLINT NOT NULL,
+    price FLOAT NOT NULL,
     menuType SMALLINT,
     isAvailable BOOL NOT NULL,
     stationID SMALLINT
 
-	CONSTRAINT priceCheck(price > 0)
+    CONSTRAINT priceCheck CHECK (price > 0) 
 );
 
 CREATE TABLE transactions(
@@ -32,7 +32,7 @@ CREATE TABLE transactions(
 );
 
 CREATE TABLE purchase_orders(
-	orderID INT NOT NULL AUTO_INCREMENT,
+	orderID INT NOT NULL,
     supplierName VARCHAR(50),
     ingredientID INT,
     quantity INT,
