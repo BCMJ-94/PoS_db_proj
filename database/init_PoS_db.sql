@@ -88,11 +88,7 @@ CREATE TABLE payroll_records(
     PRIMARY KEY (employeeID, payPeriodID)
 );
 
-ALTER TABLE payroll_records
-ADD CONSTRAINT fk_employeeID
-FOREIGN KEY (employeeID) REFERENCES employees (employeeID),
-ADD CONSTRAINT fk_payPeriodID
-FOREIGN KEY (payPeriodID) REFERENCES pay_periods (payPeriodID);
+
 
 CREATE TABLE printers(
 	stationID SMALLINT PRIMARY KEY AUTO_INCREMENT
