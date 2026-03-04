@@ -69,7 +69,7 @@ CREATE TABLE employees (
   dateOfBirth DATE,
   ShiftRole SMALLINT,
   hourlyRate FLOAT,
-  sectionID INT NOT NULL,
+  sectionID INT NOT NULL
 );
 
 CREATE TABLE pay_periods(
