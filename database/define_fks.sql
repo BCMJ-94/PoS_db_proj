@@ -41,3 +41,8 @@ ADD CONSTRAINT fkTimeClockEntriesEmployeeID
 FOREIGN KEY (employeeID) REFERENCES employees (employeeID),
 ADD CONSTRAINT fkTimeClockEntriesScheduledShiftID
 FOREIGN KEY (scheduledShiftID) REFERENCES scheduled_shifts (scheduledShiftID);
+
+#sections foreign keys
+ALTER TABLE sections
+ADD CONSTRAINT fkSectionsEmployeeID
+FOREIGN KEY (employeeID) REFERENCES employees(employeeID);
