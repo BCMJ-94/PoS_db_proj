@@ -70,7 +70,6 @@ CREATE TABLE employees (
   ShiftRole SMALLINT,
   hourlyRate FLOAT,
   sectionID INT NOT NULL,
-  FOREIGN KEY (sectionID) REFERENCES sections(sectionID)
 );
 
 CREATE TABLE pay_periods(
@@ -106,7 +105,7 @@ CREATE TABLE sections (
   sectionID INT PRIMARY KEY AUTO_INCREMENT
 );
 
-CREATE TABLE tables (
+CREATE TABLE `tables` (
   tableID INT PRIMARY KEY AUTO_INCREMENT,
   capacity INT NOT NULL,
   sectionID INT NOT NULL
