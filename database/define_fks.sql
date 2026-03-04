@@ -40,4 +40,4 @@ FOREIGN KEY (payPeriodID) REFERENCES payPeriods (payPeriodID),
 ADD CONSTRAINT fk_timeclockEntriesemployeeID
 FOREIGN KEY (employeeID) REFERENCES employees (employeeID),
 ADD CONSTRAINT fk_timeclockEntriesscheduledShiftID
-FOREIGN KEY (scheduledShiftID) REFERENCES scheduledShifts (scheduledShiftID)
+FOREIGN KEY (scheduledShiftID) REFERENCES scheduledShifts (scheduledShiftID);
