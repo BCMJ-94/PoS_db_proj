@@ -26,3 +26,9 @@ ALTER TABLE sections
 ADD CONSTRAINT fk_sectionID
 FOREIGN KEY (sectionID) REFERENCES sections(sectionID);
 
+#payrollRecords foreign keys
+ALTER TABLE payrollRecords
+ADD CONSTRAINT fk_employeeID
+FOREIGN KEY (employeeID) REFERENCES employees (employeeID),
+ADD CONSTRAINT fk_payPeriodID
+FOREIGN KEY (payPeriodID) REFERENCES pay_periods (payPeriodID);
