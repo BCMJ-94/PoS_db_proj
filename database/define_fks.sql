@@ -28,7 +28,16 @@ FOREIGN KEY (sectionID) REFERENCES sections(sectionID);
 
 #payrollRecords foreign keys
 ALTER TABLE payrollRecords
-ADD CONSTRAINT fk_employeeID
+ADD CONSTRAINT fk_payrollRecordsemployeeID
 FOREIGN KEY (employeeID) REFERENCES employees (employeeID),
-ADD CONSTRAINT fk_payPeriodID
+ADD CONSTRAINT fk_payrollRecordspayPeriodID
 FOREIGN KEY (payPeriodID) REFERENCES pay_periods (payPeriodID);
+
+#timeclockEntries
+ALTER TABLE timeclockEntries
+ADD CONSTRAINT fk_timeclockEntriespayPeriodID
+FOREIGN KEY (payPeriodID) REFERENCES payPeriods (payPeriodID),
+ADD CONSTRAINT fk_timeclockEntriesemployeeID
+FOREIGN KEY (employeeID) REFERENCES employees (employeeID),
+ADD CONSTRAINT fk_timeclockEntriesscheduledShiftID
+FOREIGN KEY (scheduledShiftID) REFERENCES scheduledShifts (scheduledShiftID)
