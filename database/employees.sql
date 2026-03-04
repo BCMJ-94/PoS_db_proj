@@ -7,6 +7,6 @@ CREATE TABLE employees (
   ShiftRole SMALLINT,
   hourlyRate FLOAT
 
-  sectionID INT NOT NULL,
+  sectionID INT,
   FOREIGN KEY (sectionID) REFERENCES sections(sectionID)
 );
