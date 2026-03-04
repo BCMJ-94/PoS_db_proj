@@ -15,7 +15,7 @@ ADD CONSTRAINT fk_employeeID
 FOREIGN KEY (employeeID) REFERENCES employee(employeeID);
 
 #product_order foreign keys
-ALTER TABLE productOrders
+ALTER TABLE product_orders
 ADD CONSTRAINT fk_transactionID
 FOREIGN KEY (transactionID) REFERENCES transactions(transactionID),
 ADD CONSTRAINT fk_productID
@@ -27,14 +27,14 @@ ADD CONSTRAINT fk_sectionID
 FOREIGN KEY (sectionID) REFERENCES sections(sectionID);
 
 #payrollRecords foreign keys
-ALTER TABLE payrollRecords
+ALTER TABLE payroll_records
 ADD CONSTRAINT fk_payrollRecordsemployeeID
 FOREIGN KEY (employeeID) REFERENCES employees (employeeID),
 ADD CONSTRAINT fk_payrollRecordspayPeriodID
 FOREIGN KEY (payPeriodID) REFERENCES pay_periods (payPeriodID);
 
 #timeclockEntries
-ALTER TABLE timeclockEntries
+ALTER TABLE timeclock_entries
 ADD CONSTRAINT fk_timeclockEntriespayPeriodID
 FOREIGN KEY (payPeriodID) REFERENCES payPeriods (payPeriodID),
 ADD CONSTRAINT fk_timeclockEntriesemployeeID
