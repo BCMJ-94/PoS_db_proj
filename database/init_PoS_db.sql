@@ -1,3 +1,4 @@
+CREATE DATABASE RestaurantTestDB
 CREATE TABLE ingredients(
 	ingredientID INT PRIMARY KEY,
     _name SMALLINT,
