@@ -1,3 +1,3 @@
-CREATE TABLE section (
+CREATE TABLE sections (
   sectionID INT PRIMARY KEY AUTO_INCREMENT
 );
