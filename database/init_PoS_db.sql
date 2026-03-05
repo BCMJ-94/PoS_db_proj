@@ -6,7 +6,7 @@ CREATE TABLE ingredients(
     pricePerUnit FLOAT NOT NULL,
     quantity FLOAT
 
-    CONSTRAINT priceCheck CHECK (pricePerUnit > 0)
+	CONSTRAINT pricePerUnitCheck CHECK (pricePerUnit > 0)
 );
 
 CREATE TABLE products(
@@ -17,7 +17,7 @@ CREATE TABLE products(
     isAvailable BOOL NOT NULL,
     stationID SMALLINT
 
-    CONSTRAINT priceCheck CHECK (price > 0) 
+	CONSTRAINT priceCheck CHECK(price > 0)
 );
 
 CREATE TABLE transactions(
