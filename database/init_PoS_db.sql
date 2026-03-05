@@ -17,7 +17,7 @@ CREATE TABLE products(
     isAvailable BOOL NOT NULL,
     stationID SMALLINT,
 
-	CONSTRAINT price Check (price > 0)
+	CONSTRAINT priceCheck CHECK (price > 0)
 );
 
 CREATE TABLE transactions(
