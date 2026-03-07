@@ -6,7 +6,7 @@ CREATE TABLE ingredients(
     pricePerUnit FLOAT NOT NULL,
     quantity FLOAT,
 
-	CONSTRAINT priceCheck CHECK (pricePerUnit > 0)
+	CONSTRAINT ppuCheck CHECK (pricePerUnit > 0)
 );
 
 CREATE TABLE products(
