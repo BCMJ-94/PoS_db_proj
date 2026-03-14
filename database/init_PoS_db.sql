@@ -4,9 +4,9 @@ CREATE TABLE ingredients(
 	ingredientID INT PRIMARY KEY,
     _name VARCHAR(20) ,
     pricePerUnit FLOAT NOT NULL,
-    quantity FLOAT
+    quantity FLOAT,
 
-	CONSTRAINT priceCheck CHECK (pricePerUnit > 0)
+	CONSTRAINT ppuCheck CHECK (pricePerUnit > 0)
 );
 
 CREATE TABLE products(
@@ -15,9 +15,9 @@ CREATE TABLE products(
     price FLOAT,
     menuType SMALLINT,
     isAvailable BOOL NOT NULL,
-    stationID SMALLINT
+    stationID SMALLINT,
 
-	CONSTRAINT priceCheck(price > 0)
+	CONSTRAINT priceCheck CHECK (price > 0)
 );
 
 CREATE TABLE transactions(
