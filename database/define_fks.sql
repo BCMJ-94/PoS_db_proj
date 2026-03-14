@@ -24,7 +24,7 @@ FOREIGN KEY (productID) REFERENCES products(productID) ON DELETE RESTRICT;
 #table foreign keys
 ALTER TABLE `tables`
 ADD CONSTRAINT fkSectionID
-FOREIGN KEY (sectionID) REFERENCES sections(sectionID) ON DELETE SET NULL;
+FOREIGN KEY (sectionID) REFERENCES sections(sectionID) ON DELETE RESTRICT;
 
 #payrollRecords foreign keys
 ALTER TABLE payroll_records
