@@ -1,4 +1,5 @@
 CREATE DATABASE RestaurantTestDB;
+USE RestaurantTestDB;
 
 CREATE TABLE ingredients(
 	ingredientID INT PRIMARY KEY,
@@ -32,7 +33,7 @@ CREATE TABLE transactions(
 );
 
 CREATE TABLE purchase_orders(
-	orderID INT NOT NULL AUTO_INCREMENT,
+	orderID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     supplierName VARCHAR(50),
     ingredientID INT,
     quantity INT,
