@@ -24,14 +24,12 @@ FOREIGN KEY (productID) REFERENCES products(productID) ON DELETE RESTRICT;
 #table foreign keys
 ALTER TABLE `tables`
 ADD CONSTRAINT fkSectionID
-FOREIGN KEY (sectionID) REFERENCES sections(sectionID) ON DELETE SET NULL;
+FOREIGN KEY (sectionID) REFERENCES sections(sectionID) ON DELETE RESTRICT;
 
 #payrollRecords foreign keys
 ALTER TABLE payroll_records
 ADD CONSTRAINT fkPayrollRecordsEmployeeID
-FOREIGN KEY (employeeID) REFERENCES employees (employeeID) ON DELETE RESTRICT,
-ADD CONSTRAINT fkPayrollRecordsPayPeriodID
-FOREIGN KEY (payPeriodID) REFERENCES pay_periods (payPeriodID) ON DELETE RESTRICT;
+FOREIGN KEY (employeeID) REFERENCES employees (employeeID) ON DELETE RESTRICT;
 
 #timeclockEntries
 ALTER TABLE timeclock_entries
