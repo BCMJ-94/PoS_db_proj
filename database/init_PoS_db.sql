@@ -13,7 +13,9 @@ CREATE TABLE products(
     price FLOAT NOT NULL CONSTRAINT priceCheck CHECK(price > 0),
     menuType SMALLINT,
     isAvailable BOOL NOT NULL,
-    stationID SMALLINT	
+    stationID SMALLINT,
+
+	CONSTRAINT priceCheck CHECK (price > 0)
 );
 
 CREATE TABLE transactions(
@@ -28,7 +30,7 @@ CREATE TABLE transactions(
 );
 
 CREATE TABLE purchase_orders(
-	orderID INT NOT NULL,
+	orderID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     supplierName VARCHAR(50),
     ingredientID INT,
     quantity INT,
