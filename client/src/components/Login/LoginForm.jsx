@@ -10,16 +10,18 @@ export default function LoginForm({handleSubmit}) {
     }
 
     return (
-        <div className="">
-            <form onSubmit={onSubmit}>
-                <div>
-                    <label htmlFor="employeeID">Employee ID</label>
-                    <input type="text" name="employeeID" id="employeeID" required/>
-                </div>
+        <div>
+            <form onSubmit={onSubmit} className='flex flex-col items-center gap-5'>
+                <div className='flex flex-col text-lg gap-5'>
+                    <div className='flex flex-col gap-1'>
+                        <label htmlFor="employeeID" className=''>Employee ID</label>
+                        <input type="text" name="employeeID" id="employeeID" required className='border border-[#7ebeeba6] rounded-md px-2'/>
+                    </div>
 
-                <div>
-                    <label htmlFor="password">Password</label>
-                    <input type="password" name="password" id="password" required/>
+                    <div className='flex flex-col gap-1'>
+                        <label htmlFor="password">Password</label>
+                        <input type="password" name="password" id="password" required className='border border-[#7ebeeba6] rounded-md px-2'/>
+                    </div>
                 </div>
                 <Button type="submit" name="Login" />
             </form>
