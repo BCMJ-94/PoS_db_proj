@@ -29,7 +29,9 @@ FOREIGN KEY (sectionID) REFERENCES sections(sectionID) ON DELETE RESTRICT;
 #payrollRecords foreign keys
 ALTER TABLE payroll_records
 ADD CONSTRAINT fkPayrollRecordsEmployeeID
-FOREIGN KEY (employeeID) REFERENCES employees (employeeID) ON DELETE RESTRICT;
+FOREIGN KEY (employeeID) REFERENCES employees (employeeID) ON DELETE RESTRICT,
+ADD CONSTRAINT fkPayrollRecordsPayPeriodID
+FOREIGN KEY (payPeriodID) REFERENCES pay_periods (payPeriodID) ON DELETE RESTRICT;
 
 #timeclockEntries
 ALTER TABLE timeclock_entries
