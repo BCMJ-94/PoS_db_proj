@@ -46,9 +46,9 @@ app.get("/employee/:employeeID", async (req, res) => { // creates a route /emplo
 })
 
 app.post("/employees", async (req, res) => { // creates a new employee using the createEmployee function from database.js and adds it to the /employees path (where the list of employees are)
-    const {firstName, lastName, dateHired, dateOfBirth, ShiftRole, hourlyRate} = req.body
-    const employee = await createEmployee(firstName, lastName, dateHired, dateOfBirth, ShiftRole, hourlyRate)
-    //res.status(201).send(note)
+    const {firstName, lastName, dateHired, dateOfBirth, ShiftRole, hourlyRate, password} = req.body
+    const employee = await createEmployee(firstName, lastName, dateHired, dateOfBirth, ShiftRole, hourlyRate, password)
+    res.status(201).send(employee)
 })
 
 // error handling?
