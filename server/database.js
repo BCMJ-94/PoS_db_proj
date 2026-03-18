@@ -1,5 +1,4 @@
 // has database functions stored here
-import bcrypt from 'bycrpt'
 import mysql from 'mysql2'
 import dotenv from 'dotenv'
 
@@ -18,8 +17,8 @@ export async function getEmployees(){ // exporting allows it to be used in diffe
 }
 
 export async function getEmployeeCredentials(employeeID) {
-    const { employeeID, password } = await pool.query(`SELECT employeeID, password FROM employees WHERE employeeID = ?`, [employeeID])
-    return 
+    const employee = await pool.query(`SELECT employeeID, password FROM employees WHERE employeeID = ?`, [employeeID , password])
+    return employee
 }
 
 export async function getEmployee(employeeID){
@@ -27,8 +26,17 @@ export async function getEmployee(employeeID){
     return rows
 }
 
-export async function createEmployee(firstName, lastName, dateHired, dateOfBirth, ShiftRole, hourlyRate, password){
-    const [result] = await pool.query(`INSERT INTO employees (firstName, lastName, dateHired, dateOfBirth, ShiftRole, hourlyRate, password)
-    VALUES (?, ?, ?, ?, ?, ?, ?)`, [firstName, lastName, dateHired, dateOfBirth, ShiftRole, hourlyRate, password])
-    return result
+export async function createEmployee(firstName, lastName, dateHired, dateOfBirth, shiftRole, hourlyRate, hashedPassword){
+    const [result] = await pool.query(`INSERT INTO employees (firstName, lastName, dateHired, dateOfBirth, shiftRole, hourlyRate, hashedPassword)
+    VALUES (?, ?, ?, ?, ?, ?, ?)`, [firstName, lastName, dateHired, dateOfBirth, shiftRole, hourlyRate, hashedPassword])
+    return {
+        employeeID: result.insertId,
+        firstName,
+        lastName,
+        dateHired,
+        dateOfBirth,
+        shiftRole,
+        hourlyRate,
+        hashedPassword
+    }
 }

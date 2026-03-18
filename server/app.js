@@ -1,7 +1,9 @@
-import { getEmployees, getEmployee } from './database.js'
+import { hash, compare } from 'bcrypt'
 import express from 'express'
 import session from 'express-session'
 import cors from 'cors'
+
+import { getEmployees, getEmployee, createEmployee } from './database.js'
 
 const app = express()
 const port = 3030
@@ -46,8 +48,10 @@ app.get("/employee/:employeeID", async (req, res) => { // creates a route /emplo
 })
 
 app.post("/employees", async (req, res) => { // creates a new employee using the createEmployee function from database.js and adds it to the /employees path (where the list of employees are)
-    const {firstName, lastName, dateHired, dateOfBirth, ShiftRole, hourlyRate, password} = req.body
-    const employee = await createEmployee(firstName, lastName, dateHired, dateOfBirth, ShiftRole, hourlyRate, password)
+    const {firstName, lastName, dateHired, dateOfBirth, shiftRole, hourlyRate, password} = req.body
+    const saltRounds = 10
+    const hashedPassword = await hash(password, saltRounds)
+    const employee = await createEmployee(firstName, lastName, dateHired, dateOfBirth, shiftRole, hourlyRate, hashedPassword)
     res.status(201).send(employee)
 })
 
