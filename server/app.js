@@ -3,7 +3,7 @@ import express from 'express'
 import session from 'express-session'
 import cors from 'cors'
 
-import { getEmployees, getEmployee, createEmployee } from './database.js'
+import { getEmployees, getEmployee, createEmployee, getEmployeeCredentials } from './database.js'
 
 const app = express()
 const port = 3030
@@ -20,12 +20,29 @@ app.post('/login', async (req, res) => {
     const { employeeID, password } = req.body
 
     try {
-        if (!email || !password) {
+        if (!employeeID || !password) {
             return res.status(400).json({
                 message: "Fields not entered"
             })
         }
+        
+        const employee = await getEmployeeCredentials(employeeID)
 
+        if (!employee) {
+            return res.status(404).json({
+                message: "Employee not found"
+            })
+        }
+        
+        const match = await compare(password, employee.hashedPassword)
+        if (!match) {
+            return res.status(401).json({
+                message: "Invalid credentials"
+            })
+        }
+
+        // Send session | Implement later
+        res.send(employee)
         
     } catch(err) {
         res.status(500).json({

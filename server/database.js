@@ -17,8 +17,8 @@ export async function getEmployees(){ // exporting allows it to be used in diffe
 }
 
 export async function getEmployeeCredentials(employeeID) {
-    const employee = await pool.query(`SELECT employeeID, password FROM employees WHERE employeeID = ?`, [employeeID , password])
-    return employee
+    const [employee] = await pool.query(`SELECT employeeID, hashedPassword FROM employees WHERE employeeID = ?`, [employeeID])
+    return employee[0] ?? null
 }
 
 export async function getEmployee(employeeID){
