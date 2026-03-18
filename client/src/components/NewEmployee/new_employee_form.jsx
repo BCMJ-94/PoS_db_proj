@@ -1,44 +1,63 @@
 import React from "react"
-import Buttom from "../Button/jsx"
-function NewEmployeeForm(){
+import Button from "../Button.jsx"
 
-    const handleSubmit = (e) => {
-        e.prevent
+function NewEmployeeForm(handleSubmit){
 
-    };
+    const onSubmit = (e) => {
+        e.preventDefault()
+        const form = new FormData(e.target)
+        handleSubmit({employeeID: form.get('employeeID'), 
+            firstName : form.get('firstName'),
+            lastName : form.get('lastName'),
+            dob : form.get('dob'),
+            hireDate : form.get('hireDate'),
+            role : form.get('shiftRole'),
+            hourlyRate : form.get('hourlyRate')
+        })
+
+    }
+
     return(
-        <>
-        <form method = "get">
-            <header>Add New Employee</header>
-            <label>
-                First Name
-                <input name = "fname"/> <br></br>
-            </label>
-            <label>
-                Last Name
-                <input name = "lname"/> <br></br>
-            </label>
-            <label> 
-                Hire Date
-                <input name = "hireDate"/> <br></br>
-            </label>
-            <label>
-                DOB 
-                <input name = "dob"/> <br></br>
-            </label>
-            <label>
-                Role 
-                <input name = "shiftRole"/> <br></br>
-            </label>
-            <label>
-                Hourly Rate 
-                <input name = "hourlyRate"/> <br></br>
-            </label>
-            <button onClick ={handleSubmit}>Submit</button>
+        <div>
+            <header> Register New Employee</header>
+            <form method = "post" onSubmit={onSubmit} className = 'flex flex-col items-center gap-5'>
+                <div className = 'flex flex-col gap-1'>
+                    <label htmlFor = "employeeID"> EmployeeID</label>
+                    <input type = "text" name = "employeeID" id = "employeeID" required className = 'border border-[#7ebeeba6] rounded-md px-2'/>
+                </div>
+                
+                <div className = 'flex flex-col gap-1'>
+                    <label htmlFor = "firstName">First Name</label>
+                    <input type = "text" name = "firstName" id = "firstName" required className = 'border border-[#7ebeeba6] rounded-md px-2'/>
+                </div>
 
-           
-        </form>
-        </>
+                <div className = 'flex flex-col gap-1'>
+                    <label htmlFor="lastName">Last Name</label>
+                    <input type = "text" name = "lastName" id = "lastName" required className = 'border border=[#7ebeeba6] rounded-md px-2'/>
+                </div>
+
+                <div className = 'flex flex-col gap-1'>
+                    <label htmlFor="dob">Date of Birth </label>
+                    <input type = "text" name = "dob" id = "dob" required className = 'border border=[#7ebeeba6] rounded-md px-2'/>
+                </div>
+
+                <div className = 'flex flex-col gap-1'>
+                    <label htmlFor="hireDate">Hire Date </label>
+                    <input type = "text" name = "hireDate" id = "hireDate" required className = 'border border=[#7ebeeba6] rounded-md px-2'/>
+                </div>
+
+                <div className = 'flex flex-col gap-1'>
+                    <label htmlFor="role">Role </label>
+                    <input type = "text" name = "role" id = "role" required className = 'border border=[#7ebeeba6] rounded-md px-2'/>
+                </div>
+
+                <div className = 'flex flex-col gap-1'>
+                    <label htmlFor="hourlyRate">Hourly Rate</label>
+                    <input type = "text" name = "hourlyRate" id = "hourlyRate" required className = 'border border=[#7ebeeba6] rounded-md px-2'/>
+                </div>
+                <Button type="submit" name="Submit" />
+            </form>
+        </div>
     );
 }
 
