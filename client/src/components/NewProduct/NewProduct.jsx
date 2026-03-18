@@ -1,5 +1,5 @@
 import React from "react"
-import NewProductForm from "./NewProduct/NewProduct.jsx"
+import NewProductForm from "./NewProduct/new_product_form.jsx"
 
 function NewProduct(){
     
