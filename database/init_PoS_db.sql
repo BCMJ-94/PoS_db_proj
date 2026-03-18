@@ -72,7 +72,7 @@ CREATE TABLE employees (
   lastName VARCHAR(50) NOT NULL,
   dateHired DATE NOT NULL,
   dateOfBirth DATE,
-  ShiftRole SMALLINT,
+  shiftRole SMALLINT,
   hourlyRate FLOAT,
   sectionID INT
 );
