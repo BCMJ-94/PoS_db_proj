@@ -21,8 +21,8 @@ export async function getEmployee(employeeID){
     return rows
 }
 
-export async function createEmployee(firstName, lastName, dateHired, dateOfBirth, ShiftRole, hourlyRate){
-    const [result] = await pool.query(`INSERT INTO employees (firstName, lastName, dateHired, dateOfBirth, ShiftRole, hourlyRate)
-    VALUES (?, ?, ?, ?, ?, ?)`, [firstName, lastName, dateHired, dateOfBirth, ShiftRole, hourlyRate])
+export async function createEmployee(firstName, lastName, dateHired, dateOfBirth, ShiftRole, hourlyRate, password){
+    const [result] = await pool.query(`INSERT INTO employees (firstName, lastName, dateHired, dateOfBirth, ShiftRole, hourlyRate, password)
+    VALUES (?, ?, ?, ?, ?, ?, ?)`, [firstName, lastName, dateHired, dateOfBirth, ShiftRole, hourlyRate, password])
     return result
 }
