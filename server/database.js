@@ -1,7 +1,8 @@
 // has database functions stored here
-
+import bcrypt from 'bycrpt'
 import mysql from 'mysql2'
 import dotenv from 'dotenv'
+
 dotenv.config()
 
 const pool = mysql.createPool({
@@ -14,6 +15,11 @@ const pool = mysql.createPool({
 export async function getEmployees(){ // exporting allows it to be used in different files (like app.js)
     const [rows] = await pool.query("SELECT * FROM employees")
     return rows
+}
+
+export async function getEmployeeCredentials(employeeID) {
+    const { employeeID, password } = await pool.query(`SELECT employeeID, password FROM employees WHERE employeeID = ?`, [employeeID])
+    return 
 }
 
 export async function getEmployee(employeeID){

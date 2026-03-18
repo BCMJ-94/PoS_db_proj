@@ -74,7 +74,8 @@ CREATE TABLE employees (
   dateOfBirth DATE,
   ShiftRole SMALLINT,
   hourlyRate FLOAT,
-  sectionID INT
+  sectionID INT,
+  hashedPassword VARCHAR(255)
 );
 
 CREATE TABLE pay_periods(

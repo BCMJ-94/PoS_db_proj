@@ -1,5 +1,6 @@
-import { getEmployees } from './database.js'
+import { getEmployees, getEmployee } from './database.js'
 import express from 'express'
+import session from 'express-session'
 import cors from 'cors'
 
 const app = express()
@@ -10,8 +11,27 @@ const corsOptions = {
     credentials: true,
 }
 
-app.use(cors(corsOptions))
 app.use(express.json())
+app.use(cors(corsOptions))
+
+app.post('/login', async (req, res) => {
+    const { employeeID, password } = req.body
+
+    try {
+        if (!email || !password) {
+            return res.status(400).json({
+                message: "Fields not entered"
+            })
+        }
+
+        
+    } catch(err) {
+        res.status(500).json({
+            message: "Server error"
+        })
+    }
+
+})
 
 app.get("/employees", async (req, res) => { // creates a route /employees on the webapp that displays the list of employees
     const employees = await getEmployees() // make sure async is present so that await works
