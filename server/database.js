@@ -1,7 +1,7 @@
 // has database functions stored here
-
 import mysql from 'mysql2'
 import dotenv from 'dotenv'
+
 dotenv.config()
 
 const pool = mysql.createPool({
@@ -16,19 +16,27 @@ export async function getEmployees(){ // exporting allows it to be used in diffe
     return rows
 }
 
+export async function getEmployeeCredentials(employeeID) {
+    const [employee] = await pool.query(`SELECT employeeID, hashedPassword FROM employees WHERE employeeID = ?`, [employeeID])
+    return employee[0] ?? null
+}
+
 export async function getEmployee(employeeID){
-    const [rows] = await pool.query(`SELECT * FROM employees WHERE employeeID = ?`, [employeeID]) // we send the [id] separately to the query, mySQL will manage it and make sure the untrusted data (the ?) isn't a part of the query
-    return rows
+    const [employee] = await pool.query(`SELECT * FROM employees WHERE employeeID = ?`, [employeeID]) // we send the [id] separately to the query, mySQL will manage it and make sure the untrusted data (the ?) isn't a part of the query
+    return employee[0] ?? null
 }
 
-export async function createEmployee(firstName, lastName, dateHired, dateOfBirth, ShiftRole, hourlyRate){
-    const [result] = await pool.query(`INSERT INTO employees (firstName, lastName, dateHired, dateOfBirth, ShiftRole, hourlyRate)
-    VALUES (?, ?, ?, ?, ?, ?)`, [firstName, lastName, dateHired, dateOfBirth, ShiftRole, hourlyRate])
-    return result
+export async function createEmployee(firstName, lastName, dateHired, dateOfBirth, shiftRole, hourlyRate, hashedPassword){
+    const [result] = await pool.query(`INSERT INTO employees (firstName, lastName, dateHired, dateOfBirth, shiftRole, hourlyRate, hashedPassword)
+    VALUES (?, ?, ?, ?, ?, ?, ?)`, [firstName, lastName, dateHired, dateOfBirth, shiftRole, hourlyRate, hashedPassword])
+    return {
+        employeeID: result.insertId,
+        firstName,
+        lastName,
+        dateHired,
+        dateOfBirth,
+        shiftRole,
+        hourlyRate,
+        hashedPassword
+    }
 }
-
-// const employees = await getEmployee(1)
-// console.log(employees)
-
-// const result = await createEmployee('Kelly', 'Michael', '2004-02-28', '1987-03-31', 3, 17.00)
-// console.log(result)
