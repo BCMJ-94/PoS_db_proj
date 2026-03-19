@@ -6,7 +6,7 @@ function NewEmployeeForm(handleSubmit){
     const onSubmit = (e) => {
         e.preventDefault()
         const form = new FormData(e.target)
-        handleSubmit({employeeID: form.get('employeeID'), 
+        handleSubmit({ 
             firstName : form.get('firstName'),
             lastName : form.get('lastName'),
             dob : form.get('dob'),
@@ -20,11 +20,6 @@ function NewEmployeeForm(handleSubmit){
     return(
         <div>
             <form method = "post" onSubmit={onSubmit} className = 'flex flex-col items-center gap-5'>
-                <div className = 'flex flex-col gap-1'>
-                    <label htmlFor = "employeeID"> EmployeeID</label>
-                    <input type = "text" name = "employeeID" id = "employeeID" required className = 'border border-[#7ebeeba6] rounded-md px-2'/>
-                </div>
-                
                 <div className = 'flex flex-col gap-1'>
                     <label htmlFor = "firstName">First Name</label>
                     <input type = "text" name = "firstName" id = "firstName" required className = 'border border-[#7ebeeba6] rounded-md px-2'/>
