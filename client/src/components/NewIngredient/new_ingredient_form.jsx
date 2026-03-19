@@ -4,7 +4,7 @@ import Button from "../Button.jsx"
 function NewIngredientForm(handleSubmit){
     const onSubmit= (e) => {
         e.preventDefault()
-        const form = new FormData()
+        const form = new FormData(e.target)
         handleSubmit({ingredientID : form.get('ingredientID'),
                       _name : form.get('name'),
                       pricePerUnit : form.get('pricePerUnit')

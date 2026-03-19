@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import Login from "./components/Login/Login";
+import NewEmployee from "./components/NewEmployee/NewEmployee.jsx";
+import Apitest from "./apitest.jsx"
 
 function App(){
     const [view, setView] = useState("login")
@@ -7,7 +9,7 @@ function App(){
 	return (
         <>
             {view === "login" ? (
-                <Login></Login>
+                <Apitest/>
             ) :
             null}
             <button 
@@ -21,5 +23,4 @@ function App(){
         </>
     )
 }
-
 export default App;
