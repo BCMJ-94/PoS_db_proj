@@ -18,7 +18,7 @@ app.use(cors(corsOptions))
 
 const expiration_30_minutes = 1000 * 60 * 30
 app.use(session({
-   // secret : process.env.SESSION_KEY,
+    secret : process.env.SESSION_KEY,
     resave : false,
     saveUninitialized : false,
     cookie : {
