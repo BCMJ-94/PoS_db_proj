@@ -9,7 +9,8 @@ function App(){
 	return (
         <>
             {view === "login" ? (
-                <Apitest/>
+                <Login/>
+
             ) :
             null}
             <button 
