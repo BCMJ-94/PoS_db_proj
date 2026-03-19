@@ -2,7 +2,7 @@ import express from 'express'
 import { hash } from 'bcrypt'
 
 import { getEmployee, getEmployees, createEmployee } from '../database.js'
-import isAuthorized from '../auth/auth.js'
+import isAuthorized from '../utils/auth.js'
 
 const employeesRouter = express.Router()
 employeesRouter.use(isAuthorized)

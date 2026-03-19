@@ -2,7 +2,7 @@ import express from 'express'
 import { compare } from 'bcrypt'
 
 import { getEmployeeCredentials } from '../database.js'
-import isAuthorized from '../auth/auth.js'
+import isAuthorized from '../utils/auth.js'
 
 
 const authRouter = express.Router()

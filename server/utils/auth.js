@@ -1,5 +1,3 @@
-import express from 'express'
-
 export default function isAuthorized(req, res, next) {
     if (!req.session?.employee) {
         return res.status(401).json({
