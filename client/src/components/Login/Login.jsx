@@ -2,8 +2,13 @@ import React from 'react'
 import LoginForm from './LoginForm'
 
 export default function Login() {
-    const handleLogin = ({employeeID, password}) => {
-        // Sends to backend | not yet implemented
+    const handleLogin = async ({employeeID, password}) => {
+        const endpoint = 'http://localhost:3030/'
+        const req = await fetch(endpoint, 
+            {method :'POST',
+            body : JSON.stringify({employeeID, password})
+        });
+        const res = req.json()
         console.log(`${employeeID}, ${password}`)
     }
 
