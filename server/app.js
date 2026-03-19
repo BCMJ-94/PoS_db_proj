@@ -3,7 +3,7 @@ import cors from 'cors'
 import session from 'express-session'
 
 import employeesRouter from './routes/employeesRoute.js'
-import loginRouter from './routes/loginRoute.js'
+import authRouter from './routes/authRoute.js'
 
 const app = express()
 const port = 3030
@@ -30,7 +30,7 @@ app.use(cors(corsOptions))
 
 
 app.use('/employees', employeesRouter)
-app.use(loginRouter)
+app.use(authRouter)
 
 app.get('/', (req, res) => {
     res.send('Hello World')
