@@ -40,8 +40,17 @@ authRouter.post('/login', async (req, res) => {
             req.session.employee = {
                 employeeID : employee.employeeID
             }
-            res.status(200).json({
-                employee: req.session.employee
+
+            req.session.save((err2) => {
+                if (err2) {
+                    return res.status(500).json({
+                        message: "Session save error"
+                    })
+                }
+
+                return res.status(200).json({
+                    employee: req.session.employee
+                })
             })
         })
 
@@ -69,6 +78,7 @@ authRouter.post('/logout', (req, res) => {
 })
 
 authRouter.get('/dashboard', isAuthorized, (req, res) => {
+    res.set("Cache-Control", "no-store")
     res.status(200).json({
         employee : req.session.employee
     })

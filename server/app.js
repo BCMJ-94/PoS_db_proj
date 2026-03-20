@@ -24,7 +24,8 @@ app.use(session({
     cookie : {
         secure : false,
         maxAge : expiration_30_minutes,
-        httpOnly : true
+        httpOnly : true,
+        sameSite: "lax"
     }
 }))
 
