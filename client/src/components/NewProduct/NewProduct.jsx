@@ -1,17 +1,18 @@
 import React from "react"
-import NewEmployeeForm from "./new_employee_form.jsx"
+import NewProductForm from "./NewProduct/new_product_form.jsx"
 
-function NewEmployee(){
-    const submitNewEmployee = ({employeeID, 
-        firstName, lastName, dob, hireDate, role, hourlyRates}) => {
-            //TODO: post fetch request to backend app.js 
-        }
+function NewProduct(){
+    
+    const submitNewProduct = ({productID, _name, price, 
+                               menuType, stationID}) => {}     
+    //TODO: post fetch request to backend app.js 
+        
    
     return (
         <div className='flex flex-col items-center justify-center h-screen bg-[rgb(206,226,240)]'>
             <div className="flex flex-col items-center bg-[rgb(248,247,246)] rounded-2xl gap-6 px-10 py-8 shadow">
                 <h1 className='font-bold text-4xl text-[#5eb5f3a6]'>Register New Employee</h1>
-                <NewEmployeeForm handleSubmit={submitNewEmployee}/>
+                <NewProductForm handleSubmit={submitNewProduct}/>
             </div>
         </div>
 

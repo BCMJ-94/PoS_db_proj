@@ -1,19 +1,16 @@
-CREATE DATABASE RestaurantTestDB;
-USE RestaurantTestDB;
+
 
 CREATE TABLE ingredients(
 	ingredientID INT PRIMARY KEY,
-    _name VARCHAR(20) ,
-    pricePerUnit FLOAT NOT NULL,
-    quantity FLOAT,
-
-	CONSTRAINT ppuCheck CHECK (pricePerUnit > 0)
+    _name VARCHAR(20),
+    pricePerUnit FLOAT NOT NULL CONSTRAINT pricePerUnitCheck CHECK (pricePerUnit > 0),
+    quantity FLOAT
 );
 
 CREATE TABLE products(
 	productID INT PRIMARY KEY,
-    _name VARCHAR(20),
-    price FLOAT,
+    _name VARCHAR(20) NOT NULL,
+    price FLOAT NOT NULL CONSTRAINT priceCheck CHECK(price > 0),
     menuType SMALLINT,
     isAvailable BOOL NOT NULL,
     stationID SMALLINT,
