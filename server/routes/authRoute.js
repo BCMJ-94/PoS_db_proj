@@ -78,7 +78,6 @@ authRouter.post('/logout', (req, res) => {
 })
 
 authRouter.get('/dashboard', isAuthorized, (req, res) => {
-    res.set("Cache-Control", "no-store")
     res.status(200).json({
         employee : req.session.employee
     })
