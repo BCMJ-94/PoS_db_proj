@@ -6,7 +6,7 @@ function NewProductForm({handleSubmit}){
 
     const onSubmit= (e) =>{
         e.preventDefault()
-        const form = new FormData()
+        const form = new FormData(e.target)
         handleSubmit({productID : form.get('productID'),
                       _name : form.get('_name'),
                       price : form.get('price'),

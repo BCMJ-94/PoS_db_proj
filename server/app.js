@@ -9,9 +9,12 @@ const app = express()
 const port = 3030
 
 const corsOptions = { 
-    origin: "http://localhost:5173/", 
-    credentials: true,
+    origin: "http://localhost:5173", 
+    credentials: true
 }
+
+app.use(express.json())
+app.use(cors(corsOptions))
 
 const expiration_30_minutes = 1000 * 60 * 30
 app.use(session({
@@ -21,13 +24,10 @@ app.use(session({
     cookie : {
         secure : false,
         maxAge : expiration_30_minutes,
-        httpOnly : true
+        httpOnly : true,
+        sameSite: "lax"
     }
 }))
-
-app.use(express.json())
-app.use(cors(corsOptions))
-
 
 app.use('/employees', employeesRouter)
 app.use(authRouter)
