@@ -3,7 +3,7 @@ import LoginForm from './LoginForm'
 
 export default function Login() {
     const handleLogin = async ({employeeID, password}) => {
-        const endpoint = 'http://localhost:3030/employees'
+        const endpoint = 'http://localhost:3030/login'
         const req = await fetch(endpoint, 
             {method :'POST',
             body : JSON.stringify({employeeID, password})

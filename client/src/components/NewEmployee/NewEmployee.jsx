@@ -2,9 +2,12 @@ import React from "react"
 import NewEmployeeForm from "./new_employee_form.jsx"
 
 function NewEmployee(){
-    const submitNewEmployee = ({employeeID, 
-        firstName, lastName, dob, hireDate, role, hourlyRates}) => {
-            //TODO: post fetch request to backend app.js 
+    const submitNewEmployee = async ({firstName, lastName, dob, hireDate, role, hourlyRates, password}) => {
+            const endpoint = 'http:localhost:3030/employees'
+            const req = await fetch(endpoint,{method : 'POST',
+                body : JSON.stringify({firstName, lastName, dob, hireDate, role, hourlyRates, password})
+            });
+            const res = await req.text()
         }
    
     return (

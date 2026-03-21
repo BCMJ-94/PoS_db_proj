@@ -1,7 +1,7 @@
 import React from "react"
 import Button from "../Button.jsx"
 
-function NewEmployeeForm(handleSubmit){
+function NewEmployeeForm({handleSubmit}){
 
     const onSubmit = (e) => {
         e.preventDefault()
@@ -12,7 +12,8 @@ function NewEmployeeForm(handleSubmit){
             dob : form.get('dob'),
             hireDate : form.get('hireDate'),
             role : form.get('shiftRole'),
-            hourlyRate : form.get('hourlyRate')
+            hourlyRate : form.get('hourlyRate'),
+            password : form.get('password')
         })
 
     }
@@ -48,6 +49,10 @@ function NewEmployeeForm(handleSubmit){
                 <div className = 'flex flex-col gap-1'>
                     <label htmlFor="hourlyRate">Hourly Rate</label>
                     <input type = "text" name = "hourlyRate" id = "hourlyRate" required className = 'border border=[#7ebeeba6] rounded-md px-2'/>
+                </div>
+                <div className = 'flex flex-col gap-1'>
+                    <label htmlFor="password">Password</label>
+                    <input type = "text" name = "password" id = "password" required className = 'border border=[#7ebeeba6] rounded-md px-2'/>
                 </div>
                 <Button type="submit" name="Submit" />
             </form>
