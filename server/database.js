@@ -56,6 +56,22 @@ export async function getCustomer_Email(email){
     return customers[0] ?? null
 }
 
+export async function createCustomer(firstName, lastName, dob, dateJoined, phoneNumber, email, status, rewardPoints){ // this works!
+    const [result] = await pool.query(`INSERT INTO customers (firstName, lastName, dob, dateJoined, phoneNumber, email, status, rewardPoints)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, [firstName, lastName, dob, dateJoined, phoneNumber, email, status, rewardPoints])
+        return {
+            customerID: result.insertId,
+            firstName,
+            lastName,
+            dob,
+            dateJoined,
+            phoneNumber,
+            email,
+            status,
+            rewardPoints
+        }
+}
+
 export async function getIngredients(){
     const [rows] = await pool.query(`SELECT * FROM ingredients`)
     return rows
@@ -64,6 +80,17 @@ export async function getIngredients(){
 export async function getIngredient(ingredientID){
     const [ingredients] = await pool.query(`SELECT * FROM ingredients WHERE ingredientID = ?`, [ingredientID])
     return ingredients[0] ?? null
+}
+
+export async function createIngredient(ingredientID, _name, pricePerUnit, quantity){
+    const [result] = await pool.query(`INSERT INTO ingredients (ingredientID, _name, pricePerUnit, quantity)
+    VALUES (?, ?, ?, ?)`, [ingredientID, _name, pricePerUnit, quantity])
+        return {
+            ingredientID,
+            _name,
+            pricePerUnit,
+            quantity
+        }
 }
 
 export async function getPay_Periods(){
@@ -76,6 +103,16 @@ export async function getPay_Period(payPeriodID){
     return pay_periods[0] ?? null
 }
 
+export async function createPay_Period(startDate, endDate){
+    const [result] = await pool.query(`INSERT INTO pay_periods (startDate, endDate)
+    VALUES (? ,?)`, [startDate, endDate])
+        return {
+            payPeriodID: result.insertId,
+            startDate,
+            endDate
+        }
+}
+
 export async function getPayroll_Records(){
     const [payroll_records] = await pool.query(`SELECT * FROM payroll_records`)
     return payroll_records
@@ -84,6 +121,17 @@ export async function getPayroll_Records(){
 export async function getPayroll_Record(employeeID, payPeriodID){
     const [payroll_records] = await pool.query(`SELECT * FROM payroll_records WHERE employeeID = ? AND payPeriodID = ?`, [employeeID, payPeriodID])
     return payroll_records[0] ?? null
+}
+
+export async function createPayroll_Record(employeeID, payPeriodID, totalHours, totalPay){
+    const [result] = await pool.query(`INSERT INTO payroll_records (employeeID, payPeriodID, totalHours, totalPay)
+        VALUES (?, ?, ?, ?)`, [employeeID, payPeriodID, totalHours, totalPay])
+            return {
+                employeeID,
+                payPeriodID,
+                totalHours,
+                totalPay
+            }
 }
 
 export async function getPrinters(){
@@ -96,6 +144,14 @@ export async function getPrinter(stationID){
     return printers[0] ?? null
 }
 
+export async function createPrinter(stationID){ 
+    const [result] = await pool.query(`INSERT INTO printers (stationID)
+        VALUES (?)`, [stationID])
+        return {
+            stationID: result.insertId
+        }
+}
+
 export async function getProduct_Orders(){
     const [rows] = await pool.query(`SELECT * FROM product_orders`)
     return rows
@@ -104,6 +160,16 @@ export async function getProduct_Orders(){
 export async function getProduct_Order(transactionID, productID){
     const [product_orders] = await pool.query(`SELECT * FROM product_orders WHERE transactionID = ? AND productID = ?`, [transactionID, productID])
     return product_orders[0] ?? null
+}
+
+export async function createProduct_Order(quantity, productID, transactionID){
+    const [result] = await pool.query(`INSERT INTO product_orders (quantity, productID, transactionID)
+        VALUES (?, ?, ?)`, [quantity, productID, transactionID])
+            return {
+                quantity,
+                productID,
+                transactionID
+            }
 }
 
 export async function getProducts(){
@@ -116,6 +182,19 @@ export async function getProduct(productID){
     return products[0] ?? null
 }
 
+export async function createProduct(productID, _name, price, menuType, isAvailable, stationID){ // we need to change stationID to stationType, no foreign key required
+    const [result] = await pool.query(`INSERT INTO products (productID, _name, price, menuType, isAvailable, stationID)
+    VALUES (?, ?, ?, ?, ?, ?)`, [productID, _name, price, menuType, isAvailable, stationID])
+        return {
+            productID,
+            _name,
+            price,
+            menuType,
+            isAvailable,
+            stationID
+        }
+}
+
 export async function getPurchase_Orders(){
     const [rows] = await pool.query(`SELECT * FROM purchase_orders`)
     return rows
@@ -124,6 +203,18 @@ export async function getPurchase_Orders(){
 export async function getPurchase_Order(orderID){
     const [purchase_orders] = await pool.query(`SELECT * FROM purchase_orders WHERE orderID = ?`, [orderID])
     return purchase_orders[0] ?? null
+}
+
+export async function createPurchase_Order(supplierName, ingredientID, quantity, dateOrdered){ // i think we need a foreign key for ingredientID here
+    const [result] = await pool.query(`INSERT INTO purchase_orders (supplierName, ingredientID, quantity, dateOrdered)
+    VALUES (?, ?, ?, ?)`, [supplierName, ingredientID, quantity, dateOrdered])
+    return{
+        orderID: result.insertId,
+        supplierName,
+        ingredientID,
+        quantity,
+        dateOrdered
+    }
 }
 
 export async function getRecipes(){
@@ -136,6 +227,17 @@ export async function getRecipe(recipeID){
     return recipes[0] ?? null
 }
 
+export async function createRecipe(recipeID, ingredientID, finishedProductID, intermediateProductID){ // foreign keys
+    const [result] = await pool.query(`INSERT INTO recipes (recipeID, ingredientID, finishedProductID, intermediateProductID)
+        VALUES (?, ?, ?, ?)`, [recipeID, ingredientID, finishedProductID, intermediateProductID])
+        return{
+            recipeID,
+            ingredientID,
+            finishedProductID,
+            intermediateProductID
+        }
+}
+
 export async function getScheduled_Shift(){
     const [rows] = await pool.query(`SELECT * FROM scheduled_shifts`)
     return rows
@@ -144,6 +246,17 @@ export async function getScheduled_Shift(){
 export async function getScheduled_Shifts(scheduledShiftID){
     const [scheduled_shift] = await pool.query(`SELECT * FROM scheduled_shifts WHERE scheduledShiftID = ?`, [scheduledShiftID])
     return scheduled_shift[0] ?? null
+}
+
+export async function createScheduled_Shift(startTime, endTime, shiftRole){
+    const [result] = await pool.query(`INSERT INTO scheduled_shifts (startTime, endTime, shiftRole)
+    VALUES (?, ?, ?)`, [startTime, endTime, shiftRole])
+        return {
+            scheduledShiftID: result.insertId,
+            startTime,
+            endTime,
+            shiftRole
+        }
 }
 
 export async function getSection(){
@@ -156,6 +269,15 @@ export async function getSections(sectionID){
     return sections[0] ?? null
 }
 
+export async function createSection(employeeID){
+    const [result] = await pool.query(`INSERT INTO sections (employeeID)
+    VALUES (?)`, [employeeID])
+        return {
+            sectionID: result.insertId,
+            employeeID
+        }
+}
+
 export async function getTables(){
     const [rows] = await pool.query(`SELECT * FROM tables`)
     return rows
@@ -164,6 +286,16 @@ export async function getTables(){
 export async function getTable(tableID){
     const [tables] = await pool.query(`SELECT * FROM tables WHERE tableID = ?`, [tableID])
     return tables[0] ?? null
+}
+
+export async function createTable(capacity, sectionID){
+    const [result] = await pool.query(`INSERT INTO tables (capacity, sectionID)
+    VALUES (?, ?)`, [capacity, sectionID])
+        return {
+            tableID: result.insertId,
+            capacity,
+            sectionID
+        }
 }
 
 export async function getTimeclock_Entries(){
@@ -176,6 +308,19 @@ export async function getTimeclock_Entry(entryID){
     return timeclock_entries[0] ?? null
 }
 
+export async function createTimeclock_Entry(clockIn, clockOUT, payPeriodID, employeeID, scheduledShiftID){
+    const [result] = await pool.query(`INSERT INTO timeclock_entries (clockIn, clockOUT, payPeriodID, employeeID, scheduledShiftID)
+    VALUES (?, ?, ?, ?, ?)`, [clockIn, clockOUT, payPeriodID, employeeID, scheduledShiftID])
+    return {
+        entryID: result.insertId,
+        clockIn,
+        clockOUT,
+        payPeriodID,
+        employeeID,
+        scheduledShiftID
+    }
+}
+
 export async function getTransactions(){
     const [rows] = await pool.query(`SELECT * FROM transactions`)
     return rows
@@ -184,4 +329,19 @@ export async function getTransactions(){
 export async function getTransaction(transactionID){
     const [transactions] = await pool.query(`SELECT * FROM transactions WHERE transactionID = ?`, [transactionID])
     return transactions[0] ?? null
+}
+
+export async function createTransaction(tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod){
+    const [result] = await pool.query(`INSERT INTO transactions (tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod)
+    VALUES (?, ?, ?, ?, ?, ?, ?)`, [tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod])
+        return {
+            transactionID: result.insertId,
+            tableID,
+            employeeID,
+            customerID,
+            timePlaced,
+            total,
+            tipAmount,
+            paymentMethod
+        }
 }
