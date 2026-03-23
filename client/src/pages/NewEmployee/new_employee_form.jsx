@@ -1,19 +1,19 @@
 import React from "react"
-import Button from "../Button.jsx"
+import Button from "../../components/Button.jsx"
+import '../../index.css'
 
 function NewEmployeeForm({handleSubmit}){
 
     const onSubmit = (e) => {
         e.preventDefault()
         const form = new FormData(e.target)
-        handleSubmit({ 
+        handleSubmit({
             firstName : form.get('firstName'),
             lastName : form.get('lastName'),
             dob : form.get('dob'),
             hireDate : form.get('hireDate'),
-            role : form.get('shiftRole'),
-            hourlyRate : form.get('hourlyRate'),
-            password : form.get('password')
+            role : form.get('role'),
+            hourlyRate : form.get('hourlyRate')
         })
 
     }
@@ -21,6 +21,7 @@ function NewEmployeeForm({handleSubmit}){
     return(
         <div>
             <form method = "post" onSubmit={onSubmit} className = 'flex flex-col items-center gap-5'>
+                
                 <div className = 'flex flex-col gap-1'>
                     <label htmlFor = "firstName">First Name</label>
                     <input type = "text" name = "firstName" id = "firstName" required className = 'border border-[#7ebeeba6] rounded-md px-2'/>
@@ -52,7 +53,7 @@ function NewEmployeeForm({handleSubmit}){
                 </div>
                 <div className = 'flex flex-col gap-1'>
                     <label htmlFor="password">Password</label>
-                    <input type = "text" name = "password" id = "password" required className = 'border border=[#7ebeeba6] rounded-md px-2'/>
+                    <input type = "password" name = "password" id = "password" required className = 'border border=[#7ebeeba6] rounded-md px-2'/>
                 </div>
                 <Button type="submit" name="Submit" />
             </form>

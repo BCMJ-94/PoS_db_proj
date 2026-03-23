@@ -1,22 +1,22 @@
-import React from 'react'
 import LoginForm from './LoginForm'
+import { loginEmployee } from '../../api/loginEmployee'
+import { useAuth } from '../../context/AuthProvider'
+import { useNavigate } from 'react-router-dom'
 
 export default function Login() {
-    const handleLogin = async ({employeeID, password}) => {
-        const endpoint = 'http://localhost:3030/login'
-        const req = await fetch(endpoint, 
-            {method :'POST',
-            body : JSON.stringify({employeeID, password})
-        });
-        console.log(`${employeeID}, ${password}`)
-    }
+    const { setEmployee } = useAuth()
+    const navigate = useNavigate()
 
-    const testget = async () =>{
-        const endpoint = 'http://localhost:3030/'
-        const req = await fetch(endpoint) 
-        const res = await req.text()
-        console.log(res)
-        
+    const handleLogin = async ({employeeID, password}) => {
+        try {
+
+            const { data } = await loginEmployee(employeeID, password)        
+            setEmployee(data.employee)
+            navigate("/dashboard", { replace: true })
+
+        } catch(err) {
+            console.log(err.message)
+        }
     }
 
     return (
