@@ -4,6 +4,7 @@ import session from 'express-session'
 
 import employeesRouter from './routes/employeesRoute.js'
 import authRouter from './routes/authRoute.js'
+import dataReportRouter from './routes/dataReportsRoute.js'
 
 const app = express()
 const port = 3030
@@ -31,6 +32,7 @@ app.use(session({
 
 app.use('/employees', employeesRouter)
 app.use(authRouter)
+app.use('/data-reports', dataReportRouter)
 
 app.get('/', (req, res) => {
     res.send('Hello World')

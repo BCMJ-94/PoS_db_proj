@@ -41,6 +41,11 @@ export async function createEmployee(firstName, lastName, dateHired, dateOfBirth
     }
 }
 
+export async function deleteEmployee(employeeID){
+    const [employee] = await pool.query(`DELETE FROM employees WHERE employeeID = ?`, [employeeID])
+    return employee ?? null
+}
+
 export async function getCustomers(){ // exporting allows it to be used in different files (like app.js)
     const [rows] = await pool.query("SELECT * FROM customers")
     return rows
@@ -72,6 +77,11 @@ export async function createCustomer(firstName, lastName, dob, dateJoined, phone
         }
 }
 
+export async function deleteCustomer(customerID){
+    const [customer] = await pool.query(`DELETE FROM customers WHERE customerID = ?`, [customerID])
+    return customer ?? null
+}
+
 export async function getIngredients(){
     const [rows] = await pool.query(`SELECT * FROM ingredients`)
     return rows
@@ -93,6 +103,11 @@ export async function createIngredient(ingredientID, _name, pricePerUnit, quanti
         }
 }
 
+export async function deleteIngredient(ingredientID, _name){
+    const [ingredient] = await pool.query(`DELETE FROM ingredients WHERE ingredientID = ? AND _name = ?`, [ingredientID, _name])
+    return ingredient ?? null
+}
+
 export async function getPay_Periods(){
     const [rows] = await pool.query(`SELECT * FROM pay_periods`)
     return rows
@@ -111,6 +126,11 @@ export async function createPay_Period(startDate, endDate){
             startDate,
             endDate
         }
+}
+
+export async function deletePay_Period(payPeriodID){
+    const [pay_per] = await pool.query(`DELETE FROM pay_periods WHERE payPeriodID = ?`, [payPeriodID])
+    return pay_per ?? null
 }
 
 export async function getPayroll_Records(){
@@ -134,6 +154,11 @@ export async function createPayroll_Record(employeeID, payPeriodID, totalHours, 
             }
 }
 
+export async function deletePayroll_Record(employeeID, payPeriodID){
+    const [payr_rec] = await pool.query(`DELETE FROM payroll_records WHERE employeeID = ? AND payPeriodID = ?`, [employeeID, payPeriodID])
+    return payr_rec ?? null
+}
+
 export async function getPrinters(){
     const [rows] = await pool.query(`SELECT * FROM printers`)
     return rows
@@ -150,6 +175,11 @@ export async function createPrinter(stationID){
         return {
             stationID: result.insertId
         }
+}
+
+export async function deletePrinter(stationID){
+    const [print] = await pool.query(`DELETE FROM printers WHERE stationID = ?`, [stationID])
+    return print ?? null
 }
 
 export async function getProduct_Orders(){
@@ -170,6 +200,11 @@ export async function createProduct_Order(quantity, productID, transactionID){
                 productID,
                 transactionID
             }
+}
+
+export async function deleteProduct_Order(transactionID, productID){
+    const [prod_ord] = await pool.query(`DELETE FROM product_orders WHERE transactionID = ? AND productID = ?`, [transactionID, productID])
+    return prod_ord ?? null
 }
 
 export async function getProducts(){
@@ -195,6 +230,11 @@ export async function createProduct(productID, _name, price, menuType, isAvailab
         }
 }
 
+export async function deleteProduct(productID, _name){
+    const [product] = await pool.query(`DELETE FROM products WHERE productID = ? AND _name = ?`, [productID, _name])
+    return product ?? null
+}
+
 export async function getPurchase_Orders(){
     const [rows] = await pool.query(`SELECT * FROM purchase_orders`)
     return rows
@@ -215,6 +255,11 @@ export async function createPurchase_Order(supplierName, ingredientID, quantity,
         quantity,
         dateOrdered
     }
+}
+
+export async function deletePurchase_Order(orderID){
+    const [purch_ord] = await pool.query(`DELETE FROM purchase_orders WHERE orderID = ?`, [orderID])
+    return purch_ord ?? null
 }
 
 export async function getRecipes(){
@@ -238,6 +283,11 @@ export async function createRecipe(recipeID, ingredientID, finishedProductID, in
         }
 }
 
+export async function deleteRecipe(recipeID, finishedProductID){
+    const [reci] = await pool.query(`DELETE FROM recipes WHERE recipeID = ? AND finishedProductID = ?`, [recipeID, finishedProductID])
+    return reci ?? null
+}
+
 export async function getScheduled_Shift(){
     const [rows] = await pool.query(`SELECT * FROM scheduled_shifts`)
     return rows
@@ -259,6 +309,11 @@ export async function createScheduled_Shift(startTime, endTime, shiftRole){
         }
 }
 
+export async function deleteScheduled_Shift(scheduledShiftID){
+    const [sched_sh] = await pool.query(`DELETE FROM scheduled_shifts WHERE scheduledShiftID = ?`, [scheduledShiftID])
+    return sched_sh ?? null
+}
+
 export async function getSection(){
     const [rows] = await pool.query(`SELECT * FROM sections`)
     return rows
@@ -276,6 +331,11 @@ export async function createSection(employeeID){
             sectionID: result.insertId,
             employeeID
         }
+}
+
+export async function deleteSection(sectionID){
+    const [sect] = await pool.query(`DELETE FROM sections WHERE sectionID = ?`, [sectionID])
+    return sect ?? null
 }
 
 export async function getTables(){
@@ -296,6 +356,11 @@ export async function createTable(capacity, sectionID){
             capacity,
             sectionID
         }
+}
+
+export async function deleteTable(tableID){
+    const [table] = await pool.query(`DELETE FROM tables WHERE tableID = ?`, [tableID])
+    return table ?? null
 }
 
 export async function getTimeclock_Entries(){
@@ -321,6 +386,11 @@ export async function createTimeclock_Entry(clockIn, clockOUT, payPeriodID, empl
     }
 }
 
+export async function deleteTimeclock_Entry(entryID){
+    const [time] = await pool.query(`DELETE FROM timeclock_entries WHERE entryID = ?`, [entryID])
+    return time ?? null
+}
+
 export async function getTransactions(){
     const [rows] = await pool.query(`SELECT * FROM transactions`)
     return rows
@@ -344,4 +414,56 @@ export async function createTransaction(tableID, employeeID, customerID, timePla
             tipAmount,
             paymentMethod
         }
+}
+
+export async function deleteTransaction(transactionID){
+    const [trans] = await pool.query(`DELETE FROM transactions WHERE transactionID = ?`, [transactionID])
+    return trans ?? null
+}
+
+export async function getItemsSoldReport(startDate, endDate) {
+    const [result] = await pool.query(
+        `SELECT
+            p._name AS productName,
+            p.price,
+            SUM(po.quantity) AS totalQuantitySold,
+            SUM(po.quantity * p.price) AS totalRevenue
+        FROM product_orders po
+        JOIN products p ON po.productID = p.productID
+        JOIN transactions t ON po.transactionID = t.transactionID
+        WHERE t.timePlaced BETWEEN ? AND ?
+        GROUP BY p.productID, p._name, p.price
+        ORDER BY totalQuantitySold DESC`, [startDate, endDate])
+        return result[0] ?? null
+}
+
+export async function getRevenue_Summary(startDate, endDate){
+    const [rows] = await pool.query(
+        `SELECT
+            COUNT(t.transactionID) AS numberOfTransactions,
+            SUM(t.total) AS totalRevenue,
+            SUM(COALESCE(t.tipAmount, 0)) AS totalTips,
+            AVG(t.total) AS averageTransactionValue
+        FROM transactions t
+        JOIN employees e ON t.employeeID = e.employeeID
+        WHERE t.timePlaced BETWEEN ? AND ?`,
+        [startDate, endDate])
+    return rows[0] ?? null
+}
+
+export async function getRevenueBy_Employee(startDate, endDate){
+    const [rows] = await pool.query(
+        `SELECT
+            e.firstName,
+            e.lastName,
+            COUNT(t.transactionID) AS transactionsHandled,
+            SUM(t.total) AS revenue,
+            SUM(COALESCE(t.tipAmount, 0)) AS tips
+        FROM transactions t
+        JOIN employees e ON t.employeeID = e.employeeID
+        WHERE t.timePlaced BETWEEN ? AND ?
+        GROUP BY e.employeeID, e.firstName, e.lastName
+        ORDER BY revenue DESC`,
+        [startDate, endDate])
+    return rows
 }
