@@ -11,7 +11,7 @@ dataReportsRouter.get('/revenue', async (req, res) => {
     try {
         if (!start || !end) {
             return res.status(400).json({
-                message: "Start and end dates required"
+                message: 'Start and end dates required'
             })
         }
 
@@ -27,7 +27,26 @@ dataReportsRouter.get('/revenue', async (req, res) => {
         })
     } catch (err) {
         res.status(500).json({
-            message: "Server error"
+            message: 'Server error'
+        })
+    }
+})
+
+dataReportsRouter.get('/items-sold', async (req, res) => {
+    const { startDate, endDate } = req.query
+
+    try {
+        if (!startDate || !endDate) {
+            return res.status(400).json({
+                message: 'A start and end date are required'
+            })
+        }
+
+        const rows = await getItemsSoldReport(startDate, endDate)
+        res.json(rows)
+    } catch (err) {
+        res.status(500).json({
+            message: 'Server error'
         })
     }
 })
