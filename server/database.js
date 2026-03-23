@@ -427,7 +427,7 @@ export async function getItemsSoldReport(startDate, endDate) {
             p._name AS productName,
             p.price,
             SUM(po.quantity) AS totalQuantitySold,
-            SUM(po.quantity * p.price) AS totalRevenue
+            ROUND(SUM(po.quantity * p.price), 2) AS totalRevenue
         FROM product_orders po
         JOIN products p ON po.productID = p.productID
         JOIN transactions t ON po.transactionID = t.transactionID
