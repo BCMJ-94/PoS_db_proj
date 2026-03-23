@@ -51,6 +51,10 @@ function NewEmployeeForm({handleSubmit}){
                     <label htmlFor="hourlyRate">Hourly Rate</label>
                     <input type = "text" name = "hourlyRate" id = "hourlyRate" required className = 'border border=[#7ebeeba6] rounded-md px-2'/>
                 </div>
+                <div className = 'flex flex-col gap-1'>
+                    <label htmlFor="password">Password</label>
+                    <input type = "password" name = "password" id = "password" required className = 'border border=[#7ebeeba6] rounded-md px-2'/>
+                </div>
                 <Button type="submit" name="Submit" />
             </form>
         </div>

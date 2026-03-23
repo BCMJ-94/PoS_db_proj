@@ -1,8 +1,10 @@
 import React from "react"
 import NewEmployeeForm from "./new_employee_form.jsx"
 import addNewEmployee from "../../api/addNewEmployee.js"
+import { useAuth } from '../../context/AuthProvider'
 
 function NewEmployee(){
+    const { setEmployee } = useAuth()
     const submitNewEmployee = async ({employeeID, 
         firstName, lastName, dob, hireDate, role, hourlyRates}) => {
             const { data } = await addNewEmployee({employeeID, 
