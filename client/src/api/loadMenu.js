@@ -12,7 +12,6 @@ export default async function loadMenu(options = {}){
             
         }
         return await response.json()
-
     }
     
     catch(error){

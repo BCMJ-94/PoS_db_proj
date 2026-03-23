@@ -1,10 +1,12 @@
 import React from "react"
 import NewEmployeeForm from "./new_employee_form.jsx"
+import addNewEmployee from "../../api/addNewEmployee.js"
 
 function NewEmployee(){
-    const submitNewEmployee = ({employeeID, 
+    const submitNewEmployee = async ({employeeID, 
         firstName, lastName, dob, hireDate, role, hourlyRates}) => {
-            //TODO: post fetch request to backend app.js 
+            const { data } = await addNewEmployee({employeeID, 
+            firstName, lastName, dob, hireDate, role, hourlyRates})
         }
    
     return (
