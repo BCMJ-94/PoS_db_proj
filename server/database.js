@@ -345,3 +345,20 @@ export async function createTransaction(tableID, employeeID, customerID, timePla
             paymentMethod
         }
 }
+
+export async function getItemsSoldReport(startDate, endDate) {
+    const [result] = await pool.query(
+        `SELECT
+            p._name AS productName,
+            p.price,
+            SUM(po.quantity) AS totalQuantitySold,
+            SUM(po.quantity * p.price) AS totalRevenue
+        FROM product_orders po
+        JOIN products p ON po.productID = p.productID
+        JOIN transactions t ON po.transactionID = t.transactionID
+        WHERE t.timePlaced BETWEEN ? AND ?
+        GROUP BY p.productID, p._name, p.price
+        ORDER BY totalQuantitySold DESC`, [startDate, endDate]
+    )
+    return result
+}
