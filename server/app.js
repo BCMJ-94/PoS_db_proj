@@ -18,7 +18,7 @@ app.use(express.json())
 app.use(cors(corsOptions))
 
 const expiration_30_minutes = 1000 * 60 * 30
-/*app.use(session({
+app.use(session({
     secret : process.env.SESSION_KEY,
     resave : false,
     saveUninitialized : false,
@@ -28,7 +28,7 @@ const expiration_30_minutes = 1000 * 60 * 30
         httpOnly : true,
         sameSite: "lax"
     }
-}))*/
+}))
 
 app.use('/employees', employeesRouter)
 app.use(authRouter)
