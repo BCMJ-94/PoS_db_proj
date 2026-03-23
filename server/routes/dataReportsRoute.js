@@ -3,7 +3,7 @@ import { getItemsSoldReport, getRevenue_Summary, getRevenueBy_Employee } from '.
 import isAuthorized from '../utils/auth.js'
 
 const dataReportsRouter = express.Router()
-// dataReportsRouter.use(isAuthorized)
+dataReportsRouter.use(isAuthorized)
 
 dataReportsRouter.get('/revenue', async (req, res) => {
     const { start, end } = req.query
