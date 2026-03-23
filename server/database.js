@@ -358,9 +358,8 @@ export async function getItemsSoldReport(startDate, endDate) {
         JOIN transactions t ON po.transactionID = t.transactionID
         WHERE t.timePlaced BETWEEN ? AND ?
         GROUP BY p.productID, p._name, p.price
-        ORDER BY totalQuantitySold DESC`, [startDate, endDate]
-    )
-    return result
+        ORDER BY totalQuantitySold DESC`, [startDate, endDate])
+        return result[0] ?? null
 }
 
 export async function getRevenue_Summary(startDate, endDate){
