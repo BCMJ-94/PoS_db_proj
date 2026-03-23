@@ -362,3 +362,34 @@ export async function getItemsSoldReport(startDate, endDate) {
     )
     return result
 }
+
+export async function getRevenue_Summary(startDate, endDate){
+    const [rows] = await pool.query(
+        `SELECT
+            COUNT(t.transactionID) AS numberOfTransactions,
+            SUM(t.total) AS totalRevenue,
+            SUM(COALESCE(t.tipAmount, 0)) AS totalTips,
+            AVG(t.total) AS averageTransactionValue
+        FROM transactions t
+        JOIN employees e ON t.employeeID = e.employeeID
+        WHERE t.timePlaced BETWEEN ? AND ?`,
+        [startDate, endDate])
+    return rows[0] ?? null
+}
+
+export async function getRevenueBy_Employee(startDate, endDate){
+    const [rows] = await pool.query(
+        `SELECT
+            e.firstName,
+            e.lastName,
+            COUNT(t.transactionID) AS transactionsHandled,
+            SUM(t.total) AS revenue,
+            SUM(COALESCE(t.tipAmount, 0)) AS tips
+        FROM transactions t
+        JOIN employees e ON t.employeeID = e.employeeID
+        WHERE t.timePlaced BETWEEN ? AND ?
+        GROUP BY e.employeeID, e.firstName, e.lastName
+        ORDER BY revenue DESC`,
+        [startDate, endDate])
+    return rows
+}
