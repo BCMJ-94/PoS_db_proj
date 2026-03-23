@@ -32,7 +32,7 @@ app.use(session({
 
 app.use('/employees', employeesRouter)
 app.use(authRouter)
-app.use('/data-reports', dataReportsRouter)
+app.use('/data-reports', dataReportRouter)
 
 app.get('/', (req, res) => {
     res.send('Hello World')
