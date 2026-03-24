@@ -2,8 +2,10 @@ import React from 'react'
 import NewIngredientForm from './new_ingredient_form'
 
 function NewIngredient(){
-    const submitNewIngredient = ({ingredientID, _name, pricePerUnit}) => {
-        //TODO: post fetch request to backend app.js
+    const submitNewIngredient = async({ingredientID, _name, pricePerUnit}) => {
+        const endpoint = 'http://localhost:3030/' //update with proper path once it exists
+        const req = await fetch(endpoint, {method : 'POST', body : JSON.stringify({ingredientID, _name, pricePerUnit})})
+        const res = await req.text()
     }
     return(
         <div className='flex flex-col items-center justify-center h-screen bg-[rgb(206,226,240)]'>

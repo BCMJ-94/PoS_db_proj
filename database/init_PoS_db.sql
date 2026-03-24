@@ -1,4 +1,6 @@
-
+-- Active: 1773972300148@@127.0.0.1@3306@restauranttestdb
+CREATE DATABASE RestaurantTestDB;
+USE RestaurantTestDB;
 
 CREATE TABLE ingredients(
 	ingredientID INT PRIMARY KEY,
@@ -13,9 +15,8 @@ CREATE TABLE products(
     price FLOAT NOT NULL CONSTRAINT priceCheck CHECK(price > 0),
     menuType SMALLINT,
     isAvailable BOOL NOT NULL,
-    stationID SMALLINT,
+    stationID SMALLINT
 
-	CONSTRAINT priceCheck CHECK (price > 0)
 );
 
 CREATE TABLE transactions(
@@ -90,8 +91,6 @@ CREATE TABLE payroll_records(
 
     PRIMARY KEY (employeeID, payPeriodID)
 );
-
-
 
 CREATE TABLE printers(
 	stationID SMALLINT PRIMARY KEY AUTO_INCREMENT
