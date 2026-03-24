@@ -31,7 +31,6 @@ authRouter.post('/login', async (req, res) => {
             })
         }
 
-
         req.session.regenerate((err) => {
             if (err) {
                 return res.status(500).json({ message : "Session error" }) 
