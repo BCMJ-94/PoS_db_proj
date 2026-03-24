@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { getTable, getTables, createTable } from '../database.js'
+import { getTable, getTables, createTable, updateTable, deleteTable } from '../database.js'
 import isAuthorized from '../utils/auth.js'
 
 const tablesRouter = express.Router()
@@ -49,5 +49,49 @@ tablesRouter.post("/", async (req, res) => {
         })
     }
 })
+
+tablesRouter.put("/:tableID", async (req, res) => {
+    const tableID = req.params.tableID
+    const { capacity, sectionID } = req.body
+
+    try {
+        const table = await getTable(tableID)
+
+        if (!table) {
+            return res.status(404).json({
+                message: "Table not found"
+            })
+        }
+
+        const updatedTable = await updateTable(capacity, sectionID, tableID)
+        res.send(updatedTable)
+    } catch (err) {
+        res.status(500).json({
+            message: "Server error"
+        })
+    }
+})
+
+tablesRouter.delete("/:tableID", async (req, res) => {
+    const tableID = req.params.tableID
+
+    try {
+        const table = await getTable(tableID)
+
+        if (!table) {
+            return res.status(404).json({
+                message: "Table not found"
+            })
+        }
+
+        await deleteTable(tableID)
+        res.sendStatus(204)
+    } catch (err) {
+        res.status(500).json({
+            message: "Server error"
+        })
+    }
+})
+
 
 export default tablesRouter
