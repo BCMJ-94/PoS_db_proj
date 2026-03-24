@@ -18,7 +18,8 @@ export default function AppRoutes() {
             <Route path="/login" element={employee ? <Navigate to="/dashboard" replace /> : <Login />}/>
 
             <Route element={<ProtectedRoutes />} >
-                <Route path="/dashboard" element={<Dashboard/>}/>
+                <Route path="/dashboard" element={<Dashboard/>}/> 
+                <Route path="/newemployee" element = {<NewEmployee/>}/>
             </Route>
 
             <Route path="*" element={<Navigate to={"/login"} replace />}></Route>

@@ -3,10 +3,29 @@ import Button from "../../components/Button.jsx"
 import { useNavigate } from 'react-router-dom'
 
 export default function Dashboard(){
-    
+    const nav = useNavigate() 
+
     const goToOpenTab = () => {
-        console.log("test");
+        try{
+            console.log("redirect to open tab")
+            nav("/openTab", {replace : true})
+        }
+        catch(error){
+            console.log(error.message)
+        }
     }
+
+    const registerNewEmployee = () => {
+        try{
+            console.log("redirect to employee registration")
+            nav("/newemployee", {replace : true})
+        } 
+        catch(error){
+            console.log(error)
+        }
+    }
+
+    const addNewProduct = () => {}
 
     return(
         <>
@@ -15,7 +34,7 @@ export default function Dashboard(){
                     <Button onClick = {goToOpenTab}  type = "button" name = "Open Tab"/>     
                 </div>  
                 <div>
-                    <Button type = "button" name = "Register New Employee"/>
+                    <Button onClick = {registerNewEmployee} type = "button" name = "Register New Employee"/>
                 </div>
                 <div>
                     <Button type  = "button" name  = "Add New Product"/>
