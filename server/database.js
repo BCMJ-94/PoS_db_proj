@@ -46,6 +46,20 @@ export async function deleteEmployee(employeeID){
     return employee ?? null
 }
 
+export async function updateEmployee(firstName, lastName, dateHired, dateOfBirth, shiftRole, hourlyRate, hashedPassword, employeeID){
+    const result = await pool.query(`UPDATE employees SET firstName = ?, lastName = ?, dateHired = ?, dateOfBirth = ?, shiftRole = ?, hourlyRate = ?, hashedPassword = ? WHERE employeeID = ?`, [firstName, lastName, dateHired, dateOfBirth, shiftRole, hourlyRate, hashedPassword, employeeID])
+    return {
+        firstName,
+        lastName,
+        dateHired,
+        dateOfBirth,
+        shiftRole,
+        hourlyRate,
+        hashedPassword,
+        employeeID
+    }
+}
+
 export async function getCustomers(){ // exporting allows it to be used in different files (like app.js)
     const [rows] = await pool.query("SELECT * FROM customers")
     return rows
@@ -82,6 +96,21 @@ export async function deleteCustomer(customerID){
     return customer ?? null
 }
 
+export async function updateCustomer(firstName, lastName, dob, dateJoined, phoneNumber, email, status, rewardPoints, customerID){ // this works!
+    const [result] = await pool.query(`UPDATE customers SET firstName = ?, lastName = ?, dob = ?, dateJoined = ?, phoneNumber = ?, email = ?, status = ?, rewardPoints = ? WHERE customerID = ?`, [firstName, lastName, dob, dateJoined, phoneNumber, email, status, rewardPoints, customerID])
+        return {
+            firstName,
+            lastName,
+            dob,
+            dateJoined,
+            phoneNumber,
+            email,
+            status,
+            rewardPoints,
+            customerID
+        }
+}
+
 export async function getIngredients(){
     const [rows] = await pool.query(`SELECT * FROM ingredients`)
     return rows
@@ -106,6 +135,16 @@ export async function createIngredient(ingredientID, _name, pricePerUnit, quanti
 export async function deleteIngredient(ingredientID, _name){
     const [ingredient] = await pool.query(`DELETE FROM ingredients WHERE ingredientID = ? AND _name = ?`, [ingredientID, _name])
     return ingredient ?? null
+}
+
+export async function updateIngredient(_name, pricePerUnit, quantity, ingredientID){
+    const [result] = await pool.query(`UPDATE ingredients SET _name = ?, pricePerUnit = ?, quantity = ? WHERE ingredientID = ?`, [_name, pricePerUnit, quantity, ingredientID])
+        return {
+            _name,
+            pricePerUnit,
+            quantity,
+            ingredientID
+        }
 }
 
 export async function getPay_Periods(){
@@ -133,6 +172,15 @@ export async function deletePay_Period(payPeriodID){
     return pay_per ?? null
 }
 
+export async function updatePay_Period(startDate, endDate, payPeriodID){
+    const [result] = await pool.query(`UPDATE pay_periods SET startDate = ?, endDate = ? WHERE payPeriodID = ?`, [startDate, endDate, payPeriodID])
+        return {
+            startDate,
+            endDate,
+            payPeriodID
+        }
+}
+
 export async function getPayroll_Records(){
     const [payroll_records] = await pool.query(`SELECT * FROM payroll_records`)
     return payroll_records
@@ -157,6 +205,16 @@ export async function createPayroll_Record(employeeID, payPeriodID, totalHours, 
 export async function deletePayroll_Record(employeeID, payPeriodID){
     const [payr_rec] = await pool.query(`DELETE FROM payroll_records WHERE employeeID = ? AND payPeriodID = ?`, [employeeID, payPeriodID])
     return payr_rec ?? null
+}
+
+export async function updatePayroll_Record(totalHours, totalPay, employeeID, payPeriodID){
+    const [result] = await pool.query(`UPDATE payroll_records SET totalHours = ?, totalPay = ? WHERE payPeriodID = ? AND employeeID = ?`, [totalHours, totalPay, employeeID, payPeriodID])
+            return {
+                totalHours,
+                totalPay,
+                payPeriodID,
+                employeeID,
+            }
 }
 
 export async function getPrinters(){
@@ -207,6 +265,15 @@ export async function deleteProduct_Order(transactionID, productID){
     return prod_ord ?? null
 }
 
+export async function updateProduct_Order(quantity, productID, transactionID){
+    const [result] = await pool.query(`UPDATE product_orders SET quantity = ? WHERE productID = ? AND transactionID = ?`, [quantity, productID, transactionID])
+            return {
+                quantity,
+                productID,
+                transactionID
+            }
+}
+
 export async function getProducts(){
     const [rows] = await pool.query(`SELECT * FROM products`)
     return rows
@@ -233,6 +300,18 @@ export async function createProduct(productID, _name, price, menuType, isAvailab
 export async function deleteProduct(productID, _name){
     const [product] = await pool.query(`DELETE FROM products WHERE productID = ? AND _name = ?`, [productID, _name])
     return product ?? null
+}
+
+export async function updateProduct(_name, price, menuType, isAvailable, stationID, productID){ // we need to change stationID to stationType, no foreign key required
+    const [result] = await pool.query(`UPDATE products SET _name = ?, price = ?, menuType = ?, isAvailable = ?, stationID = ? WHERE productID = ?`, [_name, price, menuType, isAvailable, stationID, productID])
+        return {
+            _name,
+            price,
+            menuType,
+            isAvailable,
+            stationID,
+            productID
+        }
 }
 
 export async function getPurchase_Orders(){
@@ -262,6 +341,17 @@ export async function deletePurchase_Order(orderID){
     return purch_ord ?? null
 }
 
+export async function updatePurchase_Order(supplierName, ingredientID, quantity, dateOrdered, orderID){ // i think we need a foreign key for ingredientID here
+    const [result] = await pool.query(`UPDATE purchase_orders SET supplierName = ?, ingredientID = ?, quantity = ?, dateOrdered = ? WHERE orderiD = ?`, [supplierName, ingredientID, quantity, dateOrdered, orderID])
+    return{
+        supplierName,
+        ingredientID,
+        quantity,
+        dateOrdered,
+        orderID
+    }
+}
+
 export async function getRecipes(){
     const [rows] = await pool.query(`SELECT * FROM recipes`)
     return rows
@@ -286,6 +376,16 @@ export async function createRecipe(recipeID, ingredientID, finishedProductID, in
 export async function deleteRecipe(recipeID, finishedProductID){
     const [reci] = await pool.query(`DELETE FROM recipes WHERE recipeID = ? AND finishedProductID = ?`, [recipeID, finishedProductID])
     return reci ?? null
+}
+
+export async function updateRecipe(ingredientID, finishedProductID, intermediateProductID, recipeID){ // foreign keys
+    const [result] = await pool.query(`UPDATE recipes SET ingredientID = ?, finishedProductID = ?, intermediateProductID = ? WHERE recipeID= ?`, [ingredientID, finishedProductID, intermediateProductID, recipeID])
+        return{
+            ingredientID,
+            finishedProductID,
+            intermediateProductID,
+            recipeID
+        }
 }
 
 export async function getScheduled_Shift(){
@@ -314,6 +414,16 @@ export async function deleteScheduled_Shift(scheduledShiftID){
     return sched_sh ?? null
 }
 
+export async function updateScheduled_Shift(startTime, endTime, shiftRole, scheduledShiftID){
+    const [result] = await pool.query(`UPDATE scheduled_shifts SET startTime= ?, endTime = ?, shiftRole = ? WHERE scheduledShiftID = ?`, [startTime, endTime, shiftRole, scheduledShiftID])
+        return {
+            startTime,
+            endTime,
+            shiftRole,
+            scheduledShiftID
+        }
+}
+
 export async function getSection(){
     const [rows] = await pool.query(`SELECT * FROM sections`)
     return rows
@@ -336,6 +446,14 @@ export async function createSection(employeeID){
 export async function deleteSection(sectionID){
     const [sect] = await pool.query(`DELETE FROM sections WHERE sectionID = ?`, [sectionID])
     return sect ?? null
+}
+
+export async function updateSection(employeeID, sectionID){
+    const [result] = await pool.query(`UPDATE sections SET employeeID = ? WHERE sectionID = ?`, [employeeID, sectionID])
+        return {
+            employeeID,
+            sectionID
+        }
 }
 
 export async function getTables(){
@@ -361,6 +479,15 @@ export async function createTable(capacity, sectionID){
 export async function deleteTable(tableID){
     const [table] = await pool.query(`DELETE FROM tables WHERE tableID = ?`, [tableID])
     return table ?? null
+}
+
+export async function updateTable(capacity, sectionID, tableID){
+    const [result] = await pool.query(`UPDATE tables SET capacity = ?, sectionID = ? WHERE tableID = ?`, [capacity, sectionID, tableID])
+        return {
+            capacity,
+            sectionID,
+            tableID
+        }
 }
 
 export async function getTimeclock_Entries(){
@@ -391,6 +518,18 @@ export async function deleteTimeclock_Entry(entryID){
     return time ?? null
 }
 
+export async function updateTimeclock_Entry(clockIn, clockOUT, payPeriodID, employeeID, scheduledShiftID, entryID){
+    const [result] = await pool.query(`UPDATE timeclock_entries SET clockIn = ?, clockOUT = ?, payPeriodID = ?, employeeID = ?, scheduledShiftID = ? WHERE entryID = ?`, [clockIn, clockOUT, payPeriodID, employeeID, scheduledShiftID, entryID])
+    return {
+        clockIn,
+        clockOUT,
+        payPeriodID,
+        employeeID,
+        scheduledShiftID,
+        entryID
+    }
+}
+
 export async function getTransactions(){
     const [rows] = await pool.query(`SELECT * FROM transactions`)
     return rows
@@ -419,6 +558,20 @@ export async function createTransaction(tableID, employeeID, customerID, timePla
 export async function deleteTransaction(transactionID){
     const [trans] = await pool.query(`DELETE FROM transactions WHERE transactionID = ?`, [transactionID])
     return trans ?? null
+}
+
+export async function updateTransaction(tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod, transactionID){
+    const [result] = await pool.query(`UPDATE transactions SET tableID = ?, employeeID = ?, customerID = ?, timePlaced = ?, total = ?, tipAmount = ?, paymentMethod = ? WHERE transactionID = ?`, [tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod, transactionID])
+        return {
+            tableID,
+            employeeID,
+            customerID,
+            timePlaced,
+            total,
+            tipAmount,
+            paymentMethod,
+            transactionID
+        }
 }
 
 export async function getItemsSoldReport(startDate, endDate) {
