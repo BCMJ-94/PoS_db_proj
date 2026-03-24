@@ -16,7 +16,7 @@ export default async function addNewEmployee({firstName, lastName, dateHired,
                 err.message || `HTTP Error: ${response.status}`
             );
         }
-        const data = await response.text()
+        const data = await response
         console.log(data)
     }
 
