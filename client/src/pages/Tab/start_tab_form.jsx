@@ -1,11 +1,11 @@
 import React from 'react'
-import Button from '../../components.Button.jsx'
+import Button from '../../components/Button.jsx'
 
 export default function OpenTabForm({handleSubmit}){
     const onSubmit = (e) => {
-        const form = new FormData(e.target)
         const date = new Date()
         const datetimePlaced = date.toISOString()
+        const form = new FormData(e.target)
         handleSubmit({
             tableID : form.get('tableID'),
             employeeID : form.get('employeeID'),
@@ -23,12 +23,13 @@ export default function OpenTabForm({handleSubmit}){
                 </div>
                 <div className = 'flex flex-col gap-1'>
                     <label htmlFor = "employeeID">Employee ID</label>
-                    <input type = "text" name = "employeeID" id = "employeeID" required className = 'border border-[#7ebeeba6] rounded-md px-2'/>
+                    <input type = "number" name = "employeeID" id = "employeeID" required className = 'border border-[#7ebeeba6] rounded-md px-2'/>
                 </div>
                 <div className = 'flex flex-col gap-1'>
                     <label htmlFor = "customerID">Customer ID</label>
-                    <input type = "text" name = "customerID" id = "customerID" required className = 'border border-[#7ebeeba6] rounded-md px-2'/>
+                    <input type = "number" name = "customerID" id = "customerID" required className = 'border border-[#7ebeeba6] rounded-md px-2'/>
                 </div>
+                <Button type = "submit" name = "Submit"/>
 
         </div>
     );
