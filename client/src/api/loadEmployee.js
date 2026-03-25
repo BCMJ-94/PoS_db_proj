@@ -1,6 +1,7 @@
+import { API_URL } from "./baseUrl";
 
 export async function loadEmployee() {
-    const endpoint = 'http://localhost:3030/dashboard';
+    const endpoint = `${API_URL}/dashboard`;
     const response = await fetch(endpoint, {
         credentials: "include",
     });
