@@ -11,7 +11,14 @@ export default function OpenTab(){
             timePlaced
         }
     ) => {
-        const data = await openTab(tableID, employeeID, customerID, timePlaced)
+        try{
+
+            const { data } = await openTab(tableID, employeeID, customerID, timePlaced)
+            console.log("attempted tab open")
+        }
+        catch(err){
+            console.log(err)
+        }
 
     }
     return (

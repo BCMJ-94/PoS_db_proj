@@ -3,11 +3,10 @@ export default async function openTab(tableID,
     employeeID, customerID, timePlaced){
     const endpoint = 'http://localhost:3030/transactions'
 
-    try{
         const req = {
             method : 'POST',
             headers : {
-                'content-type' : 'application/json'
+                'Content-Type' : 'application/json'
             },
             credentials : 'include',
             body : JSON.stringify({
@@ -18,19 +17,15 @@ export default async function openTab(tableID,
             })
 
         }
-        const res = await fetch(endpoint, request)
-        const data = await response.json().catch()(() => ({})) 
-        if (!response.ok){
+        const res = await fetch(endpoint, req)
+        const data = await res.json().catch()(() => ({})) 
+        if (!res.ok){
             throw new Error (
-                data.message || `HTTP Error: ${response.status}`
+                data.message || `HTTP Error: ${res.status}`
         );
     }
-    }
-
-    catch(error){
-        console.log(error)
-    }
-
+    
+    console.log(data.body)
     return {
         data : data
     }

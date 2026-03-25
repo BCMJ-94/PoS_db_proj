@@ -8,7 +8,7 @@ export default function Dashboard(){
     const goToOpenTab = () => {
         try{
             console.log("redirect to open tab")
-            nav("/openTab", {replace : true})
+            nav("/Tab", {replace : true})
         }
         catch(error){
             console.log(error.message)

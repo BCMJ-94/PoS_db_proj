@@ -1,5 +1,7 @@
 import React from 'react'
 import Button from '../../components/Button.jsx'
+import '../../index.css'
+
 
 export default function OpenTabForm({handleSubmit}){
     const onSubmit = (e) => {
@@ -16,7 +18,7 @@ export default function OpenTabForm({handleSubmit}){
 
     return (
         <div>
-            <form method = "post" onSubmit={onSubmit} className = 'flex flex-col items-center gap-5'></form>
+            <form method = "post" onSubmit={onSubmit} className = 'flex flex-col items-center gap-5'>
                 <div className = 'flex flex-col gap-1'>
                     <label htmlFor = "tableID">Table ID</label>
                     <input type = "number" name = "tableID" id = "tableID" required className = 'border border-[#7ebeeba6] rounded-md px-2'/>
@@ -30,6 +32,7 @@ export default function OpenTabForm({handleSubmit}){
                     <input type = "number" name = "customerID" id = "customerID" required className = 'border border-[#7ebeeba6] rounded-md px-2'/>
                 </div>
                 <Button type = "submit" name = "Submit"/>
+                </form>
 
         </div>
     );

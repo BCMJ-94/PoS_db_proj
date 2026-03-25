@@ -16,7 +16,6 @@ function NewEmployeeForm({handleSubmit}){
             hourlyRate : form.get('hourlyRate'),
             password : form.get('password')
         })
-
     }
 
     return(
