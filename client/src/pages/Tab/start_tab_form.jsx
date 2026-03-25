@@ -1,12 +1,11 @@
 import React from 'react'
 import Button from '../../components/Button.jsx'
-import '../../index.css'
 
 
 export default function OpenTabForm({handleSubmit}){
     const onSubmit = (e) => {
         const date = new Date()
-        const datetimePlaced = date.toISOString()
+        const datetimePlaced = date.toISOString().slice(0,19).replace('T', ' ')
         const form = new FormData(e.target)
         handleSubmit({
             tableID : form.get('tableID'),
