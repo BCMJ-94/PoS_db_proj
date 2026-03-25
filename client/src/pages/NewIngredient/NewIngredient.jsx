@@ -1,10 +1,11 @@
 import React from 'react'
 import NewIngredientForm from './new_ingredient_form'
 import NavBar from '../../components/NavBar'
+import { API_URL } from '../../api/baseUrl'
 
 function NewIngredient(){
     const submitNewIngredient = async({ingredientID, _name, pricePerUnit}) => {
-        const endpoint = 'http://localhost:3030/' //update with proper path once it exists
+        const endpoint = `${API_URL}` //update with proper path once it exists
         const req = await fetch(endpoint, {method : 'POST', body : JSON.stringify({ingredientID, _name, pricePerUnit})})
         const res = await req.text()
     }

@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { getTable, getTables, createTable, updateTable, deleteTable } from '../database.js'
+import { getTable, getTables, createTable, updateTable, deleteTable, getCurrentTransactionByTable } from '../database.js'
 import isAuthorized from '../utils/auth.js'
 
 const tablesRouter = express.Router()
@@ -18,13 +18,41 @@ tablesRouter.get("/", async (req, res) => {
     }
 })
 
+tablesRouter.get("/:tableID/current-transaction", async (req, res) => {
+    const tableID = req.params.tableID
+
+    try {
+        const table = await getTable(tableID)
+
+        if (!table) {
+            return res.status(404).json({
+                message: "Table not found"
+            })
+        }
+
+        const transaction = await getCurrentTransactionByTable(tableID)
+
+        if (!transaction) {
+            return res.status(404).json({
+                message: "Current transaction not found"
+            })
+        }
+
+        return res.send(transaction)
+    } catch (err) {
+        return res.status(500).json({
+            message: "Server error"
+        })
+    }
+})
+
 tablesRouter.get("/:tableID", async (req, res) => {
     const tableID = req.params.tableID
     try {
         const table = await getTable(tableID)
 
         if (!table) {
-            res.status(404).json({
+            return res.status(404).json({
                 message: "Table not found"
             })
         }
@@ -92,6 +120,5 @@ tablesRouter.delete("/:tableID", async (req, res) => {
         })
     }
 })
-
 
 export default tablesRouter

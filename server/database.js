@@ -155,7 +155,7 @@ export async function getPay_Periods(){
 export async function getCurrentPayPeriod() {
     const [rows] = await pool.query(
         `
-        SELECT payPeriodID
+        SELECT payPeriodID, startDate, endDate
         FROM pay_periods
         WHERE CURDATE() BETWEEN startDate AND endDate
         LIMIT 1
@@ -173,11 +173,11 @@ export async function getPay_Period(payPeriodID){
 export async function createPay_Period(startDate, endDate){
     const [result] = await pool.query(`INSERT INTO pay_periods (startDate, endDate)
     VALUES (? ,?)`, [startDate, endDate])
-        return {
-            payPeriodID: result.insertId,
-            startDate,
-            endDate
-        }
+    return {
+        payPeriodID: result.insertId,
+        startDate,
+        endDate
+    }
 }
 
 export async function deletePay_Period(payPeriodID){
@@ -579,6 +579,12 @@ export async function getTransactions(){
 
 export async function getTransaction(transactionID){
     const [transactions] = await pool.query(`SELECT * FROM transactions WHERE transactionID = ?`, [transactionID])
+    return transactions[0] ?? null
+}
+
+export async function getCurrentTransactionByTable(tableID){
+    const [transactions] = await pool.query(
+        `SELECT * FROM transactions WHERE tableID = ? AND paymentMethod IS NULL ORDER BY timePlaced DESC LIMIT 1`, [tableID])
     return transactions[0] ?? null
 }
 

@@ -1,7 +1,7 @@
 import React from "react"
 import NewEmployeeForm from "./new_employee_form.jsx"
 import addNewEmployee from "../../api/addNewEmployee.js"
-import NavBar from "../../components/NavBar.jsx"
+import NavBar from "../../routes/NavBar.jsx"
 
 function NewEmployee(){
     const submitNewEmployee = async ({ 
