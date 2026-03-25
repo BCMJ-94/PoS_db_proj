@@ -28,7 +28,7 @@ app.use(express.json())
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://your-frontend.vercel.app",
+  "https://po-s-db-proj.vercel.app",
 ];
 
 app.use(
