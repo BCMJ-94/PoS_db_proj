@@ -587,7 +587,7 @@ export async function getItemsSoldReport(startDate, endDate) {
         WHERE t.timePlaced BETWEEN ? AND ?
         GROUP BY p.productID, p._name, p.price
         ORDER BY totalQuantitySold DESC`, [startDate, endDate])
-        return result[0] ?? null
+        return result ?? []
 }
 
 export async function getRevenue_Summary(startDate, endDate){
@@ -619,4 +619,39 @@ export async function getRevenueBy_Employee(startDate, endDate){
         ORDER BY revenue DESC`,
         [startDate, endDate])
     return rows
+}
+
+export async function getTopSpenders(startDate, endDate) {
+    const [result] = await pool.query(
+        `SELECT
+            c.customerID, c.firstName, c.lastName, c.rewardPoints,
+            COUNT(t.transactionID) AS totalVisits,
+            ROUND(SUM(t.total), 2) AS totalSpent
+        FROM customers c
+        JOIN transactions t ON c.customerID = t.customerID
+        WHERE t.customerID IS NOT NULL
+        AND t.timePlaced BETWEEN ? AND ?
+        GROUP BY c.customerID
+        ORDER BY totalSpent DESC
+        LIMIT 5`,
+        [startDate, endDate])
+    return result ?? []
+}
+
+export async function getTopVisitors(startDate, endDate) {
+    const [result] = await pool.query(
+        `SELECT
+            c.customerID, c.firstName, c.lastName, c.rewardPoints,
+            COUNT(t.transactionID) AS totalVisits,
+            ROUND(SUM(t.total), 2) AS totalSpent
+        FROM customers c
+        JOIN transactions t ON c.customerID = t.customerID
+        WHERE t.customerID IS NOT NULL
+        AND t.timePlaced BETWEEN ? AND ?
+        GROUP BY c.customerID
+        ORDER BY totalVisits DESC
+        LIMIT 5`,
+        [startDate, endDate]
+    )
+    return result ?? []
 }
