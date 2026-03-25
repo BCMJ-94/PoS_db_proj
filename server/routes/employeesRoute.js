@@ -25,7 +25,7 @@ employeesRouter.get("/:employeeID", async (req, res) => {
         const employee = await getEmployee(employeeID)
 
         if (!employee) {
-            res.status(404).json({
+            return res.status(404).json({
                 message: "Employee not found"
             })
         }
