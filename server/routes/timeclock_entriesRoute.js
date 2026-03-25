@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { getTimeclock_Entry, getTimeclock_Entries, createTimeclock_Entry } from '../database.js'
+import { getTimeclock_Entry, getTimeclock_Entries, createTimeclock_Entry, updateTimeclock_Entry, deleteTimeclock_Entry } from '../database.js'
 import isAuthorized from '../utils/auth.js'
 
 const timeclock_entriesRouter = express.Router()
@@ -43,6 +43,57 @@ timeclock_entriesRouter.post("/", async (req, res) => {
     try {
         const entry = await createTimeclock_Entry(clockIn, clockOUT, payPeriodID, employeeID, scheduledShiftID)
         res.status(201).send(entry)
+    } catch (err) {
+        res.status(500).json({
+            message: "Server error"
+        })
+    }
+})
+
+timeclock_entriesRouter.put("/:entryID", async (req, res) => {
+    const entryID = req.params.entryID
+
+    try {
+        const { clockIn, clockOUT, payPeriodID, employeeID, scheduledShiftID } = req.body
+        const entry = await getTimeclock_Entry(entryID)
+
+        if (!entry) {
+            return res.status(404).json({
+                message: "Entry not found"
+            })
+        }
+
+        const updatedEntry = await updateTimeclock_Entry(
+            clockIn,
+            clockOUT,
+            payPeriodID,
+            employeeID,
+            scheduledShiftID,
+            entryID
+        )
+
+        res.send(updatedEntry)
+    } catch (err) {
+        res.status(500).json({
+            message: "Server error"
+        })
+    }
+})
+
+timeclock_entriesRouter.delete("/:entryID", async (req, res) => {
+    const entryID = req.params.entryID
+
+    try {
+        const entry = await getTimeclock_Entry(entryID)
+
+        if (!entry) {
+            return res.status(404).json({
+                message: "Entry not found"
+            })
+        }
+
+        await deleteTimeclock_Entry(entryID)
+        res.sendStatus(204)
     } catch (err) {
         res.status(500).json({
             message: "Server error"
