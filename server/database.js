@@ -500,13 +500,13 @@ export async function getTimeclock_Entry(entryID){
     return timeclock_entries[0] ?? null
 }
 
-export async function createTimeclock_Entry(clockIn, clockOUT, payPeriodID, employeeID, scheduledShiftID){
-    const [result] = await pool.query(`INSERT INTO timeclock_entries (clockIn, clockOUT, payPeriodID, employeeID, scheduledShiftID)
-    VALUES (?, ?, ?, ?, ?)`, [clockIn, clockOUT, payPeriodID, employeeID, scheduledShiftID])
+export async function createTimeclock_Entry(clockIn, clockOut, payPeriodID, employeeID, scheduledShiftID){
+    const [result] = await pool.query(`INSERT INTO timeclock_entries (clockIn, clockOut, payPeriodID, employeeID, scheduledShiftID)
+    VALUES (?, ?, ?, ?, ?)`, [clockIn, clockOut, payPeriodID, employeeID, scheduledShiftID])
     return {
         entryID: result.insertId,
         clockIn,
-        clockOUT,
+        clockOut,
         payPeriodID,
         employeeID,
         scheduledShiftID
@@ -518,11 +518,11 @@ export async function deleteTimeclock_Entry(entryID){
     return time ?? null
 }
 
-export async function updateTimeclock_Entry(clockIn, clockOUT, payPeriodID, employeeID, scheduledShiftID, entryID){
-    const [result] = await pool.query(`UPDATE timeclock_entries SET clockIn = ?, clockOUT = ?, payPeriodID = ?, employeeID = ?, scheduledShiftID = ? WHERE entryID = ?`, [clockIn, clockOUT, payPeriodID, employeeID, scheduledShiftID, entryID])
+export async function updateTimeclock_Entry(clockIn, clockOut, payPeriodID, employeeID, scheduledShiftID, entryID){
+    const [result] = await pool.query(`UPDATE timeclock_entries SET clockIn = ?, clockOut = ?, payPeriodID = ?, employeeID = ?, scheduledShiftID = ? WHERE entryID = ?`, [clockIn, clockOut, payPeriodID, employeeID, scheduledShiftID, entryID])
     return {
         clockIn,
-        clockOUT,
+        clockOut,
         payPeriodID,
         employeeID,
         scheduledShiftID,
@@ -587,7 +587,7 @@ export async function getItemsSoldReport(startDate, endDate) {
         WHERE t.timePlaced BETWEEN ? AND ?
         GROUP BY p.productID, p._name, p.price
         ORDER BY totalQuantitySold DESC`, [startDate, endDate])
-        return result[0] ?? null
+        return result ?? []
 }
 
 export async function getRevenue_Summary(startDate, endDate){
@@ -619,4 +619,39 @@ export async function getRevenueBy_Employee(startDate, endDate){
         ORDER BY revenue DESC`,
         [startDate, endDate])
     return rows
+}
+
+export async function getTopSpenders(startDate, endDate) {
+    const [result] = await pool.query(
+        `SELECT
+            c.customerID, c.firstName, c.lastName, c.rewardPoints,
+            COUNT(t.transactionID) AS totalVisits,
+            ROUND(SUM(t.total), 2) AS totalSpent
+        FROM customers c
+        JOIN transactions t ON c.customerID = t.customerID
+        WHERE t.customerID IS NOT NULL
+        AND t.timePlaced BETWEEN ? AND ?
+        GROUP BY c.customerID
+        ORDER BY totalSpent DESC
+        LIMIT 5`,
+        [startDate, endDate])
+    return result ?? []
+}
+
+export async function getTopVisitors(startDate, endDate) {
+    const [result] = await pool.query(
+        `SELECT
+            c.customerID, c.firstName, c.lastName, c.rewardPoints,
+            COUNT(t.transactionID) AS totalVisits,
+            ROUND(SUM(t.total), 2) AS totalSpent
+        FROM customers c
+        JOIN transactions t ON c.customerID = t.customerID
+        WHERE t.customerID IS NOT NULL
+        AND t.timePlaced BETWEEN ? AND ?
+        GROUP BY c.customerID
+        ORDER BY totalVisits DESC
+        LIMIT 5`,
+        [startDate, endDate]
+    )
+    return result ?? []
 }

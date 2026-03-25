@@ -24,7 +24,7 @@ purchase_ordersRouter.get("/:orderID", async (req, res) => {
         const order = await getPurchase_Order(orderID)
 
         if (!order) {
-            res.status(404).json({
+            return res.status(404).json({
                 message: "Order not found"
             })
         }
@@ -55,7 +55,7 @@ purchase_ordersRouter.put("/", async (req, res) => {
 
     try {
         const puord = await updatePurchase_Order(supplierName, ingredientID, quantity, dateOrdered, orderID)
-        res.status(201).send(puord)
+        res.status(200).send(puord)
     } catch (err) {
         res.status(500).json({
             message: "Server error"
@@ -64,12 +64,12 @@ purchase_ordersRouter.put("/", async (req, res) => {
 })
 
 purchase_ordersRouter.delete("/", async (req, res) => {
-    const {employeeID} = req.body
+    const { orderID } = req.body
 
-    try{
-        const puord = await deletePurchase_Order(puord)
-        res.status(201).send(puord)
-    } catch (err){
+    try {
+        await deletePurchase_Order(orderID)
+        res.sendStatus(204)
+    } catch (err) {
         res.status(500).json({
             message: "Server error"
         })

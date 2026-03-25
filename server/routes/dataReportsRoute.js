@@ -1,5 +1,5 @@
 import express from 'express'
-import { getItemsSoldReport, getRevenue_Summary, getRevenueBy_Employee } from '../database.js'
+import { getItemsSoldReport, getRevenue_Summary, getRevenueBy_Employee, getTopSpenders, getTopVisitors } from '../database.js'
 import isAuthorized from '../utils/auth.js'
 
 const dataReportsRouter = express.Router()
@@ -31,6 +31,28 @@ dataReportsRouter.get('/items-sold', async (req, res) => {
         res.json(rows)
     } catch (err) {
         res.status(500).json({ message: 'Server error' })
+    }
+})
+
+dataReportsRouter.get('/top-spenders', async (req, res) => {
+    try {
+        const { startDate, endDate } = req.query;
+        const result = await getTopSpenders(startDate, endDate);
+        res.json(result);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to get top spenders' });
+    }
+})
+
+dataReportsRouter.get('/top-visitors', async (req, res) => {
+    try {
+        const { startDate, endDate } = req.query;
+        const result = await getTopVisitors(startDate, endDate);
+        res.json(result);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to get top visitors' });
     }
 })
 

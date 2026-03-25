@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { getRecipe, getRecipes, createRecipe, updateRecipe } from '../database.js'
+import { getRecipe, getRecipes, createRecipe, updateRecipe, deleteRecipe } from '../database.js'
 import isAuthorized from '../utils/auth.js'
 
 const recipesRouter = express.Router()
@@ -24,7 +24,7 @@ recipesRouter.get("/:recipeID", async (req, res) => {
         const recipe = await getRecipe(recipeID)
 
         if (!recipe) {
-            res.status(404).json({
+            return res.status(404).json({
                 message: "Recipe not found"
             })
         }
@@ -56,6 +56,19 @@ recipesRouter.put("/", async (req, res) => {
     try {
         const rec = await updateRecipe(ingredientID, finishedProductID, intermediateProductID, recipeID)
         res.status(201).send(rec)
+    } catch (err) {
+        res.status(500).json({
+            message: "Server error"
+        })
+    }
+})
+
+recipesRouter.delete("/", async (req, res) => {
+    const { recipeID, finishedProductID } = req.body
+
+    try {
+        await deleteRecipe(recipeID, finishedProductID)
+        res.sendStatus(204)
     } catch (err) {
         res.status(500).json({
             message: "Server error"

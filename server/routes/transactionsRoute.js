@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { getTransaction, getTransactions, createTransaction, updateTransaction } from '../database.js'
+import { getTransaction, getTransactions, createTransaction, updateTransaction, deleteTransaction } from '../database.js'
 import isAuthorized from '../utils/auth.js'
 
 const transactionsRouter = express.Router()
@@ -24,7 +24,7 @@ transactionsRouter.get("/:transactionID", async (req, res) => {
         const transaction = await getTransaction(transactionID)
 
         if (!transaction) {
-            res.status(404).json({
+            return res.status(404).json({
                 message: "Transaction not found"
             })
         }
@@ -56,6 +56,19 @@ transactionsRouter.put("/", async (req, res) => {
     try {
         const trans = await updateTransaction(tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod, transactionID)
         res.status(201).send(trans)
+    } catch (err) {
+        res.status(500).json({
+            message: "Server error"
+        })
+    }
+})
+
+transactionsRouter.delete("/", async (req, res) => {
+    const { transactionID } = req.body
+
+    try {
+        await deleteTransaction(transactionID)
+        res.sendStatus(204)
     } catch (err) {
         res.status(500).json({
             message: "Server error"
