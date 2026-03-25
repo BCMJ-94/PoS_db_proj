@@ -37,7 +37,10 @@ authRouter.post('/login', async (req, res) => {
             }
 
             req.session.employee = {
-                employeeID : employee.employeeID
+                employeeID : employee.employeeID,
+                firstName : employee.firstName,
+                lastName : employee.lastName,
+                shiftRole : employee.shiftRole
             }
 
             req.session.save((err2) => {
