@@ -500,13 +500,13 @@ export async function getTimeclock_Entry(entryID){
     return timeclock_entries[0] ?? null
 }
 
-export async function createTimeclock_Entry(clockIn, clockOUT, payPeriodID, employeeID, scheduledShiftID){
-    const [result] = await pool.query(`INSERT INTO timeclock_entries (clockIn, clockOUT, payPeriodID, employeeID, scheduledShiftID)
-    VALUES (?, ?, ?, ?, ?)`, [clockIn, clockOUT, payPeriodID, employeeID, scheduledShiftID])
+export async function createTimeclock_Entry(clockIn, clockOut, payPeriodID, employeeID, scheduledShiftID){
+    const [result] = await pool.query(`INSERT INTO timeclock_entries (clockIn, clockOut, payPeriodID, employeeID, scheduledShiftID)
+    VALUES (?, ?, ?, ?, ?)`, [clockIn, clockOut, payPeriodID, employeeID, scheduledShiftID])
     return {
         entryID: result.insertId,
         clockIn,
-        clockOUT,
+        clockOut,
         payPeriodID,
         employeeID,
         scheduledShiftID
@@ -518,11 +518,11 @@ export async function deleteTimeclock_Entry(entryID){
     return time ?? null
 }
 
-export async function updateTimeclock_Entry(clockIn, clockOUT, payPeriodID, employeeID, scheduledShiftID, entryID){
-    const [result] = await pool.query(`UPDATE timeclock_entries SET clockIn = ?, clockOUT = ?, payPeriodID = ?, employeeID = ?, scheduledShiftID = ? WHERE entryID = ?`, [clockIn, clockOUT, payPeriodID, employeeID, scheduledShiftID, entryID])
+export async function updateTimeclock_Entry(clockIn, clockOut, payPeriodID, employeeID, scheduledShiftID, entryID){
+    const [result] = await pool.query(`UPDATE timeclock_entries SET clockIn = ?, clockOut = ?, payPeriodID = ?, employeeID = ?, scheduledShiftID = ? WHERE entryID = ?`, [clockIn, clockOut, payPeriodID, employeeID, scheduledShiftID, entryID])
     return {
         clockIn,
-        clockOUT,
+        clockOut,
         payPeriodID,
         employeeID,
         scheduledShiftID,
