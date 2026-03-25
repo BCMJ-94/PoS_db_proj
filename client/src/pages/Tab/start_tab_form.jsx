@@ -4,6 +4,8 @@ import Button from '../../components/Button.jsx'
 
 export default function OpenTabForm({handleSubmit}){
     const onSubmit = (e) => {
+        e.preventDefault()
+        
         const date = new Date()
         const datetimePlaced = date.toISOString().slice(0,19).replace('T', ' ')
         const form = new FormData(e.target)

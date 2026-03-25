@@ -152,6 +152,19 @@ export async function getPay_Periods(){
     return rows
 }
 
+export async function getCurrentPayPeriod() {
+    const [rows] = await pool.query(
+        `
+        SELECT payPeriodID
+        FROM pay_periods
+        WHERE CURDATE() BETWEEN startDate AND endDate
+        LIMIT 1
+        `
+    )
+
+    return rows[0] ?? null
+}
+
 export async function getPay_Period(payPeriodID){
     const [pay_periods] = await pool.query(`SELECT * FROM pay_periods WHERE payPeriodID = ?`, [payPeriodID])
     return pay_periods[0] ?? null
@@ -510,6 +523,17 @@ export async function createTimeclock_Entry(clockIn, clockOut, payPeriodID, empl
         payPeriodID,
         employeeID,
         scheduledShiftID
+    }
+}
+
+export async function clockInEmployee(employeeID, payPeriodID, scheduledShift = null) {
+    const [result] = await pool.query(
+        `INSERT INTO timeclock_entries (clockIn, clockOut, payPeriodID, employeeID, scheduledShiftID)VALUES (NOW(), NULL, ?, ?, ?)`,
+        [payPeriodID, employeeID, scheduledShift]
+    )
+
+    return {
+        entryID: result.insertId
     }
 }
 
