@@ -6,7 +6,7 @@ import isAuthorized from '../utils/auth.js'
 
 const employeesRouter = express.Router()
 
-// employeesRouter.use(isAuthorized)
+employeesRouter.use(isAuthorized)
 
 employeesRouter.get("/", async (req, res) => {
     try {
