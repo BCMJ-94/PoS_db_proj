@@ -582,6 +582,12 @@ export async function getTransaction(transactionID){
     return transactions[0] ?? null
 }
 
+export async function getCurrentTransactionByTable(tableID){
+    const [transactions] = await pool.query(
+        `SELECT * FROM transactions WHERE tableID = ? AND paymentMethod IS NULL ORDER BY timePlaced DESC LIMIT 1`, [tableID])
+    return transactions[0] ?? null
+}
+
 export async function createTransaction(tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod){
     const [result] = await pool.query(`INSERT INTO transactions (tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod)
     VALUES (?, ?, ?, ?, ?, ?, ?)`, [tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod])

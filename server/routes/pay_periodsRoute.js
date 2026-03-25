@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { getPay_Period, getPay_Periods, createPay_Period, updatePay_Period, deletePay_Period } from '../database.js'
+import { getPay_Period, getPay_Periods, createPay_Period, updatePay_Period, deletePay_Period, getCurrentPayPeriod } from '../database.js'
 import isAuthorized from '../utils/auth.js'
 
 const pay_periodsRouter = express.Router()
@@ -18,13 +18,33 @@ pay_periodsRouter.get("/", async (req, res) => {
     }
 })
 
+pay_periodsRouter.get("/current", async (req, res) => {
+    try {
+        const payPeriod = await getCurrentPayPeriod()
+
+        if (!payPeriod) {
+            return res.status(404).json({
+                message: "Could not find pay period"
+            })
+        }
+
+        return res.status(200).json({
+            payPeriod: payPeriod
+        })
+    } catch(err) {
+        return res.status(500).json({
+            message: "Server error"
+        })
+    }
+})
+
 pay_periodsRouter.get("/:payPeriodID", async (req, res) => {
     const payPeriodID = req.params.payPeriodID
     try {
         const period = await getPay_Period(payPeriodID)
 
         if (!period) {
-            res.status(404).json({
+            return res.status(404).json({
                 message: "Pay period not found"
             })
         }
