@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { getCustomer, getCustomers, createCustomer } from '../database.js'
+import { getCustomer, getCustomers, createCustomer, updateCustomer, deleteCustomer } from '../database.js'
 import isAuthorized from '../utils/auth.js'
 
 const customersRouter = express.Router()
@@ -44,6 +44,32 @@ customersRouter.post("/", async (req, res) => {
         const customer = await createCustomer(firstName, lastName, dob, dateJoined, phoneNumber, email, status, rewardPoints)
         res.status(201).send(customer)
     } catch (err) {
+        res.status(500).json({
+            message: "Server error"
+        })
+    }
+})
+
+customersRouter.put("/", async (req, res) => {
+    const {firstName, lastName, dob, dateJoined, phoneNumber, email, status, rewardPoints, customerID} = req.body
+
+    try {
+        const cust = await updateCustomer(firstName, lastName, dob, dateJoined, phoneNumber, email, status, rewardPoints, customerID)
+        res.status(201).send(cust)
+    } catch (err) {
+        res.status(500).json({
+            message: "Server error"
+        })
+    }
+})
+
+customersRouter.delete("/", async (req, res) => {
+    const {customerID} = req.body
+
+    try{
+        const cust = await deleteCustomer(customerID)
+        res.status(201).send(cust)
+    } catch (err){
         res.status(500).json({
             message: "Server error"
         })

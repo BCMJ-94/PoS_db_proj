@@ -1,6 +1,7 @@
 import React from 'react'
 import Button from "../../components/Button.jsx"
 import { useNavigate } from 'react-router-dom'
+import NavBar from '../../components/NavBar.jsx'
 
 export default function Dashboard(){
     const nav = useNavigate() 
@@ -29,6 +30,7 @@ export default function Dashboard(){
 
     return(
         <>
+            <NavBar />
            <div style = {{display: "flex", alignItems : "center" , height : "100%"}}>
                 <div>
                     <Button onClick = {goToOpenTab}  type = "button" name = "Open Tab"/>     
