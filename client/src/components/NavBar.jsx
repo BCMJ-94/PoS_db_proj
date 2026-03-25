@@ -35,10 +35,13 @@ export default function NavBar() {
             <div className="flex flex-row gap-7">
                 <NavLink to={'/opentab'}>Tab</NavLink>
                 <NavLink to={'/newemployee'}>New Employee</NavLink>
+                <NavLink to={'/timeclock'}>Time Clock</NavLink>
             </div>
 
             <div>
-                <p>{ `${employee.firstName}  ${employee.lastName}` }</p>
+                <NavLink to={'/dashboard'}>
+                    <p>{ `${employee.firstName}  ${employee.lastName}` }</p>
+                </NavLink>
             </div>
         </nav>
     )

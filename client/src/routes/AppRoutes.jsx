@@ -5,6 +5,7 @@ import { useAuth } from "../context/AuthProvider";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import NewEmployee from "../pages/NewEmployee/NewEmployee";
 import OpenTab from "../pages/Tab/startTab";
+import TimeClock from "../pages/TimeClock/TimeClock";
 
 export default function AppRoutes() {
     const { employee, loading } = useAuth()
@@ -21,6 +22,7 @@ export default function AppRoutes() {
                 <Route path="/dashboard" element={<Dashboard/>}/> 
                 <Route path="/newemployee" element = {<NewEmployee/>}/>
                 <Route path="/openTab" element = {<OpenTab/>}/>
+                <Route path="/timeclock" element={<TimeClock/>}/>
             </Route>
 
             <Route path="*" element={<Navigate to={"/login"} replace />}></Route>

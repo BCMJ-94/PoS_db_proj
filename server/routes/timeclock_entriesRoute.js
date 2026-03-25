@@ -38,10 +38,10 @@ timeclock_entriesRouter.get("/:entryID", async (req, res) => {
 })
 
 timeclock_entriesRouter.post("/", async (req, res) => {
-    const { clockIn, clockOUT, payPeriodID, employeeID, scheduledShiftID } = req.body
+    const { clockIn, clockOut, payPeriodID, employeeID, scheduledShiftID } = req.body
 
     try {
-        const entry = await createTimeclock_Entry(clockIn, clockOUT, payPeriodID, employeeID, scheduledShiftID)
+        const entry = await createTimeclock_Entry(clockIn, clockOut, payPeriodID, employeeID, scheduledShiftID)
         res.status(201).send(entry)
     } catch (err) {
         res.status(500).json({
@@ -54,7 +54,7 @@ timeclock_entriesRouter.put("/:entryID", async (req, res) => {
     const entryID = req.params.entryID
 
     try {
-        const { clockIn, clockOUT, payPeriodID, employeeID, scheduledShiftID } = req.body
+        const { clockIn, clockOut, payPeriodID, employeeID, scheduledShiftID } = req.body
         const entry = await getTimeclock_Entry(entryID)
 
         if (!entry) {
@@ -65,7 +65,7 @@ timeclock_entriesRouter.put("/:entryID", async (req, res) => {
 
         const updatedEntry = await updateTimeclock_Entry(
             clockIn,
-            clockOUT,
+            clockOut,
             payPeriodID,
             employeeID,
             scheduledShiftID,
