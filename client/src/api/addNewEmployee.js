@@ -21,7 +21,7 @@ export default async function addNewEmployee(firstName, lastName, dateHired,
         })
         }
             const response = await fetch(endpoint, request)
-            const data = await response.json().catch()(() => ({})) 
+            const data = await response.json().catch(() => ({})) 
             if (!response.ok){
                 throw new Error (
                     data.message || `HTTP Error: ${response.status}`
