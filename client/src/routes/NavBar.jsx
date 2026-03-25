@@ -1,6 +1,6 @@
 import { NavLink } from "react-router";
 import { useAuth } from "../context/AuthProvider";
-import { useEffect } from "react";
+
 export default function NavBar() {
     {/* 
     Server
@@ -36,6 +36,7 @@ export default function NavBar() {
                 <NavLink to={'/opentab'}>Tab</NavLink>
                 <NavLink to={'/newemployee'}>New Employee</NavLink>
                 <NavLink to={'/timeclock'}>Time Clock</NavLink>
+                <NavLink to={'/payrollperiod'}>Payroll Period</NavLink>
             </div>
 
             <div>
