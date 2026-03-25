@@ -33,8 +33,7 @@ export default function OpenTabForm({handleSubmit}){
                     <input type = "number" name = "customerID" id = "customerID" required className = 'border border-[#7ebeeba6] rounded-md px-2'/>
                 </div>
                 <Button type = "submit" name = "Submit"/>
-                </form>
-
+            </form>
         </div>
     );
 }
