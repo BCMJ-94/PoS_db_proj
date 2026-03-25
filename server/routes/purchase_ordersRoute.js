@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { getPurchase_Order, getPurchase_Orders, createPurchase_Order } from '../database.js'
+import { getPurchase_Order, getPurchase_Orders, createPurchase_Order, updatePurchase_Order, deletePurchase_Order } from '../database.js'
 import isAuthorized from '../utils/auth.js'
 
 const purchase_ordersRouter = express.Router()
@@ -44,6 +44,32 @@ purchase_ordersRouter.post("/", async (req, res) => {
         const order = await createPurchase_Order(supplierName, ingredientID, quantity, dateOrdered)
         res.status(201).send(order)
     } catch (err) {
+        res.status(500).json({
+            message: "Server error"
+        })
+    }
+})
+
+purchase_ordersRouter.put("/", async (req, res) => {
+    const {supplierName, ingredientID, quantity, dateOrdered, orderID} = req.body
+
+    try {
+        const puord = await updatePurchase_Order(supplierName, ingredientID, quantity, dateOrdered, orderID)
+        res.status(201).send(puord)
+    } catch (err) {
+        res.status(500).json({
+            message: "Server error"
+        })
+    }
+})
+
+purchase_ordersRouter.delete("/", async (req, res) => {
+    const {employeeID} = req.body
+
+    try{
+        const puord = await deletePurchase_Order(puord)
+        res.status(201).send(puord)
+    } catch (err){
         res.status(500).json({
             message: "Server error"
         })
