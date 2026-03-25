@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { getTransaction, getTransactions, createTransaction } from '../database.js'
+import { getTransaction, getTransactions, createTransaction, updateTransaction } from '../database.js'
 import isAuthorized from '../utils/auth.js'
 
 const transactionsRouter = express.Router()
@@ -43,6 +43,19 @@ transactionsRouter.post("/", async (req, res) => {
     try {
         const transaction = await createTransaction(tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod)
         res.status(201).send(transaction)
+    } catch (err) {
+        res.status(500).json({
+            message: "Server error"
+        })
+    }
+})
+
+transactionsRouter.put("/", async (req, res) => {
+    const {tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod, transactionID} = req.body
+
+    try {
+        const trans = await updateTransaction(tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod, transactionID)
+        res.status(201).send(trans)
     } catch (err) {
         res.status(500).json({
             message: "Server error"

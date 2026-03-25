@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { getRecipe, getRecipes, createRecipe } from '../database.js'
+import { getRecipe, getRecipes, createRecipe, updateRecipe } from '../database.js'
 import isAuthorized from '../utils/auth.js'
 
 const recipesRouter = express.Router()
@@ -43,6 +43,19 @@ recipesRouter.post("/", async (req, res) => {
     try {
         const recipe = await createRecipe(recipeID, ingredientID, finishedProductID, intermediateProductID)
         res.status(201).send(recipe)
+    } catch (err) {
+        res.status(500).json({
+            message: "Server error"
+        })
+    }
+})
+
+recipesRouter.put("/", async (req, res) => {
+    const {ingredientID, finishedProductID, intermediateProductID, recipeID} = req.body
+
+    try {
+        const rec = await updateRecipe(ingredientID, finishedProductID, intermediateProductID, recipeID)
+        res.status(201).send(rec)
     } catch (err) {
         res.status(500).json({
             message: "Server error"
