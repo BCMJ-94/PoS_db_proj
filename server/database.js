@@ -509,8 +509,8 @@ export async function getTimeclock_Entries(){
 }
 
 export async function getTimeclock_Entry(entryID){
-    const [timeclock_entries] = await pool.query(`SELECT * FROM timeclock_entries WHERE entryID = ?`, [entryID])
-    return timeclock_entries[0] ?? null
+    const [rows] = await pool.query(`SELECT * FROM timeclock_entries WHERE entryID = ?`, [entryID])
+    return rows[0] ?? null
 }
 
 export async function createTimeclock_Entry(clockIn, clockOut, payPeriodID, employeeID, scheduledShiftID){
@@ -535,6 +535,24 @@ export async function clockInEmployee(employeeID, payPeriodID, scheduledShift = 
     return {
         entryID: result.insertId
     }
+}
+
+export async function clockOutEmployee(entryID) {
+    const [result] = await pool.query(
+        `UPDATE timeclock_entries SET clockOut = Now() WHERE entryID = ?`,
+        [entryID]
+    )
+
+    return result.affectedRows
+}
+
+export async function getActiveTimeclockEntry(employeeID) {
+    const [rows] = await pool.query(
+        `SELECT entryID FROM timeclock_entries WHERE employeeID = ? AND clockOut is NULL ORDER BY clockIn DESC LIMIT 1`,
+        [employeeID]
+    )
+
+    return rows[0] ?? null
 }
 
 export async function deleteTimeclock_Entry(entryID){
