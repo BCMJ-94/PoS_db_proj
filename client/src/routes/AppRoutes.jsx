@@ -1,7 +1,6 @@
 import { Route, Routes, Navigate } from "react-router-dom";
 import ProtectedRoutes from "./ProtectedRoutes";
 import Login from "../pages/Login/Login";
-import Test from "../Test";
 import { useAuth } from "../context/AuthProvider";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import NewEmployee from "../pages/NewEmployee/NewEmployee";
