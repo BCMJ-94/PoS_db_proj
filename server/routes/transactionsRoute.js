@@ -76,4 +76,41 @@ transactionsRouter.delete("/", async (req, res) => {
     }
 })
 
+transactionsRouter.post("/openTab", async (req, res) => { // this successfully opens a transaction (tab)
+        try{
+
+            // creates the transaction
+            const {tableID} = req.body
+            const employeeID = req.session.employee.employeeID
+            await openTransactionTab(tableID, employeeID)
+
+            res.status(201).json({
+                message: "Transaction successfully created"
+            })
+
+        } catch (err) {
+            res.status(500).json({
+                message: "Transaction creation failed"
+            })
+        }
+    })
+
+    transactionsRouter.post("/addOrder", async (req, res) => {
+        try{
+            const {quantity, productID, tableID} = req.body
+            const transID = await getCurrentTransactionByTable(tableID)
+            await createProduct_Order(quantity, productID, transID)
+
+            res.status(201).json({
+                message: "Order sucessfully added to transaction"
+            })
+
+        } catch (err) {
+            res.status(500).json({
+                message: "Failed to add order to transaction"
+            })
+
+        }
+    })
+
 export default transactionsRouter
