@@ -9,7 +9,6 @@ export default function Login() {
 
     const handleLogin = async ({employeeID, password}) => {
         try {
-
             const { data } = await loginEmployee(employeeID, password)        
             setEmployee(data.employee)
             navigate("/dashboard", { replace: true })

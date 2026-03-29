@@ -1,6 +1,6 @@
 import OpenTabForm from './start_tab_form.jsx'
 import openTab from '../../api/openTab.js'
-import NavBar from '../../components/NavBar.jsx'
+import NavBar from '../../routes/NavBar.jsx'
 
 export default function OpenTab(){
     const open = async(

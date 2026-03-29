@@ -155,7 +155,7 @@ export async function getPay_Periods(){
 export async function getCurrentPayPeriod() {
     const [rows] = await pool.query(
         `
-        SELECT payPeriodID
+        SELECT payPeriodID, startDate, endDate
         FROM pay_periods
         WHERE CURDATE() BETWEEN startDate AND endDate
         LIMIT 1
@@ -173,11 +173,11 @@ export async function getPay_Period(payPeriodID){
 export async function createPay_Period(startDate, endDate){
     const [result] = await pool.query(`INSERT INTO pay_periods (startDate, endDate)
     VALUES (? ,?)`, [startDate, endDate])
-        return {
-            payPeriodID: result.insertId,
-            startDate,
-            endDate
-        }
+    return {
+        payPeriodID: result.insertId,
+        startDate,
+        endDate
+    }
 }
 
 export async function deletePay_Period(payPeriodID){
@@ -509,8 +509,8 @@ export async function getTimeclock_Entries(){
 }
 
 export async function getTimeclock_Entry(entryID){
-    const [timeclock_entries] = await pool.query(`SELECT * FROM timeclock_entries WHERE entryID = ?`, [entryID])
-    return timeclock_entries[0] ?? null
+    const [rows] = await pool.query(`SELECT * FROM timeclock_entries WHERE entryID = ?`, [entryID])
+    return rows[0] ?? null
 }
 
 export async function createTimeclock_Entry(clockIn, clockOut, payPeriodID, employeeID, scheduledShiftID){
@@ -537,6 +537,24 @@ export async function clockInEmployee(employeeID, payPeriodID, scheduledShift = 
     }
 }
 
+export async function clockOutEmployee(entryID) {
+    const [result] = await pool.query(
+        `UPDATE timeclock_entries SET clockOut = Now() WHERE entryID = ?`,
+        [entryID]
+    )
+
+    return result.affectedRows
+}
+
+export async function getActiveTimeclockEntry(employeeID) {
+    const [rows] = await pool.query(
+        `SELECT entryID FROM timeclock_entries WHERE employeeID = ? AND clockOut is NULL ORDER BY clockIn DESC LIMIT 1`,
+        [employeeID]
+    )
+
+    return rows[0] ?? null
+}
+
 export async function deleteTimeclock_Entry(entryID){
     const [time] = await pool.query(`DELETE FROM timeclock_entries WHERE entryID = ?`, [entryID])
     return time ?? null
@@ -561,6 +579,12 @@ export async function getTransactions(){
 
 export async function getTransaction(transactionID){
     const [transactions] = await pool.query(`SELECT * FROM transactions WHERE transactionID = ?`, [transactionID])
+    return transactions[0] ?? null
+}
+
+export async function getCurrentTransactionByTable(tableID){
+    const [transactions] = await pool.query(
+        `SELECT * FROM transactions WHERE tableID = ? AND paymentMethod IS NULL ORDER BY timePlaced DESC LIMIT 1`, [tableID])
     return transactions[0] ?? null
 }
 

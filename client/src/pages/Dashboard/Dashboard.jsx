@@ -1,7 +1,7 @@
 import React from 'react'
 import Button from "../../components/Button.jsx"
 import { useNavigate } from 'react-router-dom'
-import NavBar from '../../components/NavBar.jsx'
+import NavBar from '../../routes/NavBar.jsx'
 
 export default function Dashboard(){
     const nav = useNavigate() 

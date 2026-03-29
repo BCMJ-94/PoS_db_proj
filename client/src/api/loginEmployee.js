@@ -1,6 +1,7 @@
+import { API_URL } from "./baseUrl"
 
 export async function loginEmployee(employeeID, password) {
-    const endpoint = 'http://localhost:3030/login'
+    const endpoint = `${API_URL}/login`
     const request = {
         method: 'POST',
         headers: {

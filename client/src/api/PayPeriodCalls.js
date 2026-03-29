@@ -1,17 +1,22 @@
-import { API_URL } from "./baseUrl"
+import { API_URL } from "./baseUrl";
 
-export async function fetchClockIn() {
-    const endpoint = `${API_URL}-entries/clock-in`
+export async function createPayPeriod({ startDate, endDate }) {
+    const endpoint = `${API_URL}/pay-periods`
     const res = await fetch(endpoint, {
-        method: 'POST',
+        method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         credentials: "include",
-        body: JSON.stringify({})
+        body: JSON.stringify({
+            startDate,
+            endDate
+        })
     })
-    
+
     const data = await res.json().catch(() => ({}))
+
+    console.log(data)
 
     if (!res.ok) {
         throw new Error(`${res.status} ${data.message}`)
@@ -20,20 +25,14 @@ export async function fetchClockIn() {
     return data
 }
 
-export async function fetchClockOut() {
-    const endpoint = `${API_URL}-entries/clock-out`
+export async function getCurrentPayPeriod() {
+    const endpoint = `${API_URL}/pay-periods/current`
     const res = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-            "Content-Type": "application/json"
-        },
-        credentials: "include",
-        body: JSON.stringify({})
+        credentials: "include"
     })
-
     const data = await res.json().catch(() => ({}))
 
-    if(!res.ok) {
+    if (!res.ok) {
         throw new Error(`${res.status} ${data.message}`)
     }
 

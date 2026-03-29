@@ -1,6 +1,8 @@
+import { API_URL } from "./baseUrl";
+
 //TODO: implement options to allow for selective loading of part of menu
 export default async function loadMenu(options = {}){
-    const endpoint = 'http://localhost:3030/menu'
+    const endpoint = `${API_URL}/menu`
     try {
         const response = await fetch(endpoint);
 
