@@ -673,7 +673,7 @@ export async function getTopSpenders(startDate, endDate) {
     const [result] = await pool.query(
         `SELECT
             c.customerID, c.firstName, c.lastName, c.rewardPoints,
-            COUNT(t.transactionID) AS totalVisits,
+            COUNT(DISTINCT DATE(t.timePlaced)) AS totalVisits,
             ROUND(SUM(t.total), 2) AS totalSpent
         FROM customers c
         JOIN transactions t ON c.customerID = t.customerID
@@ -690,7 +690,7 @@ export async function getTopVisitors(startDate, endDate) {
     const [result] = await pool.query(
         `SELECT
             c.customerID, c.firstName, c.lastName, c.rewardPoints,
-            COUNT(t.transactionID) AS totalVisits,
+            COUNT(DISTINCT DATE(t.timePlaced)) AS totalVisits,
             ROUND(SUM(t.total), 2) AS totalSpent
         FROM customers c
         JOIN transactions t ON c.customerID = t.customerID
