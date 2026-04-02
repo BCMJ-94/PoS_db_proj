@@ -593,6 +593,16 @@ export async function getCurrentTransactionIDByTable(tableID){
     return transactionID[0].transactionID ?? null
 }
 
+export async function openTransactionTab(tableID, employeeID){
+    const [result] = await pool.query(`INSERT INTO transactions (tableID, employeeID, timePlaced)
+    VALUES (?, ?, NOW())`, [tableID, employeeID])
+        return {
+            transactionID: result.insertId,
+            tableID,
+            employeeID
+        }
+}
+
 export async function createTransaction(tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod){
     const [result] = await pool.query(`INSERT INTO transactions (tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod)
     VALUES (?, ?, ?, ?, ?, ?, ?)`, [tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod])
