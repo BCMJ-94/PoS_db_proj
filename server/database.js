@@ -60,6 +60,10 @@ export async function updateEmployee(firstName, lastName, dateHired, dateOfBirth
     }
 }
 
+export async function updateEmployeePassword(employeeID, newHashedPassword) {
+    const [result] = await pool.query(`UPDATE employees SET hashedPassword =  ? WHERE employeeID = ?`, [newHashedPassword, employeeID])
+}
+
 export async function getCustomers(){ // exporting allows it to be used in different files (like app.js)
     const [rows] = await pool.query("SELECT * FROM customers")
     return rows
