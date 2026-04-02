@@ -75,8 +75,8 @@ export async function getCustomer(customerID){
 }
 
 export async function getCustomerByEmail(email){
-    const [customers] = await pool.query(`SELECT * FROM customers WHERE email = ?`, [email])
-    return customers[0] ?? null
+    const [customer] = await pool.query('SELECT customerID FROM customers WHERE email = ?', [email])
+    return customer[0] ?? null
 }
 
 export async function createCustomer(firstName, lastName, dob, dateJoined, phoneNumber, email, status, rewardPoints){ // this works!
@@ -620,14 +620,14 @@ WHERE employeeID = ? AND transactionID = ? AND tableID = ?;`, [total, tipAmount,
     }
 }
 
-export async function closeTabWithEmail(total, tipAmount, paymentMethod, employeeID, custID, transID, tableID, ){ // find a way to get customerID and check for loyalties
-    const [result] = await pool.query(`UPDATE transactions SET total = ?, tipAmount = ?, paymentMethod = ? WHERE employeeID = ? AND customerID = ? transactionID = ? AND tableID = ?`, [total, tipAmount, paymentMethod, employeeID, custID, transID, tableID])
+export async function closeTabWithEmail(total, tipAmount, paymentMethod, custID, employeeID, transID, tableID){ // find a way to get customerID and check for loyalties
+    const [result] = await pool.query(`UPDATE transactions SET total = ?, tipAmount = ?, paymentMethod = ?, customerID = ? WHERE employeeID = ? AND transactionID = ? AND tableID = ?`, [total, tipAmount, paymentMethod, custID, employeeID, transID, tableID])
         return {
             total,
             tipAmount,
             paymentMethod,
-            employeeID,
             custID,
+            employeeID,
             transID,
             tableID
         }
