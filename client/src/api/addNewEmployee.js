@@ -32,7 +32,7 @@ export default async function addNewEmployee(firstName, lastName, dateHired,
 
         console.log(data.body)
         return {
-            data:data
+            data
         } 
 
 }

@@ -113,4 +113,34 @@ transactionsRouter.post("/openTab", async (req, res) => { // this successfully o
         }
     })
 
+transactionsRouter.put("/modifyOrder", async (req, res) => {
+    try {
+        const { quantity, productID, tableID } = req.body
+        const transID = await getCurrentTransactionByTable(tableID)
+        await updateProduct_Order(quantity, productID, transID)
+        res.status(200).json({
+            message: "Order successfully updated"
+        })
+    } catch (err) {
+        res.status(500).json({
+            message: "Failed to update order"
+        })
+    }
+})
+
+transactionsRouter.delete("/deleteOrder", async (req, res) => {
+    try {
+        const { productID, tableID } = req.body
+        const transID = await getCurrentTransactionByTable(tableID)
+        await deleteProduct_Order(transID, productID)
+        res.status(200).json({
+            message: "Order successfully removed"
+        })
+    } catch (err) {
+        res.status(500).json({
+            message: "Failed to remove order"
+        })
+    }
+})
+
 export default transactionsRouter
