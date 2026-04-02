@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { getTransaction, getTransactions, createTransaction, updateTransaction, deleteTransaction, getCurrentTransactionIDByTable, createProduct_Order } from '../database.js'
+import { getTransaction, getTransactions, createTransaction, updateTransaction, deleteTransaction, getCurrentTransactionIDByTable, createProduct_Order, openTransactionTab, closeTransactionTab, getCustomerID } from '../database.js'
 import isAuthorized from '../utils/auth.js'
 
 const transactionsRouter = express.Router()
@@ -142,5 +142,43 @@ transactionsRouter.delete("/deleteOrder", async (req, res) => {
         })
     }
 })
+
+
+transactionsRouter.put("/closeTab", async (req, res) => {
+        try{
+            // first we need to grab the employeeID and the correct transaction for that employee
+            const {employeeID, tableID, email, total, tipAmount, paymentMethod} = req.body
+            // const employeeID = req.session.employee.employeeID
+            const transID = await getCurrentTransactionIDByTable(tableID)
+            // then we need to add the rest of the attributes
+            // server is supposed to receive customer email to find the customerID if registered
+            if(!email){
+                await closeTransactionTab(total, tipAmount, paymentMethod, employeeID, transID, tableID)
+            }
+            const customer = await getCustomerID(email)
+
+            // else if(email){
+
+            // }
+            // if(!customer){
+            //     await closeTransactionTab(total, tipAmount, paymentMethod, employeeID, transID, tableID)
+            // }
+            // else{ // if not null, find customerID associated with given email and add reward points
+            //     // update customer in loyalty program with points (one dollar is one point)
+            //     // close tab
+            //     //await closeTabWithEmail(employeeID, custID, transID, tableID, total, tipAmount, paymentMethod)
+            //     console.log("Entering branch")
+
+            // }
+            // once customerID is found, the server is supposed to attach the found ID to the transaction
+            res.status(201).json({
+                message: "Successfully closed transaction"
+            })
+        } catch (err) {
+            res.status(500).json({
+                message: "Failed to close transaction"
+            })
+        }
+    })
 
 export default transactionsRouter

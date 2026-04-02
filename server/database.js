@@ -593,6 +593,61 @@ export async function getCurrentTransactionIDByTable(tableID){
     return transactionID[0].transactionID ?? null
 }
 
+export async function openTransactionTab(tableID, employeeID){
+    const [result] = await pool.query(`INSERT INTO transactions (tableID, employeeID, timePlaced)
+    VALUES (?, ?, NOW())`, [tableID, employeeID])
+        return {
+            transactionID: result.insertId,
+            tableID,
+            employeeID
+        }
+}
+
+export async function closeTransactionTab(total, tipAmount, paymentMethod, employeeID, transID, tableID){ // find a way to get customerID and check for loyalties
+    const [result] = await pool.query(`UPDATE transactions SET total = ?, tipAmount = ?, paymentMethod = ? 
+WHERE employeeID = ? AND transactionID = ? AND tableID = ?;`, [total, tipAmount, paymentMethod, employeeID, transID, tableID])
+    return {
+        total,
+        tipAmount,
+        paymentMethod,
+        employeeID,
+        transID,
+        tableID
+    }
+}
+
+export async function closeTabWithEmail(total, tipAmount, paymentMethod, employeeID, custID, transID, tableID, ){ // find a way to get customerID and check for loyalties
+    const [result] = await pool.query(`UPDATE transactions SET total = ?, tipAmount = ?, paymentMethod = ? WHERE employeeID = ? AND customerID = ? transactionID = ? AND tableID = ?`, [total, tipAmount, paymentMethod, employeeID, custID, transID, tableID])
+        return {
+            total,
+            tipAmount,
+            paymentMethod,
+            employeeID,
+            custID,
+            transID,
+            tableID
+        }
+}
+
+
+export async function getRewardPoints(customerID) {
+    const [rewardPoints] = await pool.query('SELECT rewardPoints FROM customers WHERE customerID = ?', [customerID])
+    return rewardPoints[0].rewardPoints
+}
+
+// const rp = await getRewardPoints(1)
+// console.log(rp) works!
+
+// export async function updateRewardPoints(customerID, total) {
+//     const [result] = await pool.query(`UPDATE customers JOIN transactions on  SET rewardPoints = rewardPoints + total WHERE customerID = 1;`, [customerID, total])
+// }
+
+//const getrp = await getRewardPoints(1)
+// console.log(getrp) works!
+
+// const rp = await updateRewardPoints(1, 3)
+// console.log(rp)
+
 export async function createTransaction(tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod){
     const [result] = await pool.query(`INSERT INTO transactions (tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod)
     VALUES (?, ?, ?, ?, ?, ?, ?)`, [tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod])
