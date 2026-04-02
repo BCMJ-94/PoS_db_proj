@@ -70,7 +70,7 @@ export async function getCustomer(customerID){
     return customers[0] ?? null
 }
 
-export async function getCustomer_Email(email){
+export async function getCustomerByEmail(email){
     const [customers] = await pool.query(`SELECT * FROM customers WHERE email = ?`, [email])
     return customers[0] ?? null
 }

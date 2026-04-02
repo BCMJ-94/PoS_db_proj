@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { getTransaction, getTransactions, createTransaction, updateTransaction, deleteTransaction, getCurrentTransactionIDByTable, createProduct_Order, openTransactionTab, closeTransactionTab, getCustomerID } from '../database.js'
+import { getTransaction, getTransactions, createTransaction, updateTransaction, deleteTransaction, getCurrentTransactionIDByTable, createProduct_Order, openTransactionTab, closeTransactionTab, getCustomerByEmail } from '../database.js'
 import isAuthorized from '../utils/auth.js'
 
 const transactionsRouter = express.Router()
@@ -155,7 +155,7 @@ transactionsRouter.put("/closeTab", async (req, res) => {
             if(!email){
                 await closeTransactionTab(total, tipAmount, paymentMethod, employeeID, transID, tableID)
             }
-            const customer = await getCustomerID(email)
+            const customer = await getCustomerByEmail(email)
 
             // else if(email){
 
