@@ -60,6 +60,10 @@ export async function updateEmployee(firstName, lastName, dateHired, dateOfBirth
     }
 }
 
+export async function updateEmployeePassword(employeeID, newHashedPassword) {
+    const [result] = await pool.query(`UPDATE employees SET hashedPassword =  ? WHERE employeeID = ?`, [newHashedPassword, employeeID])
+}
+
 export async function getCustomers(){ // exporting allows it to be used in different files (like app.js)
     const [rows] = await pool.query("SELECT * FROM customers")
     return rows
@@ -71,8 +75,8 @@ export async function getCustomer(customerID){
 }
 
 export async function getCustomerByEmail(email){
-    const [customers] = await pool.query(`SELECT * FROM customers WHERE email = ?`, [email])
-    return customers[0] ?? null
+    const [customer] = await pool.query('SELECT customerID FROM customers WHERE email = ?', [email])
+    return customer[0] ?? null
 }
 
 export async function createCustomer(firstName, lastName, dob, dateJoined, phoneNumber, email, status, rewardPoints){ // this works!
@@ -616,14 +620,14 @@ WHERE employeeID = ? AND transactionID = ? AND tableID = ?;`, [total, tipAmount,
     }
 }
 
-export async function closeTabWithEmail(total, tipAmount, paymentMethod, employeeID, custID, transID, tableID, ){ // find a way to get customerID and check for loyalties
-    const [result] = await pool.query(`UPDATE transactions SET total = ?, tipAmount = ?, paymentMethod = ? WHERE employeeID = ? AND customerID = ? transactionID = ? AND tableID = ?`, [total, tipAmount, paymentMethod, employeeID, custID, transID, tableID])
+export async function closeTabWithEmail(total, tipAmount, paymentMethod, custID, employeeID, transID, tableID){ // find a way to get customerID and check for loyalties
+    const [result] = await pool.query(`UPDATE transactions SET total = ?, tipAmount = ?, paymentMethod = ?, customerID = ? WHERE employeeID = ? AND transactionID = ? AND tableID = ?`, [total, tipAmount, paymentMethod, custID, employeeID, transID, tableID])
         return {
             total,
             tipAmount,
             paymentMethod,
-            employeeID,
             custID,
+            employeeID,
             transID,
             tableID
         }
@@ -647,6 +651,21 @@ export async function getRewardPoints(customerID) {
 
 // const rp = await updateRewardPoints(1, 3)
 // console.log(rp)
+
+export async function getSectionByEmployeeID(employeeID) {
+    const [section] = await pool.query(`SELECT sectionID FROM employees WHERE employeeID = ?`, [employeeID])
+    return section[0] ?? null
+}
+
+export async function getTablesBySectionID(sectionID) {
+    const [tables] = await pool.query(`SELECT tableID FROM tables WHERE sectionID = ?`, [sectionID])
+    return tables[0] ?? null
+}
+
+export async function tableHasTransaction(tableID) {
+    const [openTrans] = await pool.query(`SELECT transactionID FROM transactions WHERE tableID = ? AND paymentMethod IS NULL`, [tableID])
+    return openTrans[0] ?? null
+}
 
 export async function createTransaction(tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod){
     const [result] = await pool.query(`INSERT INTO transactions (tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod)
