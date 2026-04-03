@@ -652,6 +652,21 @@ export async function getRewardPoints(customerID) {
 // const rp = await updateRewardPoints(1, 3)
 // console.log(rp)
 
+export async function getSectionByEmployeeID(employeeID) {
+    const [section] = await pool.query(`SELECT sectionID FROM employees WHERE employeeID = ?`, [employeeID])
+    return section[0] ?? null
+}
+
+export async function getTablesBySectionID(sectionID) {
+    const [tables] = await pool.query(`SELECT tableID FROM tables WHERE sectionID = ?`, [sectionID])
+    return tables[0] ?? null
+}
+
+export async function tableHasTransaction(tableID) {
+    const [openTrans] = await pool.query(`SELECT transactionID FROM transactions WHERE tableID = ? AND paymentMethod IS NULL`, [tableID])
+    return openTrans[0] ?? null
+}
+
 export async function createTransaction(tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod){
     const [result] = await pool.query(`INSERT INTO transactions (tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod)
     VALUES (?, ?, ?, ?, ?, ?, ?)`, [tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod])
