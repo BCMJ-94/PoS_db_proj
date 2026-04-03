@@ -1,9 +1,9 @@
-//import {API_URL } from '../api/baseUrl.js'
+import {API_URL } from '../api/baseUrl.js'
 
 
 export default async function openTab(tableID){
-//    const endpoint = `${API_URL}/transactions`
-    const endpoint = "http://localhost:3030/transactions"    
+    const endpoint = `${API_URL}/transactions/openTab`
+    
 
     const req = {
         method : 'POST',
@@ -29,5 +29,3 @@ export default async function openTab(tableID){
         data
     }
 }
-
-const test = await openTab(1)
