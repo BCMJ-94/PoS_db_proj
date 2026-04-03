@@ -1,8 +1,11 @@
 import {API_URL } from '../api/baseUrl'
+import {API_URL } from '../api/baseUrl.js'
 
 
 export default async function openTab(tableID){
     const endpoint = `${API_URL}/transactions/openTab`
+    const endpoint = `${API_URL}/transactions/openTab`
+    
 
     const req = {
         method : 'POST',
