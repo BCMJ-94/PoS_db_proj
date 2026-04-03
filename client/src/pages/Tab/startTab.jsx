@@ -5,15 +5,12 @@ import NavBar from '../../routes/NavBar.jsx'
 export default function OpenTab(){
     const open = async(
         {
-            tableID,
-            employeeID,
-            customerID,
-            timePlaced
+            tableID
         }
     ) => {
         try{
 
-            const { data } = await openTab(tableID, employeeID, customerID, timePlaced)
+            const { data } = await openTab(tableID)
             console.log("attempted tab open")
         }
         catch(err){

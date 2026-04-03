@@ -44,6 +44,7 @@ transactionsRouter.post("/", async (req, res) => {
         const transaction = await createTransaction(tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod)
         res.status(201).send(transaction)
     } catch (err) {
+        console.log(err.message)
         res.status(500).json({
             message: "Server error"
         })
@@ -95,7 +96,7 @@ transactionsRouter.post("/openTab", async (req, res) => { // this successfully o
         }
     })
 
-    transactionsRouter.post("/addOrder", async (req, res) => {
+transactionsRouter.post("/addOrder", async (req, res) => {
         try{
             const {quantity, productID, tableID} = req.body
             const transID = await getCurrentTransactionIDByTable(tableID)
@@ -142,7 +143,6 @@ transactionsRouter.delete("/deleteOrder", async (req, res) => {
         })
     }
 })
-
 
 transactionsRouter.put("/closeTab", async (req, res) => {
         try{

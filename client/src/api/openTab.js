@@ -1,8 +1,9 @@
-import {API_URL } from '../api/baseUrl'
+//import {API_URL } from '../api/baseUrl.js'
 
 
-export default async function openTab(tableID, employeeID, customerID, timePlaced){
-    const endpoint = `${API_URL}/transactions`
+export default async function openTab(tableID){
+//    const endpoint = `${API_URL}/transactions`
+    const endpoint = "http://localhost:3030/transactions"    
 
     const req = {
         method : 'POST',
@@ -11,10 +12,7 @@ export default async function openTab(tableID, employeeID, customerID, timePlace
         },
         credentials : 'include',
         body : JSON.stringify({
-            tableID,
-            employeeID,
-            customerID,
-            timePlaced
+            tableID
         })
     }
 
@@ -31,3 +29,5 @@ export default async function openTab(tableID, employeeID, customerID, timePlace
         data
     }
 }
+
+const test = await openTab(1)
