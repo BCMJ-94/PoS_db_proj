@@ -1,7 +1,7 @@
 import {API_URL } from '../api/baseUrl'
 
 
-export default async function openTab(tableID, employeeID, customerID, timePlaced){
+export default async function openTab(tableID){
     const endpoint = `${API_URL}/transactions`
 
     const req = {
@@ -11,10 +11,8 @@ export default async function openTab(tableID, employeeID, customerID, timePlace
         },
         credentials : 'include',
         body : JSON.stringify({
-            tableID,
-            employeeID,
-            customerID,
-            timePlaced
+            tableID
+            
         })
     }
 
