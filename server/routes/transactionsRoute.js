@@ -181,4 +181,24 @@ transactionsRouter.put("/closeTab", async (req, res) => {
         }
     })
 
+transactionsRouter.put("/closeTab2", async (req,res) => {
+    try{
+        const {tableID, email, total, tipAmount, paymentMethod} = req.body
+        const employeeID = req.session.employee.employeeID
+
+
+        res.status(201).json({
+            message : "Successfully closed transaction"
+        })
+
+    }
+
+    catch(error){
+        console.log(error)
+        res.status(500).json({
+            message : "Failed to close transaction"
+        })
+    }
+})
+
 export default transactionsRouter
