@@ -4,7 +4,7 @@ import Button from '../../components/Button.jsx'
 
 export default function OpenTabForm({handleSubmit}){
     const onSubmit = (e) => {
-        
+        e.preventDefault()
         const form = new FormData(e.target)
         handleSubmit({
             tableID : form.get('tableID')
