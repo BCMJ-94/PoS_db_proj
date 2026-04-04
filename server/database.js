@@ -763,3 +763,28 @@ export async function getTopVisitors(startDate, endDate) {
     )
     return result ?? []
 }
+
+export async function getLaborCost(startDate, endDate) {
+    const [result] = await pool.query(
+        `SELECT
+            ROUND(SUM(TIMESTAMPDIFF(MINUTE, tce.clockIn, tce.clockOut) / 60 * e.hourlyRate), 2) AS totalLaborCost
+        FROM timeclock_entries tce
+        JOIN employees e ON tce.employeeID = e.employeeID
+        WHERE tce.clockIn BETWEEN ? AND ?
+        AND tce.clockOut IS NOT NULL`,
+        [startDate, endDate]
+    )
+    return result[0] ?? null
+}
+
+export async function getFoodCost(startDate, endDate) {
+    const [rows] = await pool.query(
+        `SELECT
+            ROUND(SUM(po.quantity * i.pricePerUnit), 2) AS totalFoodCost
+        FROM purchase_orders po
+        JOIN ingredients i ON po.ingredientID = i.ingredientID
+        WHERE po.dateOrdered BETWEEN ? AND ?`,
+        [startDate, endDate]
+    )
+    return rows[0] ?? null
+}
