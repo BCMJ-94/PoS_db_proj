@@ -634,23 +634,9 @@ export async function closeTabWithEmail(total, tipAmount, paymentMethod, custID,
 }
 
 
-export async function getRewardPoints(customerID) {
-    const [rewardPoints] = await pool.query('SELECT rewardPoints FROM customers WHERE customerID = ?', [customerID])
-    return rewardPoints[0].rewardPoints
+export async function updateRewardPoints(total, customerID) {
+    const [rewardPoints] = await pool.query('UPDATE customers SET rewardPoints = rewardPoints + ROUND(?) WHERE customerID = ?', [total, customerID])
 }
-
-// const rp = await getRewardPoints(1)
-// console.log(rp) works!
-
-// export async function updateRewardPoints(customerID, total) {
-//     const [result] = await pool.query(`UPDATE customers JOIN transactions on  SET rewardPoints = rewardPoints + total WHERE customerID = 1;`, [customerID, total])
-// }
-
-//const getrp = await getRewardPoints(1)
-// console.log(getrp) works!
-
-// const rp = await updateRewardPoints(1, 3)
-// console.log(rp)
 
 export async function getSectionByEmployeeID(employeeID) {
     const [section] = await pool.query(`SELECT sectionID FROM employees WHERE employeeID = ?`, [employeeID])
