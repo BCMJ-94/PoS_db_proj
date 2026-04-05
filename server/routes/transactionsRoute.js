@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { getTransaction, getTransactions, createTransaction, updateTransaction, deleteTransaction, getCurrentTransactionIDByTable, createProduct_Order, openTransactionTab, closeTransactionTab, getCustomerByEmail, closeTabWithEmail } from '../database.js'
+import { getTransaction, getTransactions, createTransaction, updateTransaction, deleteTransaction, getCurrentTransactionIDByTable, createProduct_Order, openTransactionTab, closeTransactionTab, getCustomerByEmail, closeTabWithEmail, updateRewardPoints } from '../database.js'
 import isAuthorized from '../utils/auth.js'
 
 const transactionsRouter = express.Router()
@@ -165,6 +165,8 @@ transactionsRouter.put("/closeTab", async (req, res) => {
                 }
                 else{
                     await closeTabWithEmail(total, tipAmount, paymentMethod, customer.customerID, employeeID, transID, tableID)
+                    // grab customerID and total (add the total amount to customerID's reward points) this will prob be done in a couple methods
+                    await updateRewardPoints(total, customer.customerID)
                 }
             }
             res.status(201).json({
