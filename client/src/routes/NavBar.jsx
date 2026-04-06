@@ -33,7 +33,7 @@ export default function NavBar() {
     return (
         <nav className="flex flex-row justify-between bg-[#5eb5f3a6] text-[rgb(255,255,255)] font-bold text-xl items-center py-2 px-5">
             <div className="flex flex-row gap-7">
-                <NavLink to={'/opentab'}>Tab</NavLink>
+                <NavLink to={'/Tab'}>Tab</NavLink>
                 <NavLink to={'/newemployee'}>New Employee</NavLink>
                 <NavLink to={'/timeclock'}>Time Clock</NavLink>
                 <NavLink to={'/payrollperiod'}>Payroll Period</NavLink>
