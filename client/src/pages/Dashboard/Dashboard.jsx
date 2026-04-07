@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import NavBar from '../../routes/NavBar.jsx'
 import loadMenu from '../../api/loadMenu.js'
 
-
+//pretty much just using this to test the api
 export default function Dashboard(){
     const nav = useNavigate() 
 

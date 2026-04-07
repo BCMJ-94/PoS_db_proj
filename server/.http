@@ -84,3 +84,11 @@ content-type : application/json
     "isAvailable" : "1",
     "stationID" : "1"
 }
+
+###get section by employeeID
+GET http://localhost:3030/products
+content-type : application/json
+
+{
+    "employeeID" : 1
+}

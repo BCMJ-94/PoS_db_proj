@@ -442,6 +442,11 @@ export async function getSection(){
     return rows
 }
 
+export async function getSectionByEmployeeID(employeeID){
+    const[section] = await pool.query(`SELECT * FROM sections WHERE employeeID = ?`, [employeeID])
+    return section[0] ?? null
+}
+
 export async function getSections(sectionID){
     const [sections] = await pool.query(`SELECT * FROM sections WHERE sectionID = ?`, [sectionID])
     return sections[0] ?? null
