@@ -2,15 +2,6 @@
 
 ###logout
 POST http://localhost:3030/logout
-
-###login
-POST http://localhost:3030/login
-content-type : application/json
-
-{
-   "employeeID" : "1",
-   "password" : "testpass" 
-}
  
 ###add employee
 POST http://localhost:3030/employees
@@ -86,9 +77,18 @@ content-type : application/json
 }
 
 ###get section by employeeID
-GET http://localhost:3030/products
+GET http://localhost:3030/tables/employeeTables
 content-type : application/json
 
 {
     "employeeID" : 1
+}
+
+###login
+POST http://localhost:3030/login
+content-type : application/json
+
+{
+   "employeeID" : "1",
+   "password" : "testpass" 
 }

@@ -1,11 +1,12 @@
 import express from 'express'
 
-import { getTable, getTables, createTable, updateTable, deleteTable, getCurrentTransactionByTable } from '../database.js'
+import {getTablesBySectionID,getSectionByEmployeeID, getTable, getTables, createTable, updateTable, deleteTable, getCurrentTransactionByTable } from '../database.js'
 import isAuthorized from '../utils/auth.js'
 
 const tablesRouter = express.Router()
 
 tablesRouter.use(isAuthorized)
+
 
 tablesRouter.get("/", async (req, res) => {
     try {
@@ -18,7 +19,7 @@ tablesRouter.get("/", async (req, res) => {
     }
 })
 
-tablesRouter.get("/:tableID/current-transaction", async (req, res) => {
+tablesRouter.get("/tableID/current-transaction", async (req, res) => {
     const tableID = req.params.tableID
 
     try {
@@ -46,7 +47,9 @@ tablesRouter.get("/:tableID/current-transaction", async (req, res) => {
     }
 })
 
-tablesRouter.get("/:tableID", async (req, res) => {
+tablesRouter.get("/tableID", async (req, res) => {
+
+    console.log("test /tableID")
     const tableID = req.params.tableID
     try {
         const table = await getTable(tableID)
@@ -59,6 +62,7 @@ tablesRouter.get("/:tableID", async (req, res) => {
 
         res.send(table)
     } catch (err) {
+        console.log("server error in /tableID")
         res.status(500).json({
             message: "Server error"
         })
@@ -78,7 +82,7 @@ tablesRouter.post("/", async (req, res) => {
     }
 })
 
-tablesRouter.put("/:tableID", async (req, res) => {
+tablesRouter.put("/tableID", async (req, res) => {
     const tableID = req.params.tableID
     const { capacity, sectionID } = req.body
 
@@ -100,7 +104,7 @@ tablesRouter.put("/:tableID", async (req, res) => {
     }
 })
 
-tablesRouter.delete("/:tableID", async (req, res) => {
+tablesRouter.delete("/tableID", async (req, res) => {
     const tableID = req.params.tableID
 
     try {
@@ -126,14 +130,15 @@ tablesRouter.get("/employeeTables", isAuthorized, async (req, res) => {
 
     try {
         const section = await getSectionByEmployeeID(employeeID)
+        console.log(section)
         if (!section) {
             res.status(400).json({
                 message: "Could not find section"
             })
         }
 
-        // const tables = await getTablesFromSectionID(section.sectionID)
-        const tables = []
+        const tables = await getTablesBySectionID(section.sectionID)
+        console.log("tables: ",tables)
         if (!tables) {
             res.status(400).json({
                 message: "Could not find tables"
@@ -141,9 +146,10 @@ tablesRouter.get("/employeeTables", isAuthorized, async (req, res) => {
         }
 
         for (const table in tables) {
-            console.log("TODO")
+            console.log(table)
         }
     } catch (err) {
+        console.log(err)
         return res.status(500).json({
             message: "Server error"
         })

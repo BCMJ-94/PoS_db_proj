@@ -446,10 +446,6 @@ export async function getSection(){
     return rows
 }
 
-export async function getSectionByEmployeeID(employeeID){
-    const[section] = await pool.query(`SELECT * FROM sections WHERE employeeID = ?`, [employeeID])
-    return section[0] ?? null
-}
 
 export async function getSections(sectionID){
     const [sections] = await pool.query(`SELECT * FROM sections WHERE sectionID = ?`, [sectionID])
@@ -658,13 +654,13 @@ export async function getRewardPoints(customerID) {
 // console.log(rp)
 
 export async function getSectionByEmployeeID(employeeID) {
-    const [section] = await pool.query(`SELECT sectionID FROM employees WHERE employeeID = ?`, [employeeID])
+    const [section] = await pool.query(`SELECT * FROM employees WHERE employeeID = ?`, [employeeID])
     return section[0] ?? null
 }
 
 export async function getTablesBySectionID(sectionID) {
     const [tables] = await pool.query(`SELECT tableID FROM tables WHERE sectionID = ?`, [sectionID])
-    return tables[0] ?? null
+    return tables ?? null
 }
 
 export async function tableHasTransaction(tableID) {
