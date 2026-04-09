@@ -75,6 +75,37 @@ WHERE r.finishedProductID = NEW.productID; -- this works!
 END; -- THIS WORKS AS INTENDED
 
 
+CREATE TRIGGER addToTabTotal -- WORKS AS INTENDED
+AFTER INSERT on product_orders
+
+FOR EACH ROW
+
+BEGIN
+
+UPDATE transactions
+INNER JOIN products p ON p.productID = NEW.productID
+SET transactions.total = transactions.total + (NEW.quantity * p.price)
+WHERE transactions.transactionID = NEW.transactionID;
+
+END
+
+
+
+CREATE TRIGGER deleteFromTabTotal -- WORKS AS INTENDED
+AFTER DELETE on product_orders
+
+FOR EACH ROW
+
+BEGIN
+
+UPDATE transactions
+INNER JOIN products p ON p.productID = OLD.productID
+SET transactions.total = transactions.total - (OLD.quantity * p.price)
+WHERE transactions.transactionID = OLD.transactionID;
+
+END
+
+
 
 
 
