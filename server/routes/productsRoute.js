@@ -10,6 +10,12 @@ productsRouter.use(isAuthorized)
 productsRouter.get("/", async (req, res) => {
     try {
         const products = await getProducts()
+
+        if (!product){
+            return res.status(404).json({
+                message: "Product not found"
+            })
+        }
         console.log(products)
         res.json(products)
     } catch (err) {
@@ -19,7 +25,7 @@ productsRouter.get("/", async (req, res) => {
     }
 })
 
-productsRouter.get("/:productID", async (req, res) => {
+/*productsRouter.get("/:productID", async (req, res) => {
     const productID = req.params.productID
     try {
         const product = await getProduct(productID)
@@ -36,7 +42,7 @@ productsRouter.get("/:productID", async (req, res) => {
             message: "Server error"
         })
     }
-})
+})*/
 
 productsRouter.post("/", async (req, res) => {
     const { productID, _name, price, menuType, isAvailable, stationID } = req.body
