@@ -657,10 +657,6 @@ export async function getRewardPoints(customerID) {
 // const rp = await updateRewardPoints(1, 3)
 // console.log(rp)
 
-export async function getSectionByEmployeeID(employeeID) {
-    const [section] = await pool.query(`SELECT sectionID FROM employees WHERE employeeID = ?`, [employeeID])
-    return section[0] ?? null
-}
 
 export async function getTablesBySectionID(sectionID) {
     const [tables] = await pool.query(`SELECT tableID FROM tables WHERE sectionID = ?`, [sectionID])
