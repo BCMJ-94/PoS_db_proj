@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { getTransaction, getTransactions, createTransaction, updateTransaction, deleteTransaction, getCurrentTransactionIDByTable, createProduct_Order, openTransactionTab, closeTransactionTab, getCustomerByEmail, closeTabWithEmail, updateRewardPoints } from '../database.js'
+import { getTransaction, getTransactions, createTransaction, updateTransaction, deleteTransaction, getCurrentTransactionIDByTable, createProduct_Order, openTransactionTab, closeTransactionTab, getCustomerByEmail, closeTabWithEmail, updateRewardPoints, updateProduct_Order, deleteProduct_Order } from '../database.js'
 import isAuthorized from '../utils/auth.js'
 
 const transactionsRouter = express.Router()
@@ -116,7 +116,7 @@ transactionsRouter.post("/openTab", async (req, res) => { // this successfully o
 transactionsRouter.put("/modifyOrder", async (req, res) => {
     try {
         const { quantity, productID, tableID } = req.body
-        const transID = await getCurrentTransactionByTable(tableID)
+        const transID = await getCurrentTransactionIDByTable(tableID)
         await updateProduct_Order(quantity, productID, transID)
         res.status(200).json({
             message: "Order successfully updated"
@@ -131,7 +131,7 @@ transactionsRouter.put("/modifyOrder", async (req, res) => {
 transactionsRouter.delete("/deleteOrder", async (req, res) => {
     try {
         const { productID, tableID } = req.body
-        const transID = await getCurrentTransactionByTable(tableID)
+        const transID = await getCurrentTransactionIDByTable(tableID)
         await deleteProduct_Order(transID, productID)
         res.status(200).json({
             message: "Order successfully removed"
