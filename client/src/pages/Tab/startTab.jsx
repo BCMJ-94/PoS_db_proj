@@ -8,14 +8,11 @@ export default function OpenTab(){
             tableID
         }
     ) => {
-        try{
+    
 
-            const { data } = await openTab(tableID)
-            console.log("attempted tab open")
-        }
-        catch(err){
-            console.log(err)
-        }
+            const data  = await openTab(tableID)
+            //console.log(data.message)
+       
 
     }
     return (

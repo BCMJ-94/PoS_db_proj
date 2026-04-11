@@ -1,6 +1,6 @@
 import { API_URL } from "./baseUrl";
 
-export default async function addToTab(productID){
+export default async function addToTab(quantity, productID, tableID){
     const endpoint = `${API_URL}/transactions/addOrder`
 
     const request = {
@@ -26,7 +26,7 @@ export default async function addToTab(productID){
     }
 }
 
-export default async function closeTab(tableID, email, total, tipAmount, paymentMethod){
+export  async function closeTab(tableID, email, total, tipAmount, paymentMethod){
     const endpoint = `${API_URL}/transactions/closeTab`
 
     const request = {

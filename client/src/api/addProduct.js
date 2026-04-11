@@ -1,7 +1,8 @@
 import { API_URL } from "./baseUrl";
 
-export default async function addProduct(productId, _name, price, menuType, isAvailable, stationID){
+export default async function addProduct(productID, _name, price, menuType,  stationID){
     const endpoint = `${API_URL}/products`
+    console.log("price: ", price)
 
     const request = {
         method : 'POST',
@@ -10,23 +11,26 @@ export default async function addProduct(productId, _name, price, menuType, isAv
         },
         credentials : 'include',
         body : JSON.stringify({
-           productID : productID,
-           _name : _name,
-           menuType : menuType,
-           isAvailable : isAvailable, 
-           stationID : stationID 
+           productID,
+           _name,
+           price,
+           menuType,
+           stationID 
         })
     }
+
+    console.log("sending api request")
     const response = await fetch(endpoint, request)
+    const data = await response.json().catch(() =>({}))
+    console.log(data.message)
 
     if(!response.ok){
-        const err = await.res.json().catch(()=>({}))
         throw new Error(
-            err.message || `HTTP Error: ${err.status}`
+            data.message || `HTTP error: ${data.status}${data.message}`
             
         )
     }
-    console.log(response.body)
+    //console.log(response.body)
     return {
         data
     }

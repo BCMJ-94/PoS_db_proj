@@ -11,7 +11,7 @@ productsRouter.get("/", async (req, res) => {
     try {
         const products = await getProducts()
 
-        if (!product){
+        if (!products){
             return res.status(404).json({
                 message: "Product not found"
             })
@@ -19,38 +19,25 @@ productsRouter.get("/", async (req, res) => {
         console.log(products)
         res.json(products)
     } catch (err) {
+        console.log(err)
         res.status(500).json({
             message: "Server error"
         })
     }
 })
 
-/*productsRouter.get("/:productID", async (req, res) => {
-    const productID = req.params.productID
-    try {
-        const product = await getProduct(productID)
-
-        if (!product) {
-            return res.status(404).json({
-                message: "Product not found"
-            })
-        }
-
-        res.send(product)
-    } catch (err) {
-        res.status(500).json({
-            message: "Server error"
-        })
-    }
-})*/
 
 productsRouter.post("/", async (req, res) => {
-    const { productID, _name, price, menuType, isAvailable, stationID } = req.body
+    const { productID, _name, price, menuType, stationID } = req.body
+    console.log("productID: ",productID)
+    console.log("name: ",_name)
+    console.log("price: ",price)
 
     try {
-        const product = await createProduct(productID, _name, price, menuType, isAvailable, stationID)
+        const product = await createProduct(productID, _name, price, menuType, 1, stationID)
         res.status(201).send(product)
     } catch (err) {
+        console.log(err)
         res.status(500).json({
             message: "Server error"
         })

@@ -292,7 +292,10 @@ export async function updateProduct_Order(quantity, productID, transactionID){
 }
 
 export async function getProducts(){
-    const [rows] = await pool.query(`SELECT * FROM products`)
+    const [rows] = await pool.query(`SELECT *
+                                     FROM products
+                                     ORDER BY menuType ASC`)
+
     return rows
 }
 

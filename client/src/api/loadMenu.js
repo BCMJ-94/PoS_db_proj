@@ -6,13 +6,12 @@ export default async function loadMenu(){
     try {
         const response = await fetch(endpoint, {credentials : 'include'});
         const data = await response.json()
-        //console.log(data)
+        console.log(data)
         return {
             data :data 
         }
     }
        
-    
     catch(error){
         console.error('fetch error: ', error)
         throw error;

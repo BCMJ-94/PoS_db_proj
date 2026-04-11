@@ -18,7 +18,7 @@ transactionsRouter.get("/", async (req, res) => {
     }
 })
 
-transactionsRouter.get("/:transactionID", async (req, res) => {
+transactionsRouter.get("/transactionID", async (req, res) => {
     const transactionID = req.params.transactionID
     try {
         const transaction = await getTransaction(transactionID)
@@ -31,20 +31,6 @@ transactionsRouter.get("/:transactionID", async (req, res) => {
 
         res.send(transaction)
     } catch (err) {
-        res.status(500).json({
-            message: "Server error"
-        })
-    }
-})
-
-transactionsRouter.post("/", async (req, res) => {
-    const { tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod } = req.body
-
-    try {
-        const transaction = await createTransaction(tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod)
-        res.status(201).send(transaction)
-    } catch (err) {
-        console.log(err.message)
         res.status(500).json({
             message: "Server error"
         })
@@ -90,9 +76,17 @@ transactionsRouter.post("/openTab", async (req, res) => { // this successfully o
             })
 
         } catch (err) {
+            console.log(err)
+            if (err.errno = 1452){
+                res.status(404).json({
+                    message : "tableID not in database"
+                })
+            }
+            else{
             res.status(500).json({
                 message: "Transaction creation failed"
             })
+            }
         }
     })
 

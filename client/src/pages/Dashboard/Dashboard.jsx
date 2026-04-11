@@ -36,8 +36,7 @@ export default function Dashboard(){
     const addNewProduct = () => {
         try{
             console.log("redirect to new product page")
-            
-
+            nav("/newproduct", {replace : true})
         }
         catch(error){
             console.log(error.message)
