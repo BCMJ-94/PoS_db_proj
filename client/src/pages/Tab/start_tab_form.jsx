@@ -5,11 +5,9 @@ import Button from '../../components/Button.jsx'
 export default function OpenTabForm({handleSubmit}){
     const onSubmit = (e) => {
         e.preventDefault()
-        
         const form = new FormData(e.target)
         handleSubmit({
             tableID : form.get('tableID')
-            
         })
     }
 
@@ -20,7 +18,6 @@ export default function OpenTabForm({handleSubmit}){
                     <label htmlFor = "tableID">Table ID</label>
                     <input type = "number" name = "tableID" id = "tableID" required className = 'border border-[#7ebeeba6] rounded-md px-2'/>
                 </div>
-                
                 <Button type = "submit" name = "Submit"/>
             </form>
         </div>

@@ -5,11 +5,12 @@ import isAuthorized from '../utils/auth.js'
 
 const productsRouter = express.Router()
 
-productsRouter.use(isAuthorized)
+//productsRouter.use(isAuthorized)
 
 productsRouter.get("/", async (req, res) => {
     try {
         const products = await getProducts()
+        console.log(products)
         res.json(products)
     } catch (err) {
         res.status(500).json({

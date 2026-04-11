@@ -44,6 +44,7 @@ transactionsRouter.post("/", async (req, res) => {
         const transaction = await createTransaction(tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod)
         res.status(201).send(transaction)
     } catch (err) {
+        console.log(err.message)
         res.status(500).json({
             message: "Server error"
         })
@@ -95,7 +96,7 @@ transactionsRouter.post("/openTab", async (req, res) => { // this successfully o
         }
     })
 
-    transactionsRouter.post("/addOrder", async (req, res) => {
+transactionsRouter.post("/addOrder", async (req, res) => {
         try{
             const {quantity, productID, tableID} = req.body
             const transID = await getCurrentTransactionIDByTable(tableID)
@@ -143,7 +144,6 @@ transactionsRouter.delete("/deleteOrder", async (req, res) => {
     }
 })
 
-
 transactionsRouter.put("/closeTab", async (req, res) => {
         try{
             // first we need to grab the employeeID and the correct transaction for that employee
@@ -177,9 +177,33 @@ transactionsRouter.put("/closeTab", async (req, res) => {
             })
         } catch (err) {
             res.status(500).json({
-                message: "Failed to close transaction"//err.message
+                message: "Failed to close transaction"
             })
         }
     })
+
+transactionsRouter.put("/closeTab2", async (req,res) => {
+    try{
+        const {tableID, email, total, tipAmount, paymentMethod} = req.body
+        const employeeID = req.session.employee.employeeID
+
+        if(!email){
+            await closeTransactionTab
+        }
+
+
+        res.status(201).json({
+            message : "Successfully closed transaction"
+        })
+
+    }
+
+    catch(error){
+        console.log(error)
+        res.status(500).json({
+            message : "Failed to close transaction"
+        })
+    }
+})
 
 export default transactionsRouter

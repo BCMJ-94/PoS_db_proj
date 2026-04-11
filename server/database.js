@@ -446,6 +446,11 @@ export async function getSection(){
     return rows
 }
 
+export async function getSectionByEmployeeID(employeeID){
+    const[section] = await pool.query(`SELECT * FROM sections WHERE employeeID = ?`, [employeeID])
+    return section[0] ?? null
+}
+
 export async function getSections(sectionID){
     const [sections] = await pool.query(`SELECT * FROM sections WHERE sectionID = ?`, [sectionID])
     return sections[0] ?? null
@@ -650,10 +655,6 @@ export async function updateRewardPoints(total, customerID) {
     const [rewardPoints] = await pool.query('UPDATE customers SET rewardPoints = rewardPoints + ROUND(?) WHERE customerID = ?', [total, customerID])
 }
 
-export async function getSectionByEmployeeID(employeeID) {
-    const [section] = await pool.query(`SELECT sectionID FROM employees WHERE employeeID = ?`, [employeeID])
-    return section[0] ?? null
-}
 
 export async function getTablesBySectionID(sectionID) {
     const [tables] = await pool.query(`SELECT tableID FROM tables WHERE sectionID = ?`, [sectionID])

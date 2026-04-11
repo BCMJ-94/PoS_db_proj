@@ -1,0 +1,50 @@
+transactions
+
+1. employee opens a new tab
+    -Client side
+        - employee provides their id, customerID (this can be added at any point), and tableID
+        - client records the date and time that the order was placed
+        - client sends above information to server
+    -Server side
+        - server receives info sent by client
+        - server adds row to database with info
+            -sends a response back to client indicating success
+             or failure
+            -if successful database auto assigns a transactionID
+        - server automatically creates a new product_order linked to that specific transactionID
+
+2. employee modifies tab
+    -Client side
+        - employee enters their ID to view open tabs
+        - client sends ID and request for currently open tabs
+        - client recieves list of currently open transactionIDs along with total and tableID that are linked to the employeeID
+        - client displays list of open tabs, employee chooses tab to modify
+        - client sends request for all productIDs and their names currently on the menu and and displays them on a menu page
+        - employee chooses which items to add, how many, and submits info
+        - client sends back transactionID, selected productIDs and the quantities to be added to the transaction
+    -Server side
+        -server receives employeeID and request for open tabs
+        -server retrieves currently open tabs associated with employeeID and sends to client with list of transactionIDs
+        -server receives request for menu info, sends menu info, waits for next request from client
+        -server receives transactionID, productID(s), and quantities
+        -server modifies the product_order linked to the transactionID with above info
+        -server sends success/failure response to client
+
+3. employee closes tab
+    -Client side
+        - employee enters ID to view open tabs
+        - client sends ID and request for current tabs
+        - client receives open tabs for that employee
+        - employee chooses tab (this is the same process as above until this point)
+        - employee decides to close tab
+        - client requests full transaction info (this includes the products ordered) and displays information for the receipt
+        - employee inputs tip and payment info and submits
+        - client sends tip and payment info to server with request to mark tab as closed
+    -Server side
+        -server receives employeeID
+        -server sends open tabs associated with ID
+        -server receives request for full transaction info
+        -server sends response with that info
+        -server receives close request with payment, tip
+        -server saves transaction and marks it as closed
+        -server sends success/failure message

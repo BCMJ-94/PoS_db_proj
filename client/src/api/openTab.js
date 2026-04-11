@@ -3,6 +3,7 @@ import {API_URL } from '../api/baseUrl'
 
 export default async function openTab(tableID){
     const endpoint = `${API_URL}/transactions/openTab`
+    
 
     const req = {
         method : 'POST',
@@ -12,7 +13,6 @@ export default async function openTab(tableID){
         credentials : 'include',
         body : JSON.stringify({
             tableID
-            
         })
     }
 
