@@ -5,7 +5,7 @@ import isAuthorized from '../utils/auth.js'
 
 const productsRouter = express.Router()
 
-//productsRouter.use(isAuthorized)
+productsRouter.use(isAuthorized)
 
 productsRouter.get("/", async (req, res) => {
     try {
