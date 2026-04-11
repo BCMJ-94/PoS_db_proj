@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { getTransaction, getTransactions, createTransaction, updateTransaction, deleteTransaction, getCurrentTransactionIDByTable, createProduct_Order, openTransactionTab, closeTransactionTab, getCustomerByEmail, closeTabWithEmail } from '../database.js'
+import { getTransaction, getTransactions, createTransaction, updateTransaction, deleteTransaction, getCurrentTransactionIDByTable, createProduct_Order, openTransactionTab, closeTransactionTab, getCustomerByEmail, closeTabWithEmail, updateRewardPoints, updateProduct_Order, deleteProduct_Order, addTip, getTransactionTotal } from '../database.js'
 import isAuthorized from '../utils/auth.js'
 
 const transactionsRouter = express.Router()
@@ -116,7 +116,7 @@ transactionsRouter.post("/openTab", async (req, res) => { // this successfully o
 transactionsRouter.put("/modifyOrder", async (req, res) => {
     try {
         const { quantity, productID, tableID } = req.body
-        const transID = await getCurrentTransactionByTable(tableID)
+        const transID = await getCurrentTransactionIDByTable(tableID)
         await updateProduct_Order(quantity, productID, transID)
         res.status(200).json({
             message: "Order successfully updated"
@@ -131,7 +131,7 @@ transactionsRouter.put("/modifyOrder", async (req, res) => {
 transactionsRouter.delete("/deleteOrder", async (req, res) => {
     try {
         const { productID, tableID } = req.body
-        const transID = await getCurrentTransactionByTable(tableID)
+        const transID = await getCurrentTransactionIDByTable(tableID)
         await deleteProduct_Order(transID, productID)
         res.status(200).json({
             message: "Order successfully removed"
@@ -147,13 +147,14 @@ transactionsRouter.delete("/deleteOrder", async (req, res) => {
 transactionsRouter.put("/closeTab", async (req, res) => {
         try{
             // first we need to grab the employeeID and the correct transaction for that employee
-            const {tableID, email, total, tipAmount, paymentMethod} = req.body
+            const {tableID, email, tipAmount, paymentMethod} = req.body
             const employeeID = req.session.employee.employeeID
             const transID = await getCurrentTransactionIDByTable(tableID) // whenever need ID, call trans.transactionID
             // then we need to add the rest of the attributes
             // server is supposed to receive customer email to find the customerID if registered
             if(!email){
-                await closeTransactionTab(total, tipAmount, paymentMethod, employeeID, transID, tableID)
+                await addTip(tipAmount, transID)
+                await closeTransactionTab(tipAmount, paymentMethod, employeeID, transID, tableID)
             }
             else{
                 // retrieve customer by email
@@ -164,7 +165,11 @@ transactionsRouter.put("/closeTab", async (req, res) => {
                     })
                 }
                 else{
-                    await closeTabWithEmail(total, tipAmount, paymentMethod, customer.customerID, employeeID, transID, tableID)
+                    await addTip(tipAmount, transID)
+                    await closeTabWithEmail(tipAmount, paymentMethod, customer.customerID, employeeID, transID, tableID)
+                    const total = await getTransactionTotal(transID)
+                    // // grab customerID and total (add the total amount to customerID's reward points) this will prob be done in a couple methods
+                    await updateRewardPoints(total, customer.customerID)
                 }
             }
             res.status(201).json({

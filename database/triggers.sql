@@ -56,6 +56,72 @@ END IF;
 
 END$$ -- this works
 
+-- USE INGREDIENT TRIGGER --
+
+CREATE TRIGGER useIngredients
+AFTER INSERT ON product_orders
+
+FOR EACH ROW
+
+BEGIN
+
+UPDATE ingredients
+INNER JOIN recipes r ON r.ingredientID = ingredients.ingredientID
+INNER JOIN products p ON r.finishedProductID = p.productID
+INNER JOIN product_orders po ON p.productID = po.productID
+SET ingredients.quantity = ingredients.quantity - (r.quantity * NEW.quantity) -- original was 319
+WHERE r.finishedProductID = NEW.productID; -- this works!
+
+END; -- THIS WORKS AS INTENDED
+
+
+CREATE TRIGGER addToTabTotal -- WORKS AS INTENDED
+AFTER INSERT on product_orders
+
+FOR EACH ROW
+
+BEGIN
+
+UPDATE transactions
+INNER JOIN products p ON p.productID = NEW.productID
+SET transactions.total = transactions.total + (NEW.quantity * p.price)
+WHERE transactions.transactionID = NEW.transactionID;
+
+END
+
+
+
+CREATE TRIGGER deleteFromTabTotal -- WORKS AS INTENDED
+AFTER DELETE on product_orders
+
+FOR EACH ROW
+
+BEGIN
+
+UPDATE transactions
+INNER JOIN products p ON p.productID = OLD.productID
+SET transactions.total = transactions.total - (OLD.quantity * p.price)
+WHERE transactions.transactionID = OLD.transactionID;
+
+END
+
+
+CREATE TRIGGER updateTabTotal
+AFTER UPDATE on product_orders
+
+FOR EACH ROW
+
+BEGIN
+
+UPDATE transactions
+INNER JOIN products p_Old ON p_Old.productID = OLD.productID
+INNER JOIN products p_New ON p_New.productID = NEW.productID
+SET transactions.total = transactions.total - (OLD.quantity * p_Old.price) + (NEW.quantity * p_New.price)
+WHERE transactions.transactionID = NEW.transactionID;
+
+END;
+
+
 
 
 
