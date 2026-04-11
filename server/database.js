@@ -607,11 +607,10 @@ export async function openTransactionTab(tableID, employeeID){
         }
 }
 
-export async function closeTransactionTab(total, tipAmount, paymentMethod, employeeID, transID, tableID){ // find a way to get customerID and check for loyalties
-    const [result] = await pool.query(`UPDATE transactions SET total = ?, tipAmount = ?, paymentMethod = ? 
-WHERE employeeID = ? AND transactionID = ? AND tableID = ?;`, [total, tipAmount, paymentMethod, employeeID, transID, tableID])
+export async function closeTransactionTab(tipAmount, paymentMethod, employeeID, transID, tableID){ // find a way to get customerID and check for loyalties
+    const [result] = await pool.query(`UPDATE transactions SET tipAmount = ?, paymentMethod = ? 
+WHERE employeeID = ? AND transactionID = ? AND tableID = ?;`, [tipAmount, paymentMethod, employeeID, transID, tableID])
     return {
-        total,
         tipAmount,
         paymentMethod,
         employeeID,
@@ -620,10 +619,9 @@ WHERE employeeID = ? AND transactionID = ? AND tableID = ?;`, [total, tipAmount,
     }
 }
 
-export async function closeTabWithEmail(total, tipAmount, paymentMethod, custID, employeeID, transID, tableID){ // find a way to get customerID and check for loyalties
-    const [result] = await pool.query(`UPDATE transactions SET total = ?, tipAmount = ?, paymentMethod = ?, customerID = ? WHERE employeeID = ? AND transactionID = ? AND tableID = ?`, [total, tipAmount, paymentMethod, custID, employeeID, transID, tableID])
+export async function closeTabWithEmail(tipAmount, paymentMethod, custID, employeeID, transID, tableID){ // find a way to get customerID and check for loyalties
+    const [result] = await pool.query(`UPDATE transactions SET tipAmount = ?, paymentMethod = ?, customerID = ? WHERE employeeID = ? AND transactionID = ? AND tableID = ?`, [tipAmount, paymentMethod, custID, employeeID, transID, tableID])
         return {
-            total,
             tipAmount,
             paymentMethod,
             custID,
@@ -631,6 +629,20 @@ export async function closeTabWithEmail(total, tipAmount, paymentMethod, custID,
             transID,
             tableID
         }
+}
+
+export async function addTip(tipAmount, transID) {
+    const [tip] = await pool.query(`UPDATE transactions SET total = total + ? WHERE transactionID = ?`, [tipAmount, transID])
+        return {
+            tipAmount,
+            transID
+        }
+}
+
+
+export async function getTransactionTotal(transactionID) {
+    const [total] = await pool.query(`SELECT total FROM transactions WHERE transactionID = ?`, [transactionID])
+        return total[0].total ?? null
 }
 
 
