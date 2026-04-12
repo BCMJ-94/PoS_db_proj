@@ -1,7 +1,7 @@
 import { API_URL } from "./baseUrl";
 
 export default async function addNewEmployee(firstName, lastName, dateHired, 
-    dateOfBirth, shiftRole, hourlyRate, password){
+                                             dateOfBirth, shiftRole, hourlyRate, password){
     const endpoint = `${API_URL}/employees`
 
     

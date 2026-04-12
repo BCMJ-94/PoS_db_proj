@@ -1,0 +1,93 @@
+@baseurl = http://localhost:3030
+
+###logout
+POST http://localhost:3030/logout
+
+###login
+POST http://localhost:3030/login
+content-type : application/json
+
+{
+   "employeeID" : "1",
+   "password" : "testpass" 
+}
+ 
+###add employee
+POST http://localhost:3030/employees
+content-type : application/json
+
+{
+    "firstName" : "Cole",
+    "lastName" : "Mooney",
+    "dateHired" : "1994-01-01",
+    "dateOfBirth" : "1994-01-01",
+    "shiftRole" : "1",
+    "hourlyRate" : "20",
+    "password" : "test"
+}
+
+###add transaction
+POST http://localhost:3030/transactions/openTab
+content-type : application/json
+
+{
+    "tableID" : "5" 
+}
+
+###add table
+POST http://localhost:3030/tables
+content-type : application/json
+
+{
+    "capacity" : "10",
+    "sectionID" : "1"
+}
+
+###add section
+POST http://localhost:3030/sections
+content-type : application/json
+
+{
+    "employeeID" : "1"
+}
+
+###close Tab
+PUT http://localhost:3030/transactions/closeTab
+content-type : application/json 
+
+{
+    "employeeID" : "1",
+    "tableID" : "5",
+    "email" :"",
+    "total" : "100",
+    "tipAmount" : "20",
+    "paymentMethod" : "1"
+}
+
+###get menu
+GET http://localhost:3030/products
+content-type : application/json
+
+{
+
+}
+
+###add product
+POST http://localhost:3030/products
+content-type : application/json
+
+{
+    "productID" : "0006",
+    "_name" : "shawarma",
+    "price" : "2",
+    "menuType" : "1",
+    "stationID" : "1"
+}
+
+###get section by employeeID
+GET http://localhost:3030/products
+content-type : application/json
+
+{
+    "employeeID" : 1
+}

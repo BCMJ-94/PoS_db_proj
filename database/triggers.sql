@@ -106,6 +106,22 @@ WHERE transactions.transactionID = OLD.transactionID;
 END
 
 
+CREATE TRIGGER updateTabTotal
+AFTER UPDATE on product_orders
+
+FOR EACH ROW
+
+BEGIN
+
+UPDATE transactions
+INNER JOIN products p_Old ON p_Old.productID = OLD.productID
+INNER JOIN products p_New ON p_New.productID = NEW.productID
+SET transactions.total = transactions.total - (OLD.quantity * p_Old.price) + (NEW.quantity * p_New.price)
+WHERE transactions.transactionID = NEW.transactionID;
+
+END;
+
+
 
 
 
