@@ -13,6 +13,8 @@ export default function NavBar() {
     Host
         Clock-in
         Puts customer to table
+        Hours/Revenue
+
     */}
     {/* 
     Bussers/Food-Runners
@@ -41,7 +43,7 @@ export default function NavBar() {
 
             <div>
                 <NavLink to={'/dashboard'}>
-                    <p>{ `${employee.firstName}  ${employee.lastName}` }</p>
+                    <p>{ `${employee.firstName}  ${employee.lastName} | ${employee.shiftRole[0].toUpperCase() + employee.shiftRole.slice(1)}` }</p>
                 </NavLink>
             </div>
         </nav>
