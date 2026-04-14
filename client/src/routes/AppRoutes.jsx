@@ -9,6 +9,7 @@ import TimeClock from "../pages/TimeClock/TimeClock";
 import PayrollPeriod from "../pages/PayrollPeriod/PayrollPeriod";
 import { ShowTableRow } from "../pages/Tables/TableRow";
 import NewProduct from "../pages/NewProduct/NewProduct";
+import Menu from "../components/Menu"
 
 export default function AppRoutes() {
     const { employee, loading } = useAuth()
@@ -29,6 +30,7 @@ export default function AppRoutes() {
                 <Route path="/payrollperiod" element={<PayrollPeriod />}/>
                 <Route path="/tables" element={<ShowTableRow/>}/>
                 <Route path="/newproduct" element={<NewProduct/>}/>
+                <Route path="/menu" element = {<Menu/>}/>
             </Route>
 
             <Route path="*" element={<Navigate to={"/login"} replace />}></Route>

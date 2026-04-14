@@ -8,7 +8,7 @@ export default async function loadMenu(){
         const data = await response.json()
         console.log(data)
         return {
-            data :data 
+            data 
         }
     }
        

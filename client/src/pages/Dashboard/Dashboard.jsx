@@ -2,7 +2,6 @@ import React from 'react'
 import Button from "../../components/Button.jsx"
 import { useNavigate } from 'react-router-dom'
 import NavBar from '../../routes/NavBar.jsx'
-import loadMenu from '../../api/loadMenu.js'
 
 //pretty much just using this to test the api
 export default function Dashboard(){
@@ -19,8 +18,8 @@ export default function Dashboard(){
     }
 
     const getMenu = async () => {
-        const obj = await loadMenu()
-        console.log(JSON.stringify(obj))
+        nav("/menu", {replace : true})
+          
     }
 
     const registerNewEmployee = () => {
@@ -57,8 +56,9 @@ export default function Dashboard(){
                     <Button onClick = {addNewProduct} type  = "button" name  = "Add New Product"/>
                 </div>
                 <div>
-                    <Button onClick = {getMenu}  type  = "button" name  = "load menu"/>
+                    <Button onClick = {getMenu}  type  = "button" name  = "Menu"/>
                 </div>
+          
             </div> 
         </>
     )
