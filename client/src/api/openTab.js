@@ -4,7 +4,6 @@ import {API_URL } from '../api/baseUrl'
 export default async function openTab(tableID){
     const endpoint = `${API_URL}/transactions/openTab`
     
-
     const req = {
         method : 'POST',
         headers : {

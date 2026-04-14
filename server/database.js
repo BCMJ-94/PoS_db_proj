@@ -450,7 +450,7 @@ export async function getSection(){
 }
 
 export async function getSectionByEmployeeID(employeeID){
-    const[section] = await pool.query(`SELECT * FROM sections WHERE employeeID = ?`, [employeeID])
+    const[section] = await pool.query(`SELECT sectionID FROM sections WHERE employeeID = ?`, [employeeID])
     return section[0] ?? null
 }
 
@@ -808,4 +808,15 @@ export async function getFoodCost(startDate, endDate) {
         [startDate, endDate]
     )
     return rows[0] ?? null
+}
+
+export async function getAvailableProducts(){
+    const [result] = await pool.query(`SELECT * FROM availableProducts`)
+    return result
+}
+
+export async function getAvailableProduct(productID){
+    const [product] = await pool.query(
+        `SELECT * FROM availableProducts WHERE productID = ?`, [productID])
+    return product[0] ?? null
 }

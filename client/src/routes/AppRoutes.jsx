@@ -7,7 +7,7 @@ import NewEmployee from "../pages/NewEmployee/NewEmployee";
 import OpenTab from "../pages/Tab/startTab";
 import TimeClock from "../pages/TimeClock/TimeClock";
 import PayrollPeriod from "../pages/PayrollPeriod/PayrollPeriod";
-import { ShowTableRow } from "../pages/Tables/TableRow";
+import Tables from "../pages/Tables/Tables";
 import NewProduct from "../pages/NewProduct/NewProduct";
 import Menu from "../components/Menu"
 
@@ -28,7 +28,7 @@ export default function AppRoutes() {
                 <Route path="/Tab" element = {<OpenTab/>}/>
                 <Route path="/timeclock" element={<TimeClock/>}/>
                 <Route path="/payrollperiod" element={<PayrollPeriod />}/>
-                <Route path="/tables" element={<ShowTableRow/>}/>
+                <Route path="/tables" element={<Tables/>}/>
                 <Route path="/newproduct" element={<NewProduct/>}/>
                 <Route path="/menu" element = {<Menu/>}/>
             </Route>

@@ -47,9 +47,6 @@ export default function Dashboard(){
             <NavBar />
            <div style = {{display: "flex", alignItems : "center" , height : "100%"}}>
                 <div>
-                    <Button onClick = {goToOpenTab}  type = "button" name = "Open Tab"/>     
-                </div>  
-                <div>
                     <Button onClick = {registerNewEmployee} type = "button" name = "Register New Employee"/>
                 </div>
                 <div>
