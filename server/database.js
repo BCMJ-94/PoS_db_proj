@@ -450,7 +450,7 @@ export async function getSection(){
 }
 
 export async function getSectionByEmployeeID(employeeID){
-    const[section] = await pool.query(`SELECT * FROM sections WHERE employeeID = ?`, [employeeID])
+    const[section] = await pool.query(`SELECT sectionID FROM sections WHERE employeeID = ?`, [employeeID])
     return section[0] ?? null
 }
 
