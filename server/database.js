@@ -60,6 +60,10 @@ export async function updateEmployee(firstName, lastName, dateHired, dateOfBirth
     }
 }
 
+export async function updateEmployeePassword(employeeID, newHashedPassword) {
+    const [result] = await pool.query(`UPDATE employees SET hashedPassword =  ? WHERE employeeID = ?`, [newHashedPassword, employeeID])
+}
+
 export async function getCustomers(){ // exporting allows it to be used in different files (like app.js)
     const [rows] = await pool.query("SELECT * FROM customers")
     return rows
@@ -70,9 +74,9 @@ export async function getCustomer(customerID){
     return customers[0] ?? null
 }
 
-export async function getCustomer_Email(email){
-    const [customers] = await pool.query(`SELECT * FROM customers WHERE email = ?`, [email])
-    return customers[0] ?? null
+export async function getCustomerByEmail(email){
+    const [customer] = await pool.query('SELECT customerID FROM customers WHERE email = ?', [email])
+    return customer[0] ?? null
 }
 
 export async function createCustomer(firstName, lastName, dob, dateJoined, phoneNumber, email, status, rewardPoints){ // this works!
@@ -288,7 +292,10 @@ export async function updateProduct_Order(quantity, productID, transactionID){
 }
 
 export async function getProducts(){
-    const [rows] = await pool.query(`SELECT * FROM products`)
+    const [rows] = await pool.query(`SELECT *
+                                     FROM products
+                                     ORDER BY menuType ASC`)
+
     return rows
 }
 
@@ -442,6 +449,11 @@ export async function getSection(){
     return rows
 }
 
+export async function getSectionByEmployeeID(employeeID){
+    const[section] = await pool.query(`SELECT sectionID FROM sections WHERE employeeID = ?`, [employeeID])
+    return section[0] ?? null
+}
+
 export async function getSections(sectionID){
     const [sections] = await pool.query(`SELECT * FROM sections WHERE sectionID = ?`, [sectionID])
     return sections[0] ?? null
@@ -588,6 +600,75 @@ export async function getCurrentTransactionByTable(tableID){
     return transactions[0] ?? null
 }
 
+export async function getCurrentTransactionIDByTable(tableID){
+    const [transactionID] = await pool.query(`SELECT * FROM transactions WHERE tableID = ? AND paymentMethod IS NULL ORDER BY timePlaced DESC LIMIT 1`, [tableID])
+    return transactionID[0].transactionID ?? null
+}
+
+export async function openTransactionTab(tableID, employeeID){
+    const [result] = await pool.query(`INSERT INTO transactions (tableID, employeeID, timePlaced)
+    VALUES (?, ?, NOW())`, [tableID, employeeID])
+        return {
+            transactionID: result.insertId,
+            tableID,
+            employeeID
+        }
+}
+
+export async function closeTransactionTab(tipAmount, paymentMethod, employeeID, transID, tableID){ // find a way to get customerID and check for loyalties
+    const [result] = await pool.query(`UPDATE transactions SET tipAmount = ?, paymentMethod = ? 
+WHERE employeeID = ? AND transactionID = ? AND tableID = ?;`, [tipAmount, paymentMethod, employeeID, transID, tableID])
+    return {
+        tipAmount,
+        paymentMethod,
+        employeeID,
+        transID,
+        tableID
+    }
+}
+
+export async function closeTabWithEmail(tipAmount, paymentMethod, custID, employeeID, transID, tableID){ // find a way to get customerID and check for loyalties
+    const [result] = await pool.query(`UPDATE transactions SET tipAmount = ?, paymentMethod = ?, customerID = ? WHERE employeeID = ? AND transactionID = ? AND tableID = ?`, [tipAmount, paymentMethod, custID, employeeID, transID, tableID])
+        return {
+            tipAmount,
+            paymentMethod,
+            custID,
+            employeeID,
+            transID,
+            tableID
+        }
+}
+
+export async function addTip(tipAmount, transID) {
+    const [tip] = await pool.query(`UPDATE transactions SET total = total + ? WHERE transactionID = ?`, [tipAmount, transID])
+        return {
+            tipAmount,
+            transID
+        }
+}
+
+
+export async function getTransactionTotal(transactionID) {
+    const [total] = await pool.query(`SELECT total FROM transactions WHERE transactionID = ?`, [transactionID])
+        return total[0].total ?? null
+}
+
+
+export async function updateRewardPoints(total, customerID) {
+    const [rewardPoints] = await pool.query('UPDATE customers SET rewardPoints = rewardPoints + ROUND(?) WHERE customerID = ?', [total, customerID])
+}
+
+
+export async function getTablesBySectionID(sectionID) {
+    const [tables] = await pool.query(`SELECT tableID FROM tables WHERE sectionID = ?`, [sectionID])
+    return tables[0] ?? null
+}
+
+export async function tableHasTransaction(tableID) {
+    const [openTrans] = await pool.query(`SELECT transactionID FROM transactions WHERE tableID = ? AND paymentMethod IS NULL`, [tableID])
+    return openTrans[0] ?? null
+}
+
 export async function createTransaction(tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod){
     const [result] = await pool.query(`INSERT INTO transactions (tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod)
     VALUES (?, ?, ?, ?, ?, ?, ?)`, [tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod])
@@ -673,7 +754,7 @@ export async function getTopSpenders(startDate, endDate) {
     const [result] = await pool.query(
         `SELECT
             c.customerID, c.firstName, c.lastName, c.rewardPoints,
-            COUNT(t.transactionID) AS totalVisits,
+            COUNT(DISTINCT DATE(t.timePlaced)) AS totalVisits,
             ROUND(SUM(t.total), 2) AS totalSpent
         FROM customers c
         JOIN transactions t ON c.customerID = t.customerID
@@ -690,7 +771,7 @@ export async function getTopVisitors(startDate, endDate) {
     const [result] = await pool.query(
         `SELECT
             c.customerID, c.firstName, c.lastName, c.rewardPoints,
-            COUNT(t.transactionID) AS totalVisits,
+            COUNT(DISTINCT DATE(t.timePlaced)) AS totalVisits,
             ROUND(SUM(t.total), 2) AS totalSpent
         FROM customers c
         JOIN transactions t ON c.customerID = t.customerID
@@ -702,4 +783,40 @@ export async function getTopVisitors(startDate, endDate) {
         [startDate, endDate]
     )
     return result ?? []
+}
+
+export async function getLaborCost(startDate, endDate) {
+    const [result] = await pool.query(
+        `SELECT
+            ROUND(SUM(TIMESTAMPDIFF(MINUTE, tce.clockIn, tce.clockOut) / 60 * e.hourlyRate), 2) AS totalLaborCost
+        FROM timeclock_entries tce
+        JOIN employees e ON tce.employeeID = e.employeeID
+        WHERE tce.clockIn BETWEEN ? AND ?
+        AND tce.clockOut IS NOT NULL`,
+        [startDate, endDate]
+    )
+    return result[0] ?? null
+}
+
+export async function getFoodCost(startDate, endDate) {
+    const [rows] = await pool.query(
+        `SELECT
+            ROUND(SUM(po.quantity * i.pricePerUnit), 2) AS totalFoodCost
+        FROM purchase_orders po
+        JOIN ingredients i ON po.ingredientID = i.ingredientID
+        WHERE po.dateOrdered BETWEEN ? AND ?`,
+        [startDate, endDate]
+    )
+    return rows[0] ?? null
+}
+
+export async function getAvailableProducts(){
+    const [result] = await pool.query(`SELECT * FROM availableProducts`)
+    return result
+}
+
+export async function getAvailableProduct(productID){
+    const [product] = await pool.query(
+        `SELECT * FROM availableProducts WHERE productID = ?`, [productID])
+    return product[0] ?? null
 }

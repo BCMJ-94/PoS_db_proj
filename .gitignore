@@ -1,2 +1,3 @@
 node_modules/
-encrypt_password.js
+server/.env
+.http
