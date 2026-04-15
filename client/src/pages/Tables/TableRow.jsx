@@ -1,49 +1,32 @@
-import Button from "../../components/Button"
-
-export function ShowTableRow() {
-    // CHANGE DESIGN FUNCTION BAD DESIGN BUT WORKS
-    const tableRowClass = "flex flex-row justify-between" 
-
-    return (
-        <table>
-            <tbody>
-                <tr className={tableRowClass}>
-                    <Row 
-                        table={{
-                            tableID: 1,
-                            isOpen: true
-                        }} 
-                    />
-                </tr>
-                <tr className={tableRowClass}>
-                    <Row 
-                        table={{
-                            tableID: 1,
-                            isOpen: false
-                        }} 
-                    />
-                </tr>
-            </tbody>
-        </table>
-    )
-}
+import Button from "../../components/Button";
 
 export default function Row({ table }) {
     return (
-        <>
-            <p>{table.tableID}</p>
+        <div className="flex items-center w-80 justify-between rounded-lg border border-gray-300 bg-white p-2 py-4 shadow-sm">
+            <p className="text-lg font-semibold">Table {table.tableID}</p>
 
-            {
-                table.isOpen ? (
+            <div className="flex gap-2">
+                {table.isOpen ? (
                     <>
-                        <Button name="Modify" type="button" onClick={() => console.log("Clicked")}/>
-                        <Button name="Close" type="button" onClick={() => console.log("Clicked")}/>
+                        <Button
+                            name="Modify"
+                            type="button"
+                            onClick={() => console.log("Modify")}
+                        />
+                        <Button
+                            name="Close"
+                            type="button"
+                            onClick={() => console.log("Close")}
+                        />
                     </>
-                    
                 ) : (
-                    <Button name="OpenTab" type="button" onClick={() => console.log("Clicked")}/>
-                )
-            }
-        </>
-    )
+                    <Button
+                        name="OpenTab"
+                        type="button"
+                        onClick={() => console.log("OpenTab")}
+                    />
+                )}
+            </div>
+        </div>
+    );
 }
