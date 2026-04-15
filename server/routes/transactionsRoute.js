@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { getTransaction, getTransactions, createTransaction, updateTransaction, deleteTransaction, getCurrentTransactionIDByTable, createProduct_Order, openTransactionTab, closeTransactionTab, getCustomerByEmail, closeTabWithEmail } from '../database.js'
+import { getTransaction, getTransactions, deleteTransaction, getCurrentTransactionIDByTable, createProduct_Order, openTransactionTab, closeTransactionTab, getCustomerByEmail, closeTabWithEmail, updateRewardPoints, updateProduct_Order, deleteProduct_Order, addTip, getTransactionTotal } from '../database.js'
 import isAuthorized from '../utils/auth.js'
 
 const transactionsRouter = express.Router()
@@ -18,7 +18,7 @@ transactionsRouter.get("/", async (req, res) => {
     }
 })
 
-transactionsRouter.get("/:transactionID", async (req, res) => {
+transactionsRouter.get("/transactionID", async (req, res) => {
     const transactionID = req.params.transactionID
     try {
         const transaction = await getTransaction(transactionID)
@@ -30,33 +30,6 @@ transactionsRouter.get("/:transactionID", async (req, res) => {
         }
 
         res.send(transaction)
-    } catch (err) {
-        res.status(500).json({
-            message: "Server error"
-        })
-    }
-})
-
-transactionsRouter.post("/", async (req, res) => {
-    const { tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod } = req.body
-
-    try {
-        const transaction = await createTransaction(tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod)
-        res.status(201).send(transaction)
-    } catch (err) {
-        console.log(err.message)
-        res.status(500).json({
-            message: "Server error"
-        })
-    }
-})
-
-transactionsRouter.put("/", async (req, res) => {
-    const {tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod, transactionID} = req.body
-
-    try {
-        const trans = await updateTransaction(tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod, transactionID)
-        res.status(201).send(trans)
     } catch (err) {
         res.status(500).json({
             message: "Server error"
@@ -90,16 +63,32 @@ transactionsRouter.post("/openTab", async (req, res) => { // this successfully o
             })
 
         } catch (err) {
+            console.log(err)
+            if (err.errno = 1452){
+                res.status(404).json({
+                    message : "tableID not in database"
+                })
+            }
+            else{
             res.status(500).json({
                 message: "Transaction creation failed"
             })
+            }
         }
     })
 
 transactionsRouter.post("/addOrder", async (req, res) => {
         try{
+            console.log(req.body)
             const {quantity, productID, tableID} = req.body
+
             const transID = await getCurrentTransactionIDByTable(tableID)
+            console.log(transID)
+            if (!transID){
+                res.status(404).json({
+                    message : `No open transactions found on table: ${tableID}`
+                })
+            }
             await createProduct_Order(quantity, productID, transID)
 
             res.status(201).json({
@@ -107,6 +96,7 @@ transactionsRouter.post("/addOrder", async (req, res) => {
             })
 
         } catch (err) {
+          //  console.log(err)
             res.status(500).json({
                 message: "Failed to add order to transaction"
             })
@@ -117,7 +107,7 @@ transactionsRouter.post("/addOrder", async (req, res) => {
 transactionsRouter.put("/modifyOrder", async (req, res) => {
     try {
         const { quantity, productID, tableID } = req.body
-        const transID = await getCurrentTransactionByTable(tableID)
+        const transID = await getCurrentTransactionIDByTable(tableID)
         await updateProduct_Order(quantity, productID, transID)
         res.status(200).json({
             message: "Order successfully updated"
@@ -132,7 +122,7 @@ transactionsRouter.put("/modifyOrder", async (req, res) => {
 transactionsRouter.delete("/deleteOrder", async (req, res) => {
     try {
         const { productID, tableID } = req.body
-        const transID = await getCurrentTransactionByTable(tableID)
+        const transID = await getCurrentTransactionIDByTable(tableID)
         await deleteProduct_Order(transID, productID)
         res.status(200).json({
             message: "Order successfully removed"
@@ -147,13 +137,14 @@ transactionsRouter.delete("/deleteOrder", async (req, res) => {
 transactionsRouter.put("/closeTab", async (req, res) => {
         try{
             // first we need to grab the employeeID and the correct transaction for that employee
-            const {tableID, email, total, tipAmount, paymentMethod} = req.body
+            const {tableID, email, tipAmount, paymentMethod} = req.body
             const employeeID = req.session.employee.employeeID
             const transID = await getCurrentTransactionIDByTable(tableID) // whenever need ID, call trans.transactionID
             // then we need to add the rest of the attributes
             // server is supposed to receive customer email to find the customerID if registered
             if(!email){
-                await closeTransactionTab(total, tipAmount, paymentMethod, employeeID, transID, tableID)
+                await addTip(tipAmount, transID)
+                await closeTransactionTab(tipAmount, paymentMethod, employeeID, transID, tableID)
             }
             else{
                 // retrieve customer by email
@@ -164,7 +155,11 @@ transactionsRouter.put("/closeTab", async (req, res) => {
                     })
                 }
                 else{
-                    await closeTabWithEmail(total, tipAmount, paymentMethod, customer.customerID, employeeID, transID, tableID)
+                    await addTip(tipAmount, transID)
+                    await closeTabWithEmail(tipAmount, paymentMethod, customer.customerID, employeeID, transID, tableID)
+                    const total = await getTransactionTotal(transID)
+                    // // grab customerID and total (add the total amount to customerID's reward points) this will prob be done in a couple methods
+                    await updateRewardPoints(total, customer.customerID)
                 }
             }
             res.status(201).json({
@@ -172,29 +167,9 @@ transactionsRouter.put("/closeTab", async (req, res) => {
             })
         } catch (err) {
             res.status(500).json({
-                message: "Failed to close transaction"//err.message
+                message: "Failed to close transaction"
             })
         }
     })
-
-transactionsRouter.put("/closeTab2", async (req,res) => {
-    try{
-        const {tableID, email, total, tipAmount, paymentMethod} = req.body
-        const employeeID = req.session.employee.employeeID
-
-
-        res.status(201).json({
-            message : "Successfully closed transaction"
-        })
-
-    }
-
-    catch(error){
-        console.log(error)
-        res.status(500).json({
-            message : "Failed to close transaction"
-        })
-    }
-})
 
 export default transactionsRouter

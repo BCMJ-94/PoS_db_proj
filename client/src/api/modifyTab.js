@@ -1,6 +1,6 @@
 import { API_URL } from "./baseUrl";
 
-export default async function addToTab(productID){
+export default async function addToTab(quantity, productID, tableID){
     const endpoint = `${API_URL}/transactions/addOrder`
 
     const request = {
@@ -13,9 +13,9 @@ export default async function addToTab(productID){
     }
 
     const response = await fetch(endpoint, request);
-    const data = await response.json().catch(() => {})
+    const data = await response.json().catch(() => ({}))
 
-    if (!res.ok){
+    if (!response.ok){
         throw new Error (
             data.message || `HTTP Error: ${res.status}`
         );
@@ -26,7 +26,7 @@ export default async function addToTab(productID){
     }
 }
 
-export default async function closeTab(tableID, email, total, tipAmount, paymentMethod){
+export  async function closeTab(tableID, email, total, tipAmount, paymentMethod){
     const endpoint = `${API_URL}/transactions/closeTab`
 
     const request = {

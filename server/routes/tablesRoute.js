@@ -1,6 +1,6 @@
 import express from 'express'
 
-import {getTablesBySectionID,getSectionByEmployeeID, getTable, getTables, createTable, updateTable, deleteTable, getCurrentTransactionByTable } from '../database.js'
+import { getTable, getTables, createTable, updateTable, deleteTable, getCurrentTransactionIDByTable, getSectionByEmployeeID, getTablesBySectionID } from '../database.js'
 import isAuthorized from '../utils/auth.js'
 
 const tablesRouter = express.Router()
@@ -132,22 +132,34 @@ tablesRouter.get("/employeeTables", isAuthorized, async (req, res) => {
         const section = await getSectionByEmployeeID(employeeID)
         console.log(section)
         if (!section) {
-            res.status(400).json({
+            return res.status(400).json({
                 message: "Could not find section"
             })
         }
 
         const tables = await getTablesBySectionID(section.sectionID)
-        console.log("tables: ",tables)
-        if (!tables) {
-            res.status(400).json({
+
+        if (!tables || tables.length === 0) {
+            return res.status(400).json({
                 message: "Could not find tables"
             })
         }
+        
+        const formattedTables = [];
 
-        for (const table in tables) {
-            console.log(table)
+        for (const table of tables) {
+            const openTab = await getOpenTabByTableID(table.tableID);
+
+            formattedTables.push({
+                tableID: table.tableID,
+                isOpen: !!openTab
+            });
         }
+
+        return res.status(200).json({
+            tables: formattedTables
+        });
+
     } catch (err) {
         console.log(err)
         return res.status(500).json({

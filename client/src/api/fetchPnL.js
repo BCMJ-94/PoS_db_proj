@@ -21,5 +21,4 @@ export default async function fetchPnL(startDate, endDate){
         );
     }
     return await response.json()
-
 }

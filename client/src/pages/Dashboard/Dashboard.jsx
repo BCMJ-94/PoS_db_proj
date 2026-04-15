@@ -2,11 +2,13 @@ import React from 'react'
 import Button from "../../components/Button.jsx"
 import { useNavigate } from 'react-router-dom'
 import NavBar from '../../routes/NavBar.jsx'
-import loadMenu from '../../api/loadMenu.js'
+import MenuButton from '../../components/MenuButton.jsx'
 
 //pretty much just using this to test the api
 export default function Dashboard(){
     const nav = useNavigate() 
+
+    const product = {productID: "1", name: "test", tableID: "2"}
 
     const goToOpenTab = () => {
         try{
@@ -19,8 +21,7 @@ export default function Dashboard(){
     }
 
     const getMenu = async () => {
-        const obj = await loadMenu()
-        console.log(JSON.stringify(obj))
+      
     }
 
     const registerNewEmployee = () => {
@@ -37,8 +38,6 @@ export default function Dashboard(){
         try{
             console.log("redirect to new product page")
             nav("/newproduct", {replace : true})
-
-
         }
         catch(error){
             console.log(error.message)
@@ -50,17 +49,18 @@ export default function Dashboard(){
             <NavBar />
            <div style = {{display: "flex", alignItems : "center" , height : "100%"}}>
                 <div>
-                    <Button onClick = {goToOpenTab}  type = "button" name = "Open Tab"/>     
-                </div>  
-                <div>
                     <Button onClick = {registerNewEmployee} type = "button" name = "Register New Employee"/>
                 </div>
                 <div>
                     <Button onClick = {addNewProduct} type  = "button" name  = "Add New Product"/>
                 </div>
                 <div>
-                    <Button onClick = {getMenu}  type  = "button" name  = "load menu"/>
+                    <Button onClick = {getMenu}  type  = "button" name  = "Menu"/>
                 </div>
+                <div>
+                    <MenuButton product = {product}/>
+                </div>
+          
             </div> 
         </>
     )

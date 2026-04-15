@@ -68,11 +68,10 @@ POST http://localhost:3030/products
 content-type : application/json
 
 {
-    "productID" : "0001",
-    "_name" : "sandwich",
+    "productID" : "0006",
+    "_name" : "shawarma",
     "price" : "2",
     "menuType" : "1",
-    "isAvailable" : "1",
     "stationID" : "1"
 }
 
