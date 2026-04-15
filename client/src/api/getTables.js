@@ -12,7 +12,7 @@ export async function getTablesByEmployee(employeeID){
         })
     })
 
-    data = res.json().catch(() => ({}))
+    const data = res.json().catch(() => ({}))
 
     if (!res.ok) {
         throw new Error (

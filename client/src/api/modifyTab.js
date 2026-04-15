@@ -13,9 +13,9 @@ export default async function addToTab(quantity, productID, tableID){
     }
 
     const response = await fetch(endpoint, request);
-    const data = await response.json().catch(() => {})
+    const data = await response.json().catch(() => ({}))
 
-    if (!res.ok){
+    if (!response.ok){
         throw new Error (
             data.message || `HTTP Error: ${res.status}`
         );

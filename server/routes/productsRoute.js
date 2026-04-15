@@ -26,7 +26,6 @@ productsRouter.get("/", async (req, res) => {
     }
 })
 
-
 productsRouter.post("/", async (req, res) => {
     const { productID, _name, price, menuType, stationID } = req.body
     console.log("productID: ",productID)

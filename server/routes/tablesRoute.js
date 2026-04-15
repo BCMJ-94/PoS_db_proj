@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { getTable, getTables, createTable, updateTable, deleteTable, getCurrentTransactionByTable, getSectionByEmployeeID, getTablesBySectionID } from '../database.js'
+import { getTable, getTables, createTable, updateTable, deleteTable, getCurrentTransactionIDByTable, getSectionByEmployeeID, getTablesBySectionID } from '../database.js'
 import isAuthorized from '../utils/auth.js'
 
 const tablesRouter = express.Router()

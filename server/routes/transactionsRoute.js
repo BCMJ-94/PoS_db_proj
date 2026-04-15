@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { getTransaction, getTransactions, createTransaction, updateTransaction, deleteTransaction, getCurrentTransactionIDByTable, createProduct_Order, openTransactionTab, closeTransactionTab, getCustomerByEmail, closeTabWithEmail, updateRewardPoints, updateProduct_Order, deleteProduct_Order, addTip, getTransactionTotal } from '../database.js'
+import { getTransaction, getTransactions, deleteTransaction, getCurrentTransactionIDByTable, createProduct_Order, openTransactionTab, closeTransactionTab, getCustomerByEmail, closeTabWithEmail, updateRewardPoints, updateProduct_Order, deleteProduct_Order, addTip, getTransactionTotal } from '../database.js'
 import isAuthorized from '../utils/auth.js'
 
 const transactionsRouter = express.Router()
@@ -30,19 +30,6 @@ transactionsRouter.get("/transactionID", async (req, res) => {
         }
 
         res.send(transaction)
-    } catch (err) {
-        res.status(500).json({
-            message: "Server error"
-        })
-    }
-})
-
-transactionsRouter.put("/", async (req, res) => {
-    const {tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod, transactionID} = req.body
-
-    try {
-        const trans = await updateTransaction(tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod, transactionID)
-        res.status(201).send(trans)
     } catch (err) {
         res.status(500).json({
             message: "Server error"
@@ -92,8 +79,16 @@ transactionsRouter.post("/openTab", async (req, res) => { // this successfully o
 
 transactionsRouter.post("/addOrder", async (req, res) => {
         try{
+            console.log(req.body)
             const {quantity, productID, tableID} = req.body
+
             const transID = await getCurrentTransactionIDByTable(tableID)
+            console.log(transID)
+            if (!transID){
+                res.status(404).json({
+                    message : `No open transactions found on table: ${tableID}`
+                })
+            }
             await createProduct_Order(quantity, productID, transID)
 
             res.status(201).json({
@@ -101,6 +96,7 @@ transactionsRouter.post("/addOrder", async (req, res) => {
             })
 
         } catch (err) {
+          //  console.log(err)
             res.status(500).json({
                 message: "Failed to add order to transaction"
             })

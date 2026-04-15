@@ -165,7 +165,6 @@ export async function getCurrentPayPeriod() {
         LIMIT 1
         `
     )
-
     return rows[0] ?? null
 }
 
@@ -594,12 +593,6 @@ export async function getTransaction(transactionID){
     return transactions[0] ?? null
 }
 
-export async function getCurrentTransactionByTable(tableID){
-    const [transactions] = await pool.query(
-        `SELECT * FROM transactions WHERE tableID = ? AND paymentMethod IS NULL ORDER BY timePlaced DESC LIMIT 1`, [tableID])
-    return transactions[0] ?? null
-}
-
 export async function getCurrentTransactionIDByTable(tableID){
     const [transactionID] = await pool.query(`SELECT * FROM transactions WHERE tableID = ? AND paymentMethod IS NULL ORDER BY timePlaced DESC LIMIT 1`, [tableID])
     return transactionID[0].transactionID ?? null
@@ -647,60 +640,23 @@ export async function addTip(tipAmount, transID) {
         }
 }
 
-
 export async function getTransactionTotal(transactionID) {
     const [total] = await pool.query(`SELECT total FROM transactions WHERE transactionID = ?`, [transactionID])
         return total[0].total ?? null
 }
 
-
 export async function updateRewardPoints(total, customerID) {
     const [rewardPoints] = await pool.query('UPDATE customers SET rewardPoints = rewardPoints + ROUND(?) WHERE customerID = ?', [total, customerID])
 }
-
 
 export async function getTablesBySectionID(sectionID) {
     const [tables] = await pool.query(`SELECT tableID FROM tables WHERE sectionID = ?`, [sectionID])
     return tables[0] ?? null
 }
 
-export async function tableHasTransaction(tableID) {
-    const [openTrans] = await pool.query(`SELECT transactionID FROM transactions WHERE tableID = ? AND paymentMethod IS NULL`, [tableID])
-    return openTrans[0] ?? null
-}
-
-export async function createTransaction(tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod){
-    const [result] = await pool.query(`INSERT INTO transactions (tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod)
-    VALUES (?, ?, ?, ?, ?, ?, ?)`, [tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod])
-        return {
-            transactionID: result.insertId,
-            tableID,
-            employeeID,
-            customerID,
-            timePlaced,
-            total,
-            tipAmount,
-            paymentMethod
-        }
-}
-
 export async function deleteTransaction(transactionID){
     const [trans] = await pool.query(`DELETE FROM transactions WHERE transactionID = ?`, [transactionID])
     return trans ?? null
-}
-
-export async function updateTransaction(tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod, transactionID){
-    const [result] = await pool.query(`UPDATE transactions SET tableID = ?, employeeID = ?, customerID = ?, timePlaced = ?, total = ?, tipAmount = ?, paymentMethod = ? WHERE transactionID = ?`, [tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod, transactionID])
-        return {
-            tableID,
-            employeeID,
-            customerID,
-            timePlaced,
-            total,
-            tipAmount,
-            paymentMethod,
-            transactionID
-        }
 }
 
 export async function getItemsSoldReport(startDate, endDate) {
@@ -810,13 +766,51 @@ export async function getFoodCost(startDate, endDate) {
     return rows[0] ?? null
 }
 
-export async function getAvailableProducts(){
-    const [result] = await pool.query(`SELECT * FROM availableProducts`)
+
+
+
+
+///query builders
+export async function fetchAllTableNames(){
+    const result = await pool.query(
+        `SELECT table_name FROM information_schema.tables
+        WHERE table_schema = 'restauranttestdb';`
+    )
     return result
 }
 
-export async function getAvailableProduct(productID){
-    const [product] = await pool.query(
-        `SELECT * FROM availableProducts WHERE productID = ?`, [productID])
-    return product[0] ?? null
+export async function selectFromWhereBuilder(attribute, table_name,condition,compOp){
+    console.assert(table_name)
+    let result;
+    let conditions = [];
+    if (!attribute && !condition){
+        result = pool.query(
+            `SELECT * FROM ??`, [table_name]
+        )
+    }
+    else if(!condition){
+        result = pool.query(
+            `SELECT ?? FROM ??`, [attribute, table_name]
+        )
+    }
+    else{
+        let mysql = 'SELECT ?? FROM ?? WHERE 1 = 1'
+        if (condition[0] && condition[1]){
+            if(compOp == '='){
+            mysql += ' AND ?? = ?'
+
+            }
+            else if (compOp == '<'){
+                mysql += ' AND ?? < ?'
+            }
+        }
+        result = pool.query(mysql,[attribute, table_name, condition[0], condition[1]])
+       
+    }
+
+    return result
 }
+
+/* functions to delete:
+so many
+*/
