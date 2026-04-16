@@ -4,10 +4,14 @@ import { useNavigate } from 'react-router-dom'
 import NavBar from '../../routes/NavBar.jsx'
 import MenuButton from '../../components/MenuButton.jsx'
 import Menu from '../Menu/Menu.jsx'
+import { getAllTables } from '../../api/getTables.js'
+import { loadEmployee } from '../../api/loadEmployee.js'
+import loadMenu from '../../api/loadMenu.js'
+
 //pretty much just using this to test the api
 export default function Dashboard(){
     const nav = useNavigate() 
-
+    const tableID = 1 //for testing, remove later
 
     const goToOpenTab = () => {
         try{
@@ -20,7 +24,13 @@ export default function Dashboard(){
     }
 
     const getMenu = async () => {
-      
+        const menu = await loadMenu()
+        console.log(menu.products)
+    }
+
+    const getTables = async() => {
+        const tables = await getAllTables()
+        console.log("from dashboard:" ,tables.tables) 
     }
 
     const registerNewEmployee = () => {
@@ -57,7 +67,10 @@ export default function Dashboard(){
                     <Button onClick = {getMenu}  type  = "button" name  = "Menu"/>
                 </div>
                 <div>
-                    <Menu/>
+                    <Button onClick={getTables} type = "button" name = "Tables" />
+                </div>
+                <div>
+                    <Menu tableID = {tableID}/>
                 </div>
           
             </div> 

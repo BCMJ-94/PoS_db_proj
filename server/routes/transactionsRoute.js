@@ -79,11 +79,10 @@ transactionsRouter.post("/openTab", async (req, res) => { // this successfully o
 
 transactionsRouter.post("/addOrder", async (req, res) => {
         try{
-            console.log(req.body)
+            console.log("request body: ",req.body)
             const {quantity, productID, tableID} = req.body
 
             const transID = await getCurrentTransactionIDByTable(tableID)
-            console.log(transID)
             if (!transID){
                 res.status(404).json({
                     message : `No open transactions found on table: ${tableID}`
@@ -96,7 +95,9 @@ transactionsRouter.post("/addOrder", async (req, res) => {
             })
 
         } catch (err) {
-          //  console.log(err)
+            if (err.constructor == TypeError){//if the error is a type error then the problem is most likely because getCurrentTransactionIDByTable cannot find an open transaction in the db
+                console.log(`No open tabs on ${tableID}`)
+            }
             res.status(500).json({
                 message: "Failed to add order to transaction"
             })

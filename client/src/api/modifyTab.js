@@ -17,7 +17,7 @@ export default async function addToTab(quantity, productID, tableID){
 
     if (!response.ok){
         throw new Error (
-            data.message || `HTTP Error: ${res.status}`
+            data.message || `HTTP Error: ${response.status}`
         );
     }
     console.log(data.body)

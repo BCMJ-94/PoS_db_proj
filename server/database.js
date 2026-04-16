@@ -786,17 +786,18 @@ export async function fetchAllTableNames(){
 
 export async function selectFromWhereBuilder(attribute, table_name,condition,compOp){
     console.assert(table_name)
-    let result;
     let conditions = [];
     if (!attribute && !condition){
-        result = pool.query(
-            `SELECT * FROM ??`, [table_name]
+        const result = pool.query(
+            `SELECT * FROM (??)`, [table_name],
         )
+        return result
     }
     else if(!condition){
-        result = pool.query(
+        const result = pool.query(
             `SELECT ?? FROM ??`, [attribute, table_name]
         )
+        return result
     }
     else{
         let mysql = 'SELECT ?? FROM ?? WHERE 1 = 1'
@@ -808,19 +809,16 @@ export async function selectFromWhereBuilder(attribute, table_name,condition,com
             else if (compOp == '<'){
                 mysql += ' AND ?? < ?'
             }
+            else if(compOp == '>'){
+                mysql += ' AND ?? > ?'
+            }
         }
-        result = pool.query(mysql,[attribute, table_name, condition[0], condition[1]])
+        const [result] = pool.query(mysql,[attribute, table_name, condition[0], condition[1]])
        
     }
 
-    return result
 }
 
-export async function insertQueryBuilder(table_name, data){
-    const obj = JSON.parse(data);
-    let result;
-    let keys = Object.keys(obj)
-}
 
 export async function insertQuery(table_name, attribute, data){
     let result;
@@ -833,6 +831,12 @@ export async function updateQuery(table_name, attribute, data){
     let result;
     let qry = ``
 }
+
+/*export async function insertQueryBuilder(table_name, data){
+    const obj = JSON.parse(data);
+    let result;
+    let keys = Object.keys(obj)
+}*/
 
 /* functions to delete:
 so many

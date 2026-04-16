@@ -83,6 +83,12 @@ content-type : application/json
     "employeeID" : 1
 }
 
+###get all tables from autorouter
+GET http://localhost:3030/autorouter/restaurantTables
+content-type : application/json
+
+{}
+
 ###login
 POST http://localhost:3030/login
 content-type : application/json
