@@ -306,6 +306,15 @@ export async function getProduct(productID){
 export async function createProduct(productID, _name, price, menuType, isAvailable, stationID){ // we need to change stationID to stationType, no foreign key required
     const [result] = await pool.query(`INSERT INTO products (productID, _name, price, menuType, isAvailable, stationID)
     VALUES (?, ?, ?, ?, ?, ?)`, [productID, _name, price, menuType, isAvailable, stationID])
+    console.log({
+            productID,
+            _name,
+            price,
+            menuType,
+            isAvailable,
+            stationID
+        }
+)
         return {
             productID,
             _name,
@@ -766,10 +775,6 @@ export async function getFoodCost(startDate, endDate) {
     return rows[0] ?? null
 }
 
-
-
-
-
 ///query builders
 export async function fetchAllTableNames(){
     const result = await pool.query(
@@ -809,6 +814,24 @@ export async function selectFromWhereBuilder(attribute, table_name,condition,com
     }
 
     return result
+}
+
+export async function insertQueryBuilder(table_name, data){
+    const obj = JSON.parse(data);
+    let result;
+    let keys = Object.keys(obj)
+}
+
+export async function insertQuery(table_name, attribute, data){
+    let result;
+    let qry = `INSERT INTO ?? (??) VALUES (?);`
+
+    result = pool.query(qry, [table_name,attribute,data]) 
+}
+
+export async function updateQuery(table_name, attribute, data){
+    let result;
+    let qry = ``
 }
 
 /* functions to delete:

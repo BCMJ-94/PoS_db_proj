@@ -3,12 +3,11 @@ import Button from "../../components/Button.jsx"
 import { useNavigate } from 'react-router-dom'
 import NavBar from '../../routes/NavBar.jsx'
 import MenuButton from '../../components/MenuButton.jsx'
-
+import Menu from '../Menu/Menu.jsx'
 //pretty much just using this to test the api
 export default function Dashboard(){
     const nav = useNavigate() 
 
-    const product = {productID: "1", name: "test", tableID: "2"}
 
     const goToOpenTab = () => {
         try{
@@ -58,7 +57,7 @@ export default function Dashboard(){
                     <Button onClick = {getMenu}  type  = "button" name  = "Menu"/>
                 </div>
                 <div>
-                    <MenuButton product = {product}/>
+                    <Menu/>
                 </div>
           
             </div> 

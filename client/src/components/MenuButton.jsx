@@ -1,12 +1,12 @@
 import React from 'react'
 import addToTab from '../api/modifyTab'
 
-export default function MenuButton({product}){
-    const data = JSON.stringify({product})
+export default function MenuButton(product){
+    console.log("from menu button: ",product)
+    const data = JSON.parse({product})
     const sendOrder = async () => {
         const response = await addToTab(1, product.productID, product.tableID)
-        console.log(response.message);
-        
+        //console.log(response.message);
     }
 
     return(

@@ -19,6 +19,5 @@ export async function getTablesByEmployee(employeeID){
             data.message || `HTTP Error: ${res.status}`
         );    
     }
-
     return data
 }
