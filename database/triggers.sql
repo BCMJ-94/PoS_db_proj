@@ -130,6 +130,48 @@
 -- 
 -- END//
 
+DELIMITER //
+
+CREATE TRIGGER preventFraudShift
+BEFORE INSERT on timeclock_entries
+
+FOR EACH ROW
+
+BEGIN
+
+DECLARE shiftStartTime TIME; -- reminder, DECLARE declares a local variable
+DECLARE shiftEndTime TIME;
+
+SELECT startTime, endTime
+INTO shiftStartTime, shiftEndTime 
+FROM scheduled_shifts
+WHERE scheduledShiftID = 1;
+
+IF NEW.clockIn < shiftStartTime - INTERVAL 5 MINUTE
+THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Cannot clock in more than 5 minutes before your shift!';
+END IF;
+
+IF NEW.clockIn > shiftEndTime
+THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Cannot clock in after restaurant closing!';
+END IF;
+
+END//
+
+
+SET GLOBAL event_scheduler = ON;
+
+CREATE EVENT clockoutAtMidnight
+ON SCHEDULE EVERY 1 DAY
+STARTS TIMESTAMP(CURDATE() + INTERVAL 1 DAY)
+DO
+UPDATE timeclock_entries
+SET clockOut = DATE(clockIn) + INTERVAL 1 DAY -- DATE(expression) extracts the date of a datetime expression
+WHERE clockOut IS NULL;
+
 
 
 
