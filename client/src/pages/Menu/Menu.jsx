@@ -23,7 +23,6 @@ export default function Menu(){
         }
         retrieveMenu()
     },[])
-    console.log("from menu component: ", tableID)
 
     const products = menuItems.map(item => <MenuButton product = {item} tableID = {tableID} key = {item.productID} />)
 

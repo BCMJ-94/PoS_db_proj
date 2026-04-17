@@ -1,5 +1,5 @@
 import express from 'express'
-import { selectFromWhereBuilder, insertQuery, updateSetWhereBuilder } from '../database.js'
+import { selectFromWhereBuilder, insertQuery, updateSetWhereBuilder, oneOffQuery } from '../database.js'
 import isAuthorized from '../utils/auth.js'
 
 const autoRouter = express.Router()
@@ -23,9 +23,11 @@ autoRouter.get("/restaurantTables", async (req, res) => {
 
 autoRouter.post("/addToOrder", async (req, res)=>{
     //try to insert, catch if it fails. try update instead
+    const {quantity, productID, tableID} = req.body
+    console.log(req.body)
+    const [transactionID]= await selectFromWhereBuilder('transactionID','transactions',['tableID', tableID],'=', ' AND paymentMethod IS NULL')//null payment method is a proxy for open tabs
+    
     try{
-        const {quantity, productID, tableID} = req.body
-        const [transactionID]= await selectFromWhereBuilder('transactionID','transactions',['tableID', '2'],'=', ' AND paymentMethod IS NULL')//null payment method is a proxy for open tabs
         console.log('from autorouter: ', transactionID[0])
 
         const attempt_insert = await insertQuery('product_orders',['quantity', 'productID', 'transactionID'],[quantity, productID, transactionID[0].transactionID])
@@ -33,11 +35,24 @@ autoRouter.post("/addToOrder", async (req, res)=>{
     catch(err){
         console.log(err)
         if(err.code == 'ER_DUP_ENTRY'){
-//            const attempt_update = await updateQuery()
+            const attempt_update = await oneOffQuery(//ugly ugly ugly
+                `UPDATE product_orders SET quantity = quantity + ? WHERE productID = ? AND transactionID = ?`,
+                [quantity, productID, transactionID[0].transactionID]
+            )
+            console.log(attempt_update)
+            res.status(201).json({
+                message : "successfully updated quantity"
+            })
+            
+        }
+        else{
+            res.status(500).json({
+                message : err.code
+            })
         }
 
     }
-    console.log("testestestesteset")
+   
 
 })
 

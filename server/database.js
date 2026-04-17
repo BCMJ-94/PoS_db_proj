@@ -840,21 +840,34 @@ export async function selectFromWhereBuilder(attribute, table_name,condition,com
     }
 }
 
-export async function insertQuery(table_name, attribute, data){
+export async function insertQuery(table_name, attribute, data, suffix){
     let result;
     let qry = `INSERT INTO ?? (??) VALUES (?);`
-
+   
+   
     result = pool.query(qry, [table_name,attribute,data]) 
 
     return result
 }
 
-export async function updateSetWhereBuilder(table_name, attribute, data){
+export async function updateSetWhereBuilder(table_name, attribute, suffix, data, flag){//first element of condition is lhs, second is comparison operator, third is rhs
+    console.assert(table_name,attribute,data)
     let result;
-    let qry = ``
+    let update = `UPDATE ??` 
+    let set = ` SET ?? = ?`
+    let where = ` WHERE 1=1`
+    if (flag == 'INCREMENT'){
+        set = ` SET ?? = ?? + ?`
+    }
+    
+    const qry = update + set + where + suffix
+    //const result = pool.query
 }
 
-
+export async function oneOffQuery(statement, data){
+    const result = pool.query(statement, data)
+    return result
+}
 
 /* functions to delete:
 so many
