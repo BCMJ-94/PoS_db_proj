@@ -602,9 +602,23 @@ export async function getTransaction(transactionID){
     return transactions[0] ?? null
 }
 
+export async function getCurrentTransactionByTable(tableID){
+    const [transactions] = await pool.query(
+        `SELECT * FROM transactions WHERE tableID = ? AND paymentMethod IS NULL ORDER BY timePlaced DESC LIMIT 1`, [tableID])
+    return transactions[0] ?? null
+}
+
 export async function getCurrentTransactionIDByTable(tableID){
     const [transactionID] = await pool.query(`SELECT * FROM transactions WHERE tableID = ? AND paymentMethod IS NULL ORDER BY timePlaced DESC LIMIT 1`, [tableID])
     return transactionID[0].transactionID ?? null
+}
+
+export async function insertCustIDIntoTransaction(customerID, transactionID){
+    const [custID] = await pool.query(`UPDATE transactions SET customerID = ? WHERE transactionID = ?`, [customerID, transactionID])
+}
+
+export async function useRewardPoints(points, email){
+    const [result] = await pool.query(`UPDATE customers SET rewardPoints = rewardPoints - ? WHERE email = ?`, [points, email])
 }
 
 export async function openTransactionTab(tableID, employeeID){
