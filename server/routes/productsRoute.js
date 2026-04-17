@@ -16,7 +16,7 @@ productsRouter.get("/", async (req, res) => {
                 message: "Product not found"
             })
         }
-        console.log(products)
+    
         res.status(200).json({products})
     } catch (err) {
         console.log(err)

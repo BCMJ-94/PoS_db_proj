@@ -23,14 +23,19 @@ export default function Dashboard(){
         }
     }
 
-    const getMenu = async () => {
-        const menu = await loadMenu()
-        console.log(menu.products)
+    const openMenu = async (tableID) => {
+        console.log('redirect to menu')
+        return(
+            <div>
+            <Menu tableID = {tableID}/>
+            </div>
+        )
+
     }
 
     const getTables = async() => {
-        const tables = await getAllTables()
-        console.log("from dashboard:" ,tables.tables) 
+        console.log('redirect to tables')
+        nav("/tables", {replace : true})
     }
 
     const registerNewEmployee = () => {
@@ -64,13 +69,10 @@ export default function Dashboard(){
                     <Button onClick = {addNewProduct} type  = "button" name  = "Add New Product"/>
                 </div>
                 <div>
-                    <Button onClick = {getMenu}  type  = "button" name  = "Menu"/>
-                </div>
-                <div>
                     <Button onClick={getTables} type = "button" name = "Tables" />
                 </div>
                 <div>
-                    <Menu tableID = {tableID}/>
+                    <Button onClick = {openMenu} type = "button" name = "Open Menu"/>
                 </div>
           
             </div> 

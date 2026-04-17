@@ -3,7 +3,7 @@ import { fetchAllTableNames, selectFromWhereBuilder, insertQuery } from './datab
 //const result= await fetchAllTableNames()
 //console.log("test1: ",result)
 
-const [result2] = await selectFromWhereBuilder('productID', 'products')
+const [result2] = await selectFromWhereBuilder('transactionID','transactions',['tableID', '2'],'=')
 console.log("test2: ",[result2])
 
 /*

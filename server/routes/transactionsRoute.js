@@ -95,9 +95,9 @@ transactionsRouter.post("/addOrder", async (req, res) => {
             })
 
         } catch (err) {
-            if (err.constructor == TypeError){//if the error is a type error then the problem is most likely because getCurrentTransactionIDByTable cannot find an open transaction in the db
-                console.log(`No open tabs on ${tableID}`)
-            }
+            console.log("error number: ", err.code)
+            
+            console.log(err)
             res.status(500).json({
                 message: "Failed to add order to transaction"
             })

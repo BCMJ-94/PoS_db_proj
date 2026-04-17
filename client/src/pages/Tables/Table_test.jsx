@@ -2,44 +2,38 @@ import { useEffect, useState } from "react"
 import { getTablesByEmployee } from "../../api/getTables"
 import { useAuth } from "../../context/AuthProvider"
 import Row from "./TableRow"
+import { getAllTables } from '../../api/getTables.js'
+import NavBar from "../../routes/NavBar.jsx"
 
 export default function Table() {
     const { employee } = useAuth()
-    const [tables, setTables] = useState([
-        {
-            tableID : 1,
-            isOpen: true
-        },
-        {
-            tableID : 2,
-            isOpen: true
-        },
-        {
-            tableID : 3,
-            isOpen: false
-        }
-    ])
+    const [tables, setTables] = useState([])
 
-    // useEffect(() => {
-    //     const retrieveTables = async () => {
-    //         try {
-    //             const res = await getTablesByEmployee(employee.employeeID)
-    //             setTables(res.tables)
-    //         } catch (err) {
-    //             console.log("Failed to retrieve tables")
-    //         }
-    //         return res
-    //     }
+     useEffect(() => {
+         const retrieveTables = async () => {
+             try {
+                 const res = await getAllTables()
+                 setTables(res.tables)
+             } catch (err) {
 
-    //     retrieveTables()
-    // }, [])
+                 console.log(err.message," Failed to retrieve tables")
+             }
+         }
+
+         retrieveTables()
+     }, [])
+     //console.log(tables)
 
 
     return (
+        <>
+        <NavBar/>
         <div className="table-list">
             {tables.map((table) => (
                 <Row key={table.tableID} table={table} />
             ))}
         </div>
+
+        </>
     );
 }

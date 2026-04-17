@@ -800,23 +800,38 @@ export async function selectFromWhereBuilder(attribute, table_name,condition,com
         return result
     }
     else{
-        let mysql = 'SELECT ?? FROM ?? WHERE 1 = 1'
+        let mysql = ''
+        let select = ''
+        let from = 'FROM ?? '
+        let where = 'WHERE 1 = 1 '
+        if(!attribute){
+            select = 'SELECT * ' 
+        }
+        else{
+            select = 'SELECT ?? ' 
+        }
         if (condition[0] && condition[1]){
             if(compOp == '='){
-            mysql += ' AND ?? = ?'
+                where += ' AND ?? = ?'
 
             }
             else if (compOp == '<'){
-                mysql += ' AND ?? < ?'
+                where += ' AND ?? < ?'
             }
             else if(compOp == '>'){
-                mysql += ' AND ?? > ?'
+                where += ' AND ?? > ?'
             }
         }
-        const [result] = pool.query(mysql,[attribute, table_name, condition[0], condition[1]])
-       
+        mysql = select + from + where
+        if(!attribute){
+            const result = pool.query(mysql, [table_name, condition[0], condition[1]])
+            return result
+        }
+        else{
+            const result = pool.query(mysql,[attribute, table_name, condition[0], condition[1]])
+            return result
+        }
     }
-
 }
 
 
@@ -825,6 +840,8 @@ export async function insertQuery(table_name, attribute, data){
     let qry = `INSERT INTO ?? (??) VALUES (?);`
 
     result = pool.query(qry, [table_name,attribute,data]) 
+
+    return result
 }
 
 export async function updateQuery(table_name, attribute, data){

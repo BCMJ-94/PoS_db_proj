@@ -1,7 +1,7 @@
 import { API_URL } from "./baseUrl";
 
 export default async function addToTab(quantity, productID, tableID){
-    const endpoint = `${API_URL}/transactions/addOrder`
+    const endpoint = `${API_URL}/autorouter/addToOrder`
 
     const request = {
         method : 'POST', 
