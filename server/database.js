@@ -784,7 +784,7 @@ export async function fetchAllTableNames(){
     return result
 }
 
-export async function selectFromWhereBuilder(attribute, table_name,condition,compOp){
+export async function selectFromWhereBuilder(attribute, table_name,condition,compOp, suffix){//where suffix is another condition for the where clause bc i dont have time to incorporate multiple conditions properly rn
     console.assert(table_name)
     let conditions = [];
     if (!attribute && !condition){
@@ -822,7 +822,13 @@ export async function selectFromWhereBuilder(attribute, table_name,condition,com
                 where += ' AND ?? > ?'
             }
         }
-        mysql = select + from + where
+        if(suffix){
+            mysql = select + from + where + suffix
+        }
+        else{
+            mysql = select + from + where
+
+        }
         if(!attribute){
             const result = pool.query(mysql, [table_name, condition[0], condition[1]])
             return result
@@ -834,7 +840,6 @@ export async function selectFromWhereBuilder(attribute, table_name,condition,com
     }
 }
 
-
 export async function insertQuery(table_name, attribute, data){
     let result;
     let qry = `INSERT INTO ?? (??) VALUES (?);`
@@ -844,16 +849,12 @@ export async function insertQuery(table_name, attribute, data){
     return result
 }
 
-export async function updateQuery(table_name, attribute, data){
+export async function updateSetWhereBuilder(table_name, attribute, data){
     let result;
     let qry = ``
 }
 
-/*export async function insertQueryBuilder(table_name, data){
-    const obj = JSON.parse(data);
-    let result;
-    let keys = Object.keys(obj)
-}*/
+
 
 /* functions to delete:
 so many

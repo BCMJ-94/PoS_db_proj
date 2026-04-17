@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 export default function Row({ table }) {
     const nav = useNavigate()
+
   
     return (
         <div className="flex items-center w-80 justify-between rounded-lg border border-gray-300 bg-white p-2 py-4 shadow-sm">

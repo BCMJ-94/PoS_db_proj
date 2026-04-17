@@ -89,6 +89,13 @@ content-type : application/json
 
 {}
 
+###autorouter add to order
+POST http://localhost:3030/autorouter/addToOrder
+content-type : application/json
+
+{
+
+}
 ###login
 POST http://localhost:3030/login
 content-type : application/json
