@@ -15,5 +15,3 @@ const password = "testpass"
 const saltRounds = 10
 const hashedPassword = await hash(password, saltRounds)
 const result = await createEmployee("first", "last", "1994-01-01", "1994-01-01", "1", "30", hashedPassword)
-
-
