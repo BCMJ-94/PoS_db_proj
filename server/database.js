@@ -869,6 +869,17 @@ export async function oneOffQuery(statement, data){
     return result
 }
 
+
+export async function calculateTransactionTotal(transactionID) {
+    const [result] = await pool.query(`
+        SELECT SUM(po.quantity * p.price) as total
+        FROM product_orders po
+        JOIN products p ON po.productID = p.productID
+        WHERE po.transactionID = ?`, [transactionID])
+    return result[0]?.total ?? 0
+}
+
+
 /* functions to delete:
 so many
 */
