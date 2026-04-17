@@ -2,15 +2,6 @@
 
 ###logout
 POST http://localhost:3030/logout
-
-###login
-POST http://localhost:3030/login
-content-type : application/json
-
-{
-   "employeeID" : "1",
-   "password" : "testpass" 
-}
  
 ###add employee
 POST http://localhost:3030/employees
@@ -85,9 +76,31 @@ content-type : application/json
 }
 
 ###get section by employeeID
-GET http://localhost:3030/products
+GET http://localhost:3030/tables/employeeTables
 content-type : application/json
 
 {
     "employeeID" : 1
+}
+
+###get all tables from autorouter
+GET http://localhost:3030/autorouter/restaurantTables
+content-type : application/json
+
+{}
+
+###autorouter add to order
+POST http://localhost:3030/autorouter/addToOrder
+content-type : application/json
+
+{
+
+}
+###login
+POST http://localhost:3030/login
+content-type : application/json
+
+{
+   "employeeID" : "1",
+   "password" : "testpass" 
 }

@@ -16,8 +16,8 @@ productsRouter.get("/", async (req, res) => {
                 message: "Product not found"
             })
         }
-        console.log(products)
-        res.json(products)
+    
+        res.status(200).json({products})
     } catch (err) {
         console.log(err)
         res.status(500).json({
@@ -36,7 +36,7 @@ productsRouter.post("/", async (req, res) => {
         const product = await createProduct(productID, _name, price, menuType, 1, stationID)
         res.status(201).send(product)
     } catch (err) {
-        console.log(err)
+        console.log(err.errno)
         res.status(500).json({
             message: "Server error"
         })

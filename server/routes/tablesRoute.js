@@ -7,6 +7,7 @@ const tablesRouter = express.Router()
 
 tablesRouter.use(isAuthorized)
 
+
 tablesRouter.get("/", async (req, res) => {
     try {
         const tables = await getTables()
@@ -18,7 +19,7 @@ tablesRouter.get("/", async (req, res) => {
     }
 })
 
-tablesRouter.get("/:tableID/current-transaction", async (req, res) => {
+tablesRouter.get("/tableID/current-transaction", async (req, res) => {
     const tableID = req.params.tableID
 
     try {
@@ -46,7 +47,9 @@ tablesRouter.get("/:tableID/current-transaction", async (req, res) => {
     }
 })
 
-tablesRouter.get("/:tableID", async (req, res) => {
+tablesRouter.get("/tableID", async (req, res) => {
+
+    console.log("test /tableID")
     const tableID = req.params.tableID
     try {
         const table = await getTable(tableID)
@@ -59,6 +62,7 @@ tablesRouter.get("/:tableID", async (req, res) => {
 
         res.send(table)
     } catch (err) {
+        console.log("server error in /tableID")
         res.status(500).json({
             message: "Server error"
         })
@@ -78,7 +82,7 @@ tablesRouter.post("/", async (req, res) => {
     }
 })
 
-tablesRouter.put("/:tableID", async (req, res) => {
+tablesRouter.put("/tableID", async (req, res) => {
     const tableID = req.params.tableID
     const { capacity, sectionID } = req.body
 
@@ -100,7 +104,7 @@ tablesRouter.put("/:tableID", async (req, res) => {
     }
 })
 
-tablesRouter.delete("/:tableID", async (req, res) => {
+tablesRouter.delete("/tableID", async (req, res) => {
     const tableID = req.params.tableID
 
     try {
@@ -126,6 +130,7 @@ tablesRouter.get("/employeeTables", isAuthorized, async (req, res) => {
 
     try {
         const section = await getSectionByEmployeeID(employeeID)
+        console.log(section)
         if (!section) {
             return res.status(400).json({
                 message: "Could not find section"
@@ -156,6 +161,7 @@ tablesRouter.get("/employeeTables", isAuthorized, async (req, res) => {
         });
 
     } catch (err) {
+        console.log(err)
         return res.status(500).json({
             message: "Server error"
         })

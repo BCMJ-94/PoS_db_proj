@@ -306,6 +306,15 @@ export async function getProduct(productID){
 export async function createProduct(productID, _name, price, menuType, isAvailable, stationID){ // we need to change stationID to stationType, no foreign key required
     const [result] = await pool.query(`INSERT INTO products (productID, _name, price, menuType, isAvailable, stationID)
     VALUES (?, ?, ?, ?, ?, ?)`, [productID, _name, price, menuType, isAvailable, stationID])
+    console.log({
+            productID,
+            _name,
+            price,
+            menuType,
+            isAvailable,
+            stationID
+        }
+)
         return {
             productID,
             _name,
@@ -766,10 +775,6 @@ export async function getFoodCost(startDate, endDate) {
     return rows[0] ?? null
 }
 
-
-
-
-
 ///query builders
 export async function fetchAllTableNames(){
     const result = await pool.query(
@@ -779,37 +784,77 @@ export async function fetchAllTableNames(){
     return result
 }
 
-export async function selectFromWhereBuilder(attribute, table_name,condition,compOp){
+export async function selectFromWhereBuilder(attribute, table_name,condition,compOp, suffix){//where suffix is another condition for the where clause bc i dont have time to incorporate multiple conditions properly rn
     console.assert(table_name)
-    let result;
     let conditions = [];
     if (!attribute && !condition){
-        result = pool.query(
-            `SELECT * FROM ??`, [table_name]
+        const result = pool.query(
+            `SELECT * FROM (??)`, [table_name],
         )
+        return result
     }
     else if(!condition){
-        result = pool.query(
+        const result = pool.query(
             `SELECT ?? FROM ??`, [attribute, table_name]
         )
+        return result
     }
     else{
-        let mysql = 'SELECT ?? FROM ?? WHERE 1 = 1'
+        let mysql = ''
+        let select = ''
+        let from = 'FROM ?? '
+        let where = 'WHERE 1 = 1 '
+        if(!attribute){
+            select = 'SELECT * ' 
+        }
+        else{
+            select = 'SELECT ?? ' 
+        }
         if (condition[0] && condition[1]){
             if(compOp == '='){
-            mysql += ' AND ?? = ?'
+                where += ' AND ?? = ?'
 
             }
             else if (compOp == '<'){
-                mysql += ' AND ?? < ?'
+                where += ' AND ?? < ?'
+            }
+            else if(compOp == '>'){
+                where += ' AND ?? > ?'
             }
         }
-        result = pool.query(mysql,[attribute, table_name, condition[0], condition[1]])
-       
+        if(suffix){
+            mysql = select + from + where + suffix
+        }
+        else{
+            mysql = select + from + where
+
+        }
+        if(!attribute){
+            const result = pool.query(mysql, [table_name, condition[0], condition[1]])
+            return result
+        }
+        else{
+            const result = pool.query(mysql,[attribute, table_name, condition[0], condition[1]])
+            return result
+        }
     }
+}
+
+export async function insertQuery(table_name, attribute, data){
+    let result;
+    let qry = `INSERT INTO ?? (??) VALUES (?);`
+
+    result = pool.query(qry, [table_name,attribute,data]) 
 
     return result
 }
+
+export async function updateSetWhereBuilder(table_name, attribute, data){
+    let result;
+    let qry = ``
+}
+
+
 
 /* functions to delete:
 so many

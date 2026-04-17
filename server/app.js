@@ -20,7 +20,7 @@ import printersRouter from './routes/printersRoute.js'
 import product_ordersRouter from './routes/product_ordersRoute.js'
 import payroll_recordsRouter from './routes/payroll_recordsRoute.js'
 import pnlRouter from './routes/pnlRoute.js'
-
+import autoRouter from './routes/autorouter.js'
 
 const app = express()
 const port = process.env.PORT || 3030
@@ -68,6 +68,7 @@ app.use(
 
 app.use('/employees', employeesRouter)
 app.use(authRouter)
+app.use('/autorouter', autoRouter)
 app.use('/data-reports', dataReportRouter)
 app.use('/customers', customersRouter)
 app.use('/ingredients', ingredientsRouter)
