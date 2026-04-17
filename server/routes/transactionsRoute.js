@@ -135,7 +135,7 @@ transactionsRouter.delete("/deleteOrder", async (req, res) => {
     }
 })
 
-transactionsRouter.put("/useRewards", async (req, res) => {
+transactionsRouter.put("/useRewards", async (req, res) => { // Dependent on total not being 0 (orders been added to transaction) and customerID (added using this route even if closeTabWithEmail does the same thing, needed for optional discount trigger to work)
     try{
         // need email to verify loyalty status
         const {tableID, email, points} = req.body
