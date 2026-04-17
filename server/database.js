@@ -165,7 +165,6 @@ export async function getCurrentPayPeriod() {
         LIMIT 1
         `
     )
-
     return rows[0] ?? null
 }
 
@@ -307,6 +306,15 @@ export async function getProduct(productID){
 export async function createProduct(productID, _name, price, menuType, isAvailable, stationID){ // we need to change stationID to stationType, no foreign key required
     const [result] = await pool.query(`INSERT INTO products (productID, _name, price, menuType, isAvailable, stationID)
     VALUES (?, ?, ?, ?, ?, ?)`, [productID, _name, price, menuType, isAvailable, stationID])
+    console.log({
+            productID,
+            _name,
+            price,
+            menuType,
+            isAvailable,
+            stationID
+        }
+)
         return {
             productID,
             _name,
@@ -594,12 +602,6 @@ export async function getTransaction(transactionID){
     return transactions[0] ?? null
 }
 
-export async function getCurrentTransactionByTable(tableID){
-    const [transactions] = await pool.query(
-        `SELECT * FROM transactions WHERE tableID = ? AND paymentMethod IS NULL ORDER BY timePlaced DESC LIMIT 1`, [tableID])
-    return transactions[0] ?? null
-}
-
 export async function getCurrentTransactionIDByTable(tableID){
     const [transactionID] = await pool.query(`SELECT * FROM transactions WHERE tableID = ? AND paymentMethod IS NULL ORDER BY timePlaced DESC LIMIT 1`, [tableID])
     return transactionID[0].transactionID ?? null
@@ -647,60 +649,23 @@ export async function addTip(tipAmount, transID) {
         }
 }
 
-
 export async function getTransactionTotal(transactionID) {
     const [total] = await pool.query(`SELECT total FROM transactions WHERE transactionID = ?`, [transactionID])
         return total[0].total ?? null
 }
 
-
 export async function updateRewardPoints(total, customerID) {
     const [rewardPoints] = await pool.query('UPDATE customers SET rewardPoints = rewardPoints + ROUND(?) WHERE customerID = ?', [total, customerID])
 }
-
 
 export async function getTablesBySectionID(sectionID) {
     const [tables] = await pool.query(`SELECT tableID FROM tables WHERE sectionID = ?`, [sectionID])
     return tables[0] ?? null
 }
 
-export async function tableHasTransaction(tableID) {
-    const [openTrans] = await pool.query(`SELECT transactionID FROM transactions WHERE tableID = ? AND paymentMethod IS NULL`, [tableID])
-    return openTrans[0] ?? null
-}
-
-export async function createTransaction(tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod){
-    const [result] = await pool.query(`INSERT INTO transactions (tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod)
-    VALUES (?, ?, ?, ?, ?, ?, ?)`, [tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod])
-        return {
-            transactionID: result.insertId,
-            tableID,
-            employeeID,
-            customerID,
-            timePlaced,
-            total,
-            tipAmount,
-            paymentMethod
-        }
-}
-
 export async function deleteTransaction(transactionID){
     const [trans] = await pool.query(`DELETE FROM transactions WHERE transactionID = ?`, [transactionID])
     return trans ?? null
-}
-
-export async function updateTransaction(tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod, transactionID){
-    const [result] = await pool.query(`UPDATE transactions SET tableID = ?, employeeID = ?, customerID = ?, timePlaced = ?, total = ?, tipAmount = ?, paymentMethod = ? WHERE transactionID = ?`, [tableID, employeeID, customerID, timePlaced, total, tipAmount, paymentMethod, transactionID])
-        return {
-            tableID,
-            employeeID,
-            customerID,
-            timePlaced,
-            total,
-            tipAmount,
-            paymentMethod,
-            transactionID
-        }
 }
 
 export async function getItemsSoldReport(startDate, endDate) {
@@ -810,13 +775,100 @@ export async function getFoodCost(startDate, endDate) {
     return rows[0] ?? null
 }
 
-export async function getAvailableProducts(){
-    const [result] = await pool.query(`SELECT * FROM availableProducts`)
+///query builders
+export async function fetchAllTableNames(){
+    const result = await pool.query(
+        `SELECT table_name FROM information_schema.tables
+        WHERE table_schema = 'restauranttestdb';`
+    )
     return result
 }
 
-export async function getAvailableProduct(productID){
-    const [product] = await pool.query(
-        `SELECT * FROM availableProducts WHERE productID = ?`, [productID])
-    return product[0] ?? null
+export async function selectFromWhereBuilder(attribute, table_name,condition,compOp, suffix){//where suffix is another condition for the where clause bc i dont have time to incorporate multiple conditions properly rn
+    console.assert(table_name)
+    let conditions = [];
+    if (!attribute && !condition){
+        const result = pool.query(
+            `SELECT * FROM (??)`, [table_name],
+        )
+        return result
+    }
+    else if(!condition){
+        const result = pool.query(
+            `SELECT ?? FROM ??`, [attribute, table_name]
+        )
+        return result
+    }
+    else{
+        let mysql = ''
+        let select = ''
+        let from = 'FROM ?? '
+        let where = 'WHERE 1 = 1 '
+        if(!attribute){
+            select = 'SELECT * ' 
+        }
+        else{
+            select = 'SELECT ?? ' 
+        }
+        if (condition[0] && condition[1]){
+            if(compOp == '='){
+                where += ' AND ?? = ?'
+
+            }
+            else if (compOp == '<'){
+                where += ' AND ?? < ?'
+            }
+            else if(compOp == '>'){
+                where += ' AND ?? > ?'
+            }
+        }
+        if(suffix){
+            mysql = select + from + where + suffix
+        }
+        else{
+            mysql = select + from + where
+
+        }
+        if(!attribute){
+            const result = pool.query(mysql, [table_name, condition[0], condition[1]])
+            return result
+        }
+        else{
+            const result = pool.query(mysql,[attribute, table_name, condition[0], condition[1]])
+            return result
+        }
+    }
 }
+
+export async function insertQuery(table_name, attribute, data, suffix){
+    let result;
+    let qry = `INSERT INTO ?? (??) VALUES (?);`
+   
+   
+    result = pool.query(qry, [table_name,attribute,data]) 
+
+    return result
+}
+
+export async function updateSetWhereBuilder(table_name, attribute, suffix, data, flag){//first element of condition is lhs, second is comparison operator, third is rhs
+    console.assert(table_name,attribute,data)
+    let result;
+    let update = `UPDATE ??` 
+    let set = ` SET ?? = ?`
+    let where = ` WHERE 1=1`
+    if (flag == 'INCREMENT'){
+        set = ` SET ?? = ?? + ?`
+    }
+    
+    const qry = update + set + where + suffix
+    //const result = pool.query
+}
+
+export async function oneOffQuery(statement, data){
+    const result = pool.query(statement, data)
+    return result
+}
+
+/* functions to delete:
+so many
+*/

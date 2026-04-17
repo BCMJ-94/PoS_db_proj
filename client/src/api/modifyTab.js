@@ -1,7 +1,7 @@
 import { API_URL } from "./baseUrl";
 
 export default async function addToTab(quantity, productID, tableID){
-    const endpoint = `${API_URL}/transactions/addOrder`
+    const endpoint = `${API_URL}/autorouter/addToOrder`
 
     const request = {
         method : 'POST', 
@@ -13,14 +13,14 @@ export default async function addToTab(quantity, productID, tableID){
     }
 
     const response = await fetch(endpoint, request);
-    const data = await response.json().catch(() => {})
+    const data = await response.json().catch(() => ({}))
 
-    if (!res.ok){
+    if (!response.ok){
         throw new Error (
-            data.message || `HTTP Error: ${res.status}`
+            data.message || `HTTP Error: ${response.status}`
         );
     }
-    console.log(data.body)
+    console.log(data)
     return {
         data
     }

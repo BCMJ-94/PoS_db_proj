@@ -7,8 +7,10 @@ import NewEmployee from "../pages/NewEmployee/NewEmployee";
 import OpenTab from "../pages/Tab/startTab";
 import TimeClock from "../pages/TimeClock/TimeClock";
 import PayrollPeriod from "../pages/PayrollPeriod/PayrollPeriod";
-import Tables from "../pages/Tables/Tables";
+import Table from "../pages/Tables/Table_test";
 import NewProduct from "../pages/NewProduct/NewProduct";
+import Menu from "../pages/Menu/Menu";
+
 
 export default function AppRoutes() {
     const { employee, loading } = useAuth()
@@ -27,8 +29,9 @@ export default function AppRoutes() {
                 <Route path="/Tab" element = {<OpenTab/>}/>
                 <Route path="/timeclock" element={<TimeClock/>}/>
                 <Route path="/payrollperiod" element={<PayrollPeriod />}/>
-                <Route path="/tables" element={<Tables/>}/>
+                <Route path="/tables" element={<Table/>}/>
                 <Route path="/newproduct" element={<NewProduct/>}/>
+                <Route path="/menu/:tableID" element = {<Menu/>}/> 
             </Route>
 
             <Route path="*" element={<Navigate to={"/login"} replace />}></Route>
