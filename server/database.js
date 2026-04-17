@@ -619,6 +619,9 @@ export async function insertCustIDIntoTransaction(customerID, transactionID){
 
 export async function useRewardPoints(points, email){
     const [result] = await pool.query(`UPDATE customers SET rewardPoints = rewardPoints - ? WHERE email = ?`, [points, email])
+        return {
+            points
+        }
 }
 
 export async function openTransactionTab(tableID, employeeID){
