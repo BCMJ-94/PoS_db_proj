@@ -546,7 +546,7 @@ export async function createTimeclock_Entry(clockIn, clockOut, payPeriodID, empl
     }
 }
 
-export async function clockInEmployee(employeeID, payPeriodID, scheduledShift = null) {
+export async function clockInEmployee(employeeID, payPeriodID, scheduledShift = 1) {
     const [result] = await pool.query(
         `INSERT INTO timeclock_entries (clockIn, clockOut, payPeriodID, employeeID, scheduledShiftID)VALUES (NOW(), NULL, ?, ?, ?)`,
         [payPeriodID, employeeID, scheduledShift]
