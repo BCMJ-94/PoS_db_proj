@@ -41,6 +41,10 @@ export default function NavBar() {
                 <NavLink to={'/payrollperiod'}>Payroll Period</NavLink>
             </div>
 
+            {/* <div>
+                <NavLink to={'/login'}>Logout</NavLink> added this but i'm p sure this isn't how it works lol
+            </div> */}
+
             <div>
                 <NavLink to={'/dashboard'}>
                     <p>{ `${employee.firstName}  ${employee.lastName} | ${employee.shiftRole[0].toUpperCase() + employee.shiftRole.slice(1)}` }</p>
