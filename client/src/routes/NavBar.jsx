@@ -39,11 +39,8 @@ export default function NavBar() {
                 <NavLink to={'/newemployee'}>New Employee</NavLink>
                 <NavLink to={'/timeclock'}>Time Clock</NavLink>
                 <NavLink to={'/payrollperiod'}>Payroll Period</NavLink>
+                <NavLink to={'/reports'}>Reports</NavLink>
             </div>
-
-            {/* <div>
-                <NavLink to={'/login'}>Logout</NavLink> added this but i'm p sure this isn't how it works lol
-            </div> */}
 
             <div>
                 <NavLink to={'/dashboard'}>
