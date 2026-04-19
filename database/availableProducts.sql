@@ -1,4 +1,3 @@
--- Active: 1775251831235@@localhost@3306@restauranttestdb
 CREATE VIEW availableProducts AS
 SELECT 
     p.productID,

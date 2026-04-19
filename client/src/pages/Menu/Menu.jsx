@@ -29,12 +29,8 @@ export default function Menu(){
     return(
         <>
             <NavBar/>
-            <div style = {{
-                display : 'flex',
-                alignItems : 'center',
-                justifyContent: 'center'
-            }}>
-                    {products}
+            <div>
+                {products}
             </div>
         </>
     )

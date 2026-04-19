@@ -867,26 +867,18 @@ export async function insertQuery(table_name, attribute, data, suffix){
     return result
 }
 
-export async function updateSetWhereBuilder(table_name, attribute, condition1, condition2, data, flag){
+export async function updateSetWhereBuilder(table_name, attribute, suffix, data, flag){//first element of condition is lhs, second is comparison operator, third is rhs
     console.assert(table_name,attribute,data)
-    let update = `UPDATE ${table_name}` 
-    let set = ` SET ${attribute} = ${data}`
-    let where = ` WHERE 1=1 AND ${condition1[0]} = ${condition1[1]}`
-    if(condition2){
-        where += ` AND ${condition2[0]} = ${condition2[1]};`
-    }
-    //suffix is the condition and will be of form: " AND ?? = ? ..." 
+    let result;
+    let update = `UPDATE ??` 
+    let set = ` SET ?? = ?`
+    let where = ` WHERE 1=1`
     if (flag == 'INCREMENT'){
-        set = ` SET ${attribute} = ${attribute} + ${data}`
-    }
-    if (flag == 'DECREMENT'){
-        set = ` SET ${attribute} = ${attribute} - ${data}`
+        set = ` SET ?? = ?? + ?`
     }
     
-    const qry = update + set + where
-    const result = pool.query(qry)
-    return result
-
+    const qry = update + set + where + suffix
+    //const result = pool.query
 }
 
 export async function oneOffQuery(statement, data){
