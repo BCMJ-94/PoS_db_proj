@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom'
 
 export default function Row({ table }) {
     const nav = useNavigate()
+    //const [transactions, setTransactions] = useState([])
+
 
   
     return (

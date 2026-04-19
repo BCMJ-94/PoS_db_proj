@@ -24,3 +24,17 @@ export default async function openTab(tableID){
 
     return data
 }
+
+export async function getTabsOnTable(tableID){
+    const endpoint = `${API_URL}/autorouter/itemizedOrder`
+
+    const request = {credentials : 'include'}
+    const response = await fetch(endpoint, request)
+    const data = await response.json().catch(() => ({}))
+
+    if (!response.ok){
+        throw new Error (`${response.status} ${data.message}`)
+    }
+    return data
+
+}

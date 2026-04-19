@@ -4,10 +4,11 @@ import MenuButton from '../../components/MenuButton.jsx'
 import loadMenu from "../../api/loadMenu.js"
 import { useLocation } from "react-router"
 import {useParams} from 'react-router-dom'
+import OrderCard from "../../components/OrderCard.jsx"
 
 
 export default function Menu(){
-    const { tableID } = useParams()
+    const { tableID, transactionID} = useParams()
    
     const [menuItems, setMenu] = useState([])
     useEffect(()=>{
@@ -25,8 +26,7 @@ export default function Menu(){
     },[])
 
     const products = menuItems.map(item => <MenuButton product = {item} tableID = {tableID} key = {item.productID} />)
-
-    return(
+        return(
         <>
             <NavBar/>
             <div style = {{
@@ -36,6 +36,12 @@ export default function Menu(){
             }}>
                     {products}
             </div>
+            <div style = {{
+                display : 'flex',
+                alignItems : 'right',
+                justifyContent : 'right'}}>
+                    <OrderCard />
+                </div>
         </>
     )
 }

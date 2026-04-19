@@ -11,8 +11,8 @@ autoRouter.get("/restaurantTables", async (req, res) => {
     try{
         const data = await selectFromWhereBuilder('', 'tables')
         const tables = await data[0]
-        //console.log("from autorouter", tables[0])
-        res.json({tables})
+        console.log("from autorouter", data)
+        res.status(200).json({tables})
     }
     catch(err){
         res.status(500).json({
@@ -20,6 +20,24 @@ autoRouter.get("/restaurantTables", async (req, res) => {
         })
     }
 })
+
+autoRouter.get("/itemizedOrder", async(req,res)=> {
+    const {tableID} = req.body
+    try{
+        const result = await selectFromWhereBuilder('transactionID', 'transactions', ['tableID', tableID], '=')
+        const tIDs = await result[0]
+        res.status(200).json(tIDs)
+    }
+    catch(err){
+        console.log(err)
+        res.status(500).json({
+            message : err
+        })
+
+    }
+})
+
+
 
 autoRouter.post("/addToOrder", async (req, res)=>{//will either insert a new row or update an existing row
     const employeeID = req.session.employee.employeeID
