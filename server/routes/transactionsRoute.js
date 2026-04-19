@@ -106,7 +106,7 @@ transactionsRouter.post("/addOrder", async (req, res) => {
     })
 
 transactionsRouter.put("/modifyOrder", async (req, res) => {
-    try {
+        try {
         const { quantity, productID, tableID } = req.body
         const transID = await getCurrentTransactionIDByTable(tableID)
         await updateProduct_Order(quantity, productID, transID)

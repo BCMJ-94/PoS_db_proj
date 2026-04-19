@@ -11,8 +11,8 @@ autoRouter.get("/restaurantTables", async (req, res) => {
     try{
         const data = await selectFromWhereBuilder('', 'tables')
         const tables = await data[0]
-        //console.log("from autorouter", tables[0])
-        res.json({tables})
+        console.log("from autorouter/restaurantTables", data)
+        res.status(200).json({tables})
     }
     catch(err){
         res.status(500).json({
@@ -20,6 +20,51 @@ autoRouter.get("/restaurantTables", async (req, res) => {
         })
     }
 })
+
+autoRouter.post('/itemizedList', async(req, res)=>{
+    const {transactionID} = req.body
+    console.log(Object.keys(req.body).length)
+    console.log("from itemized list: ", transactionID)
+    try{
+        const result = await selectFromWhereBuilder('', 'product_orders', ['transactionID', transactionID], '=' )
+        const rslt = await result[0]
+        const data = await oneOffQuery(
+            `SELECT product_orders.quantity,product_orders.productID, products._name, products.price
+             FROM product_orders
+             INNER JOIN products ON product_orders.productID = products.productID
+             WHERE product_orders.transactionID = ?`, transactionID) 
+        
+        const itemizedList = await data[0]
+        console.log(rslt)
+        res.status(200).json({itemizedList})
+    }
+    catch(err){
+        console.log(err)
+        res.status(500).json({
+            message : err
+        })
+
+    }
+})
+
+autoRouter.post("/openTabsOnTable", async(req,res)=> {
+    const {tableID} = req.body
+    try{
+        const result = await selectFromWhereBuilder('transactionID', 'transactions', ['tableID', tableID], '=', ' AND paymentMethod IS NULL')
+        const tIDs = await result[0]
+        //console.log(`transactions open on table ${tableID}: `, tIDs)
+        res.status(200).json({tIDs})
+    }
+    catch(err){
+        //console.log("from autorouter: ",err)
+        res.status(500).json({
+            message : err
+        })
+
+    }
+})
+
+
 
 autoRouter.post("/addToOrder", async (req, res)=>{//will either insert a new row or update an existing row
     const employeeID = req.session.employee.employeeID
@@ -96,6 +141,5 @@ autoRouter.patch("/decrementOrder", async(req, res) => {
 autoRouter.patch("/closeTab", async(req,res)=>{
 
 })
-
 
 export default autoRouter
