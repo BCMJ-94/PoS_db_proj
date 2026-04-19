@@ -1,36 +1,51 @@
 import Button from "../../components/Button";
 import { useNavigate } from 'react-router-dom'
+import {useState, useEffect, React} from 'react'
+import { getTabsOnTable } from "../../api/openTab";
 
 export default function Row({ table }) {
     const nav = useNavigate()
+    const [transactions, setTransactions] = useState([])
 
-  
-    return (
-        <div className="flex items-center w-80 justify-between rounded-lg border border-gray-300 bg-white p-2 py-4 shadow-sm">
-            <p className="text-lg font-semibold">Table {table.tableID}</p>
 
-            <div className="flex gap-2">
-                {table.isOpen ? (
-                    <>
-                        <Button
-                            name="Modify"
-                            type="button"
-                            onClick={() => console.log("Modify")}
-                        />
-                        <Button
-                            name="Close"
-                            type="button"
-                            onClick={() => console.log("Close")}
-                        />
-                    </>
-                ) : (
+    useEffect(() =>{
+        const retrieveTIDs = async () =>{
+            try{
+                //console.log("test: ", table.tableID)
+                const res = await getTabsOnTable(table.tableID)
+                setTransactions(res.tIDs)
+            }
+            catch(err){
+               // console.log(err)
+                setTransactions([])
+            }
+        }
+        retrieveTIDs()
+    },[])
+    //console.log("from row component: ", transactions)
+    const TIDs = transactions.map(element =>
+        <>
+            <div className="flex gap-2 items-center justify-between" style = {{marginTop : 5}}>
+                Order #: {element.transactionID}  
                     <Button
-                        name="OpenTab"
+                        name="View"
                         type="button"
-                        onClick={() => nav(`/menu/${table.tableID}`, {replace : true})}
-                    />
-                )}
+                        key = {element.transactionID}
+                        onClick={() => nav(`/menu/${table.tableID}/${element.transactionID}`, {replace : true})}/>
             </div>
+
+        </>
+    )
+
+
+ 
+    return (
+        <>
+        <div className=" items-center w-80 justify-between rounded-lg border border-gray-300 bg-white p-2 py-4 shadow-sm">
+            <p className="text-lg font-semibold">Table {table.tableID} {<Button name = "Start New Tab" type = "button"/>}</p>
+
+            {TIDs}
         </div>
+        </>
     );
 }

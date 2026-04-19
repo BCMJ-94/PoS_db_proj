@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { getTransaction, getTransactions, deleteTransaction, getCurrentTransactionIDByTable, createProduct_Order, openTransactionTab, closeTransactionTab, getCustomerByEmail, closeTabWithEmail, updateRewardPoints, updateProduct_Order, deleteProduct_Order, addTip, getTransactionTotal } from '../database.js'
+import { getTransaction, getTransactions, deleteTransaction, getCurrentTransactionByTable, getCurrentTransactionIDByTable, createProduct_Order, openTransactionTab, closeTransactionTab, getCustomerByEmail, closeTabWithEmail, updateRewardPoints, updateProduct_Order, deleteProduct_Order, addTip, getTransactionTotal, insertCustIDIntoTransaction, useRewardPoints } from '../database.js'
 import isAuthorized from '../utils/auth.js'
 
 const transactionsRouter = express.Router()
@@ -106,7 +106,7 @@ transactionsRouter.post("/addOrder", async (req, res) => {
     })
 
 transactionsRouter.put("/modifyOrder", async (req, res) => {
-    try {
+        try {
         const { quantity, productID, tableID } = req.body
         const transID = await getCurrentTransactionIDByTable(tableID)
         await updateProduct_Order(quantity, productID, transID)
@@ -132,6 +132,35 @@ transactionsRouter.delete("/deleteOrder", async (req, res) => {
         res.status(500).json({
             message: "Failed to remove order"
         })
+    }
+})
+
+transactionsRouter.put("/useRewards", async (req, res) => { // Dependent on total not being 0 (orders been added to transaction) and customerID (added using this route even if closeTabWithEmail does the same thing, needed for optional discount trigger to work)
+    try{
+        // need email to verify loyalty status
+        const {tableID, email, points} = req.body
+        const customer = await getCustomerByEmail(email)
+        if(!customer){
+            res.status(404).json({
+                message: "Customer not found"
+            })
+        }
+        else{
+            const trans = await getCurrentTransactionByTable(tableID)
+            // insert customerID into latest transaction
+            await insertCustIDIntoTransaction(customer.customerID, trans.transactionID)
+            await useRewardPoints(points, email);
+
+        }
+
+        res.status(201).json({
+            message: "Successfully used reward points!"
+        })
+    }
+    catch(err) {
+        res.status(500).json({
+                message: "Failed to use reward points"
+            })
     }
 })
 

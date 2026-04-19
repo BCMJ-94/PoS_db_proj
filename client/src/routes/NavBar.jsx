@@ -39,6 +39,7 @@ export default function NavBar() {
                 <NavLink to={'/newemployee'}>New Employee</NavLink>
                 <NavLink to={'/timeclock'}>Time Clock</NavLink>
                 <NavLink to={'/payrollperiod'}>Payroll Period</NavLink>
+                <NavLink to={'/reports'}>Reports</NavLink>
             </div>
 
             <div>

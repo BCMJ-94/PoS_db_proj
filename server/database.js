@@ -546,7 +546,7 @@ export async function createTimeclock_Entry(clockIn, clockOut, payPeriodID, empl
     }
 }
 
-export async function clockInEmployee(employeeID, payPeriodID, scheduledShift = null) {
+export async function clockInEmployee(employeeID, payPeriodID, scheduledShift = 1) {
     const [result] = await pool.query(
         `INSERT INTO timeclock_entries (clockIn, clockOut, payPeriodID, employeeID, scheduledShiftID)VALUES (NOW(), NULL, ?, ?, ?)`,
         [payPeriodID, employeeID, scheduledShift]
@@ -602,9 +602,26 @@ export async function getTransaction(transactionID){
     return transactions[0] ?? null
 }
 
+export async function getCurrentTransactionByTable(tableID){
+    const [transactions] = await pool.query(
+        `SELECT * FROM transactions WHERE tableID = ? AND paymentMethod IS NULL ORDER BY timePlaced DESC LIMIT 1`, [tableID])
+    return transactions[0] ?? null
+}
+
 export async function getCurrentTransactionIDByTable(tableID){
     const [transactionID] = await pool.query(`SELECT * FROM transactions WHERE tableID = ? AND paymentMethod IS NULL ORDER BY timePlaced DESC LIMIT 1`, [tableID])
     return transactionID[0].transactionID ?? null
+}
+
+export async function insertCustIDIntoTransaction(customerID, transactionID){
+    const [custID] = await pool.query(`UPDATE transactions SET customerID = ? WHERE transactionID = ?`, [customerID, transactionID])
+}
+
+export async function useRewardPoints(points, email){
+    const [result] = await pool.query(`UPDATE customers SET rewardPoints = rewardPoints - ? WHERE email = ?`, [points, email])
+        return {
+            points
+        }
 }
 
 export async function openTransactionTab(tableID, employeeID){
@@ -688,9 +705,9 @@ export async function getRevenue_Summary(startDate, endDate){
     const [rows] = await pool.query(
         `SELECT
             COUNT(t.transactionID) AS numberOfTransactions,
-            SUM(t.total) AS totalRevenue,
-            SUM(COALESCE(t.tipAmount, 0)) AS totalTips,
-            AVG(t.total) AS averageTransactionValue
+            ROUND(SUM(t.total), 2) AS totalRevenue,
+            ROUND(SUM(COALESCE(t.tipAmount, 0)), 2) AS totalTips,
+            ROUND(AVG(t.total), 2) AS averageTransactionValue
         FROM transactions t
         JOIN employees e ON t.employeeID = e.employeeID
         WHERE t.timePlaced BETWEEN ? AND ?`,
@@ -795,7 +812,7 @@ export async function selectFromWhereBuilder(attribute, table_name,condition,com
     }
     else if(!condition){
         const result = pool.query(
-            `SELECT ?? FROM ??`, [attribute, table_name]
+            `SELECT ?? FROM ??;`, [attribute, table_name]
         )
         return result
     }
@@ -850,18 +867,26 @@ export async function insertQuery(table_name, attribute, data, suffix){
     return result
 }
 
-export async function updateSetWhereBuilder(table_name, attribute, suffix, data, flag){//first element of condition is lhs, second is comparison operator, third is rhs
+export async function updateSetWhereBuilder(table_name, attribute, condition1, condition2, data, flag){
     console.assert(table_name,attribute,data)
-    let result;
-    let update = `UPDATE ??` 
-    let set = ` SET ?? = ?`
-    let where = ` WHERE 1=1`
+    let update = `UPDATE ${table_name}` 
+    let set = ` SET ${attribute} = ${data}`
+    let where = ` WHERE 1=1 AND ${condition1[0]} = ${condition1[1]}`
+    if(condition2){
+        where += ` AND ${condition2[0]} = ${condition2[1]};`
+    }
+    //suffix is the condition and will be of form: " AND ?? = ? ..." 
     if (flag == 'INCREMENT'){
-        set = ` SET ?? = ?? + ?`
+        set = ` SET ${attribute} = ${attribute} + ${data}`
+    }
+    if (flag == 'DECREMENT'){
+        set = ` SET ${attribute} = ${attribute} - ${data}`
     }
     
-    const qry = update + set + where + suffix
-    //const result = pool.query
+    const qry = update + set + where
+    const result = pool.query(qry)
+    return result
+
 }
 
 export async function oneOffQuery(statement, data){

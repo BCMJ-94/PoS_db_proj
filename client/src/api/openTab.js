@@ -24,3 +24,31 @@ export default async function openTab(tableID){
 
     return data
 }
+
+export async function getTabsOnTable(tableID){
+
+    //console.log("from api: ", tableID)
+
+    const endpoint = `${API_URL}/autorouter/openTabsOnTable`
+
+    const request = {
+        method : 'POST',
+        headers : {
+            "Content-Type" : "application/json"
+        },
+        credentials : 'include',
+        body : JSON.stringify({
+            tableID
+        })
+    
+    }
+    const response = await fetch(endpoint, request)
+    const data = await response.json().catch(() => ({}))
+
+    //console.log("from api: ", data)
+    if (!response.ok){
+        throw new Error (`${response.status} ${data.message}`)
+    }
+    return data
+
+}

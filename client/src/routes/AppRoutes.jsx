@@ -10,6 +10,7 @@ import PayrollPeriod from "../pages/PayrollPeriod/PayrollPeriod";
 import Table from "../pages/Tables/Table_test";
 import NewProduct from "../pages/NewProduct/NewProduct";
 import Menu from "../pages/Menu/Menu";
+import Reports from "../pages/Reports/Reports";
 
 
 export default function AppRoutes() {
@@ -31,7 +32,8 @@ export default function AppRoutes() {
                 <Route path="/payrollperiod" element={<PayrollPeriod />}/>
                 <Route path="/tables" element={<Table/>}/>
                 <Route path="/newproduct" element={<NewProduct/>}/>
-                <Route path="/menu/:tableID" element = {<Menu/>}/> 
+                <Route path="/menu/:tableID/:transactionID?" element = {<Menu/>}/>
+                <Route path="/reports" element={<Reports/>}/> 
             </Route>
 
             <Route path="*" element={<Navigate to={"/login"} replace />}></Route>
