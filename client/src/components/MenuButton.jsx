@@ -9,6 +9,9 @@ export default function MenuButton({product, tableID}){
     }
 
     return(
-        <button onClick={sendOrder}key = {product.productID} name = {product._name} className="p-2 rounded-md bg-[#5eb5f3a6] text-[rgb(255,255,255)] font-bold text-xl" > {product._name} </button>
+        <div style = {{marginRight: 10, marginTop : 10} }>
+            <button onClick={sendOrder} key = {product.productID} name = {product._name} className="p-2 rounded-md bg-[#5eb5f3a6] text-[rgb(255,255,255)] font-bold text-xl" > {product._name} </button>
+
+        </div>
     )
 }
