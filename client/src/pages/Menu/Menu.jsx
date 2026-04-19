@@ -1,4 +1,4 @@
-import {useState, useEffect, React} from "react"
+import {useState, useEffect, useContext, createContext, React} from "react"
 import NavBar from "../../routes/NavBar.jsx"
 import MenuButton from '../../components/MenuButton.jsx'
 import loadMenu from "../../api/loadMenu.js"
@@ -6,15 +6,15 @@ import { useLocation } from "react-router"
 import {useParams} from 'react-router-dom'
 import OrderCard from "../../components/OrderCard.jsx"
 
+const MenuContext = createContext(null)
 
 export default function Menu(){
     const { tableID, transactionID} = useParams()
     //console.log("from menu: ", transactionID[0])
     const [menuItems, setMenu] = useState([])
-    const [reload, buttonPress] = useState(0)
-    const handlePost = (nv) => {
-        buttonPress(reload + 1)
-    }
+    const [count, setCount] = useState(0)
+
+
     useEffect(() => {
         const retrieveMenu = async () =>{
             try{
@@ -29,7 +29,12 @@ export default function Menu(){
         retrieveMenu()
     },[])
 
-    const products = menuItems.map(item => <MenuButton onPost = {handlePost} product = {item} tableID = {tableID} key = {item.productID} /> )
+    const handlePost = (newData) => {
+        console.log("test")
+    }
+
+
+    const products = menuItems.map(item => <MenuButton onClick = {handlePost} product = {item} tableID = {tableID} key = {item.productID} /> )
         return(
         <>
             <NavBar/>
@@ -38,13 +43,13 @@ export default function Menu(){
                 alignItems : 'center',
                 justifyContent: 'center'
             }}>
-                    {products}
+                {products}
             </div>
             <div style = {{
                 display : 'flex',
                 alignItems : 'right',
                 justifyContent : 'right'}}>
-                    <OrderCard transactionID = {transactionID} shouldReload={reload}/>
+                    <OrderCard transactionID = {transactionID}  />
                 </div>
         </>
     )
