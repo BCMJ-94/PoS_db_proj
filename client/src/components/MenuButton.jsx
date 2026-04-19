@@ -1,7 +1,8 @@
-import React from 'react'
+import {useContext, React} from 'react'
 import addToTab from '../api/modifyTab'
 
 export default function MenuButton({product, tableID, reload, setReload}){
+    //const {setData} = useContext(MenuContext)
     const sendOrder = async () => {
         console.log("sending", product.productID, " : ", product._name)
         const response = await addToTab(1, product.productID, tableID)

@@ -1,8 +1,10 @@
-import {useState, useEffect, React} from 'react'
+import {useState, useEffect, React, useContext} from 'react'
 import { getItemizedList } from '../api/loadMenu'
+import Button from './Button'
 
-export default function OrderCard({tableID, transactionID, reload, setReload}){
-    console.log("from order card: ", transactionID)
+export default function OrderCard({tableID, transactionID, reload, setReload}){ 
+   // console.log("from order card: ", transactionID)
+   //const context = useContext(MenuContext)
 
     const[itemList, setList] = useState([])
 
@@ -34,6 +36,7 @@ export default function OrderCard({tableID, transactionID, reload, setReload}){
                 </div>
                     <div className = "flex justify-between text-decoration-line: underline">Items <div>Quantity</div> </div>
                     {itemizedList}
+            <Button name = "Close Tab" type = "button" onClick={() => {console.log("closing out")}}/>
 
             </div>
         </>
