@@ -11,7 +11,7 @@ autoRouter.get("/restaurantTables", async (req, res) => {
     try{
         const data = await selectFromWhereBuilder('', 'tables')
         const tables = await data[0]
-        console.log("from autorouter", data)
+        console.log("from autorouter/restaurantTables", data)
         res.status(200).json({tables})
     }
     catch(err){
@@ -21,15 +21,16 @@ autoRouter.get("/restaurantTables", async (req, res) => {
     }
 })
 
-autoRouter.get("/itemizedOrder", async(req,res)=> {
+autoRouter.post("/itemizedOrder", async(req,res)=> {
     const {tableID} = req.body
     try{
-        const result = await selectFromWhereBuilder('transactionID', 'transactions', ['tableID', tableID], '=')
+        const result = await selectFromWhereBuilder('transactionID', 'transactions', ['tableID', tableID], '=', ' AND paymentMethod IS NULL')
         const tIDs = await result[0]
-        res.status(200).json(tIDs)
+        //console.log(`transactions open on table ${tableID}: `, tIDs)
+        res.status(200).json({tIDs})
     }
     catch(err){
-        console.log(err)
+        //console.log("from autorouter: ",err)
         res.status(500).json({
             message : err
         })

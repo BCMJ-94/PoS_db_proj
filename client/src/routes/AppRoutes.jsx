@@ -31,7 +31,7 @@ export default function AppRoutes() {
                 <Route path="/payrollperiod" element={<PayrollPeriod />}/>
                 <Route path="/tables" element={<Table/>}/>
                 <Route path="/newproduct" element={<NewProduct/>}/>
-                <Route path="/menu/:tableID" element = {<Menu/>}/> 
+                <Route path="/menu/:tableID/:transactionID?" element = {<Menu/>}/> 
             </Route>
 
             <Route path="*" element={<Navigate to={"/login"} replace />}></Route>

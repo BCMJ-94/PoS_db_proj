@@ -9,6 +9,7 @@ import OrderCard from "../../components/OrderCard.jsx"
 
 export default function Menu(){
     const { tableID, transactionID} = useParams()
+    //console.log("from menu: ", transactionID[0])
    
     const [menuItems, setMenu] = useState([])
     useEffect(()=>{
@@ -25,7 +26,7 @@ export default function Menu(){
         retrieveMenu()
     },[])
 
-    const products = menuItems.map(item => <MenuButton product = {item} tableID = {tableID} key = {item.productID} />)
+    const products = menuItems.map(item => <MenuButton product = {item} tableID = {tableID} key = {item.productID} /> )
         return(
         <>
             <NavBar/>
