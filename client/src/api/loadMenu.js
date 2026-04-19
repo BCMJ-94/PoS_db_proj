@@ -10,3 +10,24 @@ export default async function loadMenu(){
     }
     return data
 }
+
+export async function getItemizedList(transactionID){
+    const endpoint = `${API_URL}/autorouter/itemizedList`
+
+    const request = {
+        method : 'POST',
+        headers : {
+            "content-type" : "application/json"
+        },
+        credentials : 'include',
+        body : JSON.stringify({
+            transactionID
+        })
+    }
+    const response = await fetch(endpoint, request)
+    const data = await response.json().catch(() => ({}))
+    if (!response.ok){
+        throw new Error (`${response.status} ${data.message}`)
+    }
+    return data
+}

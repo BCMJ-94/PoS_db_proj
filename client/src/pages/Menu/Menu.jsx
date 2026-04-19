@@ -10,9 +10,12 @@ import OrderCard from "../../components/OrderCard.jsx"
 export default function Menu(){
     const { tableID, transactionID} = useParams()
     //console.log("from menu: ", transactionID[0])
-   
     const [menuItems, setMenu] = useState([])
-    useEffect(()=>{
+    const [reload, buttonPress] = useState(0)
+    const handlePost = (nv) => {
+        buttonPress(reload + 1)
+    }
+    useEffect(() => {
         const retrieveMenu = async () =>{
             try{
                 const res = await loadMenu()
@@ -26,7 +29,7 @@ export default function Menu(){
         retrieveMenu()
     },[])
 
-    const products = menuItems.map(item => <MenuButton product = {item} tableID = {tableID} key = {item.productID} /> )
+    const products = menuItems.map(item => <MenuButton onPost = {handlePost} product = {item} tableID = {tableID} key = {item.productID} /> )
         return(
         <>
             <NavBar/>
@@ -41,7 +44,7 @@ export default function Menu(){
                 display : 'flex',
                 alignItems : 'right',
                 justifyContent : 'right'}}>
-                    <OrderCard />
+                    <OrderCard transactionID = {transactionID} shouldReload={reload}/>
                 </div>
         </>
     )

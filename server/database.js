@@ -812,7 +812,7 @@ export async function selectFromWhereBuilder(attribute, table_name,condition,com
     }
     else if(!condition){
         const result = pool.query(
-            `SELECT ?? FROM ??`, [attribute, table_name]
+            `SELECT ?? FROM ??;`, [attribute, table_name]
         )
         return result
     }

@@ -1,11 +1,10 @@
 import React from 'react'
 import addToTab from '../api/modifyTab'
 
-export default function MenuButton({product, tableID}){
+export default function MenuButton({product, tableID, reloadCard}){
     const sendOrder = async () => {
         console.log("sending", product.productID, " : ", product._name)
         const response = await addToTab(1, product.productID, tableID)
-        console.log(response.message);
     }
 
     return(

@@ -21,7 +21,33 @@ autoRouter.get("/restaurantTables", async (req, res) => {
     }
 })
 
-autoRouter.post("/itemizedOrder", async(req,res)=> {
+autoRouter.post('/itemizedList', async(req, res)=>{
+    const {transactionID} = req.body
+    console.log(Object.keys(req.body).length)
+    console.log("from itemized list: ", transactionID)
+    try{
+        const result = await selectFromWhereBuilder('', 'product_orders', ['transactionID', transactionID], '=' )
+        const rslt = await result[0]
+        const data = await oneOffQuery(
+            `SELECT product_orders.quantity,product_orders.productID, products._name, products.price
+             FROM product_orders
+             INNER JOIN products ON product_orders.productID = products.productID
+             WHERE product_orders.transactionID = ?`, transactionID) 
+        
+        const itemizedList = await data[0]
+        console.log(rslt)
+        res.status(200).json({itemizedList})
+    }
+    catch(err){
+        console.log(err)
+        res.status(500).json({
+            message : err
+        })
+
+    }
+})
+
+autoRouter.post("/openTabsOnTable", async(req,res)=> {
     const {tableID} = req.body
     try{
         const result = await selectFromWhereBuilder('transactionID', 'transactions', ['tableID', tableID], '=', ' AND paymentMethod IS NULL')
@@ -115,6 +141,5 @@ autoRouter.patch("/decrementOrder", async(req, res) => {
 autoRouter.patch("/closeTab", async(req,res)=>{
 
 })
-
 
 export default autoRouter

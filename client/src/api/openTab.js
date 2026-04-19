@@ -29,7 +29,7 @@ export async function getTabsOnTable(tableID){
 
     //console.log("from api: ", tableID)
 
-    const endpoint = `${API_URL}/autorouter/itemizedOrder`
+    const endpoint = `${API_URL}/autorouter/openTabsOnTable`
 
     const request = {
         method : 'POST',
