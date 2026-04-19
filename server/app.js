@@ -21,6 +21,9 @@ import product_ordersRouter from './routes/product_ordersRoute.js'
 import payroll_recordsRouter from './routes/payroll_recordsRoute.js'
 import pnlRouter from './routes/pnlRoute.js'
 import autoRouter from './routes/autorouter.js'
+import itemsSoldRouter from './routes/itemsSoldRoute.js'
+import topSpendersRoute from './routes/topSpendersRoute.js'
+import topVisitorsRoute from './routes/topVisitorsRoute.js'
 
 const app = express()
 const port = process.env.PORT || 3030
@@ -85,6 +88,9 @@ app.use('/printers', printersRouter)
 app.use('/product-orders', product_ordersRouter)
 app.use('/payroll-records', payroll_recordsRouter)
 app.use('/pnl', pnlRouter)
+app.use('/items-sold', itemsSoldRouter)
+app.use('/top-spenders', topSpendersRoute)
+app.use('/top-visitors', topVisitorsRoute)
 
 
 app.get('/', (req, res) => {

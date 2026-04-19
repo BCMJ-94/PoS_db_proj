@@ -705,9 +705,9 @@ export async function getRevenue_Summary(startDate, endDate){
     const [rows] = await pool.query(
         `SELECT
             COUNT(t.transactionID) AS numberOfTransactions,
-            SUM(t.total) AS totalRevenue,
-            SUM(COALESCE(t.tipAmount, 0)) AS totalTips,
-            AVG(t.total) AS averageTransactionValue
+            ROUND(SUM(t.total), 2) AS totalRevenue,
+            ROUND(SUM(COALESCE(t.tipAmount, 0)), 2) AS totalTips,
+            ROUND(AVG(t.total), 2) AS averageTransactionValue
         FROM transactions t
         JOIN employees e ON t.employeeID = e.employeeID
         WHERE t.timePlaced BETWEEN ? AND ?`,

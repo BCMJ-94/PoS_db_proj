@@ -1,7 +1,7 @@
 import { API_URL } from "./baseUrl";
 
-export default async function fetchPnL(startDate, endDate){
-    const endpoint = `${API_URL}/pnl?start=${encodeURIComponent(startDate)}&end=${encodeURIComponent(endDate)}`
+export default async function fetchItemsSold(startDate, endDate){
+    const endpoint = `${API_URL}/items-sold?start=${encodeURIComponent(startDate)}&end=${encodeURIComponent(endDate)}`
 
     const response= await fetch(endpoint, {
         method: 'GET',
@@ -18,5 +18,6 @@ export default async function fetchPnL(startDate, endDate){
             err.message || `HTTP Error: ${response.status}`
         );
     }
+
     return await response.json()
 }
