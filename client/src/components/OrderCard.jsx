@@ -2,11 +2,12 @@ import {useState, useEffect, React, useContext} from 'react'
 import { getItemizedList } from '../api/loadMenu'
 import Button from './Button'
 
-export default function OrderCard({tableID, transactionID, reload, setReload}){ 
+export default function OrderCard({tableID, transactionID, reload}){ 
    // console.log("from order card: ", transactionID)
    //const context = useContext(MenuContext)
 
     const[itemList, setList] = useState([])
+    const[reloadSelf, setSelfReload] = useState(false)
 
     useEffect(() => {
         const retrieveList = async() => {
@@ -22,9 +23,18 @@ export default function OrderCard({tableID, transactionID, reload, setReload}){
             }
         }
         retrieveList()
-    },[])
+    },[itemList])
 
-    console.log('from order card: ', itemList)
+    useEffect((reload) => {
+        if(reload){
+            setSelfReload(true)
+            console.log('rerendering')
+        } 
+            setSelfReload(false)
+            return;
+    },[reloadSelf])
+
+    //console.log('from order card: ', itemList)
 
     const itemizedList = itemList.map(item => <li className = "flex justify-between" key = {item.productID} >{item._name} <div>{item.quantity}</div></li>)
 

@@ -16,7 +16,7 @@ export default async function openTab(tableID){
     }
     const response = await fetch(endpoint,req)
     const data = await response.json().catch(() => ({}))
-    console.log(data.message)
+    //console.log("from api: ", data)
     
     if (!response.ok){
         throw new Error (`${response.status} ${data.message}`)

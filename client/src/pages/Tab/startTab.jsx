@@ -11,7 +11,7 @@ export default function OpenTab(){
     
 
             const data  = await openTab(tableID)
-            //console.log(data.message)
+            console.log(data.message)
        
 
     }
