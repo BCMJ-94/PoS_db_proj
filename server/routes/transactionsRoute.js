@@ -137,27 +137,35 @@ transactionsRouter.delete("/deleteOrder", async (req, res) => {
     }
 })
 
-transactionsRouter.put("/useRewards", async (req, res) => { // Dependent on total not being 0 (orders been added to transaction) and customerID (added using this route even if closeTabWithEmail does the same thing, needed for optional discount trigger to work)
+transactionsRouter.put("/useRewards", async (req, res) => { // Dependent on total not being 0 (orders been added to transaction) and customerID (added using this route even if closeTabWithEmail does the same thing, needed for optional discount trigger to work) update: fixed points at 26 to apply rewards
     try{
         // need email to verify loyalty status
-        const {tableID, email, points} = req.body
+        const {tableID, email} = req.body
         const customer = await getCustomerByEmail(email)
         if(!customer){
-            res.status(404).json({
+            return res.status(404).json({
                 message: "Customer not found"
             })
         }
         else{
+            const minPoints = 26;
+
+            if(customer.rewardPoints < minPoints) {
+                 return res.status(400).json({
+                    message: "Customer does not meet the 26 minimum points required!"
+                })
+            }
+
             const trans = await getCurrentTransactionByTable(tableID)
             // insert customerID into latest transaction
             await insertCustIDIntoTransaction(customer.customerID, trans.transactionID)
-            await useRewardPoints(points, email);
+            await useRewardPoints(minPoints, email);
 
-        }
-
-        res.status(201).json({
+            res.status(201).json({
             message: "Successfully used reward points!"
         })
+
+        }
     }
     catch(err) {
         res.status(500).json({
