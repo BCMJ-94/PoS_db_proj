@@ -37,6 +37,9 @@ dataReportsRouter.get('/items-sold', async (req, res) => {
 dataReportsRouter.get('/top-spenders', async (req, res) => {
     try {
         const { startDate, endDate, limit } = req.query;
+        if (!startDate || !endDate) {
+            return res.status(400).json({ error: 'Start and end dates required' });
+        }
         const parsedLimit = parseInt(limit, 10); // turns query string into base-10 integer
         const finalLimit = Number.isInteger(parsedLimit) && parsedLimit > 0 // checks to see if its a whole number and above 0
             ? Math.min(parsedLimit, 100) : 10; // caps entries returned to 100 (if user enters 500, only top 100 will be showm)
@@ -51,6 +54,9 @@ dataReportsRouter.get('/top-spenders', async (req, res) => {
 dataReportsRouter.get('/top-visitors', async (req, res) => {
     try {
         const { startDate, endDate, limit } = req.query;
+        if (!startDate || !endDate) {
+            return res.status(400).json({ error: 'Start and end dates required' });
+        }
         const parsedLimit = parseInt(limit, 10); 
         const finalLimit = Number.isInteger(parsedLimit) && parsedLimit > 0 
             ? Math.min(parsedLimit, 100) : 10;
