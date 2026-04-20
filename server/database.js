@@ -744,7 +744,7 @@ export async function getTopSpenders(startDate, endDate) {
         AND t.timePlaced BETWEEN ? AND ?
         GROUP BY c.customerID
         ORDER BY totalSpent DESC
-        LIMIT 5`,
+        LIMIT 10`,
         [startDate, endDate])
     return result ?? []
 }
@@ -761,7 +761,7 @@ export async function getTopVisitors(startDate, endDate) {
         AND t.timePlaced BETWEEN ? AND ?
         GROUP BY c.customerID
         ORDER BY totalVisits DESC
-        LIMIT 5`,
+        LIMIT 10`,
         [startDate, endDate]
     )
     return result ?? []
