@@ -67,6 +67,14 @@ export default function NavBar() {
                 {canAccess(employee.shiftRole, rolePermissions.reports) && (
                     <NavLink to={'/reports'}>Reports</NavLink>
                 )}
+
+                {canAccess(employee.shiftRole, rolePermissions.reports) && (
+                    <NavLink to={'/employees'}>Employees</NavLink>
+                )}
+
+                {canAccess(employee.shiftRole, rolePermissions.reports) && (
+                    <NavLink to={'/products'}>Products</NavLink>
+                )}
             </div>
 
             <div>
