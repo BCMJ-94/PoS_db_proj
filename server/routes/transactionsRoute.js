@@ -56,10 +56,12 @@ transactionsRouter.post("/openTab", async (req, res) => { // this successfully o
             // creates the transaction
             const {tableID} = req.body
             const employeeID = req.session.employee.employeeID
-            await openTransactionTab(tableID, employeeID)
+            const result = await openTransactionTab(tableID, employeeID)
+            const newTID = await result.transactionID
+            //console.log("from openTab", result.transactionID)
 
             res.status(201).json({
-                message: "Transaction successfully created"
+                message: `${newTID}`
             })
 
         } catch (err) {

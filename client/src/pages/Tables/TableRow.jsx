@@ -1,7 +1,8 @@
 import Button from "../../components/Button";
 import { useNavigate } from 'react-router-dom'
 import {useState, useEffect, React} from 'react'
-import { getTabsOnTable } from "../../api/openTab";
+import { getTabsOnTable} from "../../api/openTab.js";
+import openTab from "../../api/openTab.js";
 
 export default function Row({ table }) {
     const nav = useNavigate()
@@ -22,6 +23,7 @@ export default function Row({ table }) {
         }
         retrieveTIDs()
     },[])
+
     //console.log("from row component: ", transactions)
     const TIDs = transactions.map(element =>
         <>
@@ -42,7 +44,13 @@ export default function Row({ table }) {
     return (
         <>
         <div className=" items-center w-80 justify-between rounded-lg border border-gray-300 bg-white p-2 py-4 shadow-sm">
-            <p className="text-lg font-semibold">Table {table.tableID} {<Button name = "Start New Tab" type = "button"/>}</p>
+            <p className="text-lg font-semibold">Table {table.tableID} 
+                {<Button onClick = {async () => {
+                    const transactionID = await openTab(table.tableID)
+                    console.log("from table row: ", transactionID)
+                    nav(`/menu/${table.tableID}/${transactionID.message}`, {replace : true})
+            }}
+            name = "Start New Tab" type = "button"/>}</p>
 
             {TIDs}
         </div>

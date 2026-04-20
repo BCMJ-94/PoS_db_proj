@@ -1,6 +1,6 @@
 import { API_URL } from "./baseUrl";
 
-export default async function addToTab(quantity, productID, tableID){
+export default async function addToTab(quantity, productID, tableID, transactionID){
     const endpoint = `${API_URL}/autorouter/addToOrder`
 
     const request = {
@@ -8,7 +8,7 @@ export default async function addToTab(quantity, productID, tableID){
         headers : { "Content-Type" : 'application/json'},
         credentials : "include",
         body : JSON.stringify({
-            quantity, productID, tableID
+            quantity, productID, tableID, transactionID
         })
     }
 

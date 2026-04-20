@@ -5,19 +5,21 @@ import loadMenu from "../../api/loadMenu.js"
 import { useLocation } from "react-router"
 import {useParams} from 'react-router-dom'
 import OrderCard from "../../components/OrderCard.jsx"
+import addToTab from "../../api/modifyTab.js"
 
-const MenuContext = createContext(null)
 
 export default function Menu(){
     const { tableID, transactionID} = useParams()
     //console.log("from menu: ", transactionID[0])
     const [menuItems, setMenu] = useState([])
-    const [count, setCount] = useState(0)
+    const [render, setRender] = useState(false)
+    let posted = false
 
 
     useEffect(() => {
         const retrieveMenu = async () =>{
             try{
+                console.log("menu loading")
                 const res = await loadMenu()
                 setMenu(res.products)
             }
@@ -29,12 +31,23 @@ export default function Menu(){
         retrieveMenu()
     },[])
 
-    const handlePost = (newData) => {
-        console.log("test")
+    async function sendOrder(productID, tableID, tID) {
+       // setRender(true)
+        try{
+            //console.log("from Menu: ", productID, tableID, tID)
+            const response = await addToTab(1, productID, tableID, tID)
+            posted = true
+        }
+        catch(err){
+            console.log(err)
+
+        }
+        finally{
+            setRender(false)
+        }
     }
 
-
-    const products = menuItems.map(item => <MenuButton onClick = {handlePost} product = {item} tableID = {tableID} key = {item.productID} /> )
+    const products = menuItems.map(item => <MenuButton onClick = {() => sendOrder(item.productID,tableID,transactionID)} tID = {transactionID} product = {item} tableID = {tableID} key = {item.productID} /> )
         return(
         <>
             <NavBar/>
@@ -49,7 +62,7 @@ export default function Menu(){
                 display : 'flex',
                 alignItems : 'right',
                 justifyContent : 'right'}}>
-                    <OrderCard transactionID = {transactionID}  />
+                    <OrderCard transactionID = {transactionID} reload = {posted} />
                 </div>
         </>
     )

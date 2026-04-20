@@ -39,7 +39,7 @@ autoRouter.post('/itemizedList', async(req, res)=>{
         res.status(200).json({itemizedList})
     }
     catch(err){
-        console.log(err)
+        //console.log(err)
         res.status(500).json({
             message : err
         })
@@ -64,16 +64,19 @@ autoRouter.post("/openTabsOnTable", async(req,res)=> {
     }
 })
 
-
-
 autoRouter.post("/addToOrder", async (req, res)=>{//will either insert a new row or update an existing row
     const employeeID = req.session.employee.employeeID
-    const {quantity, productID, tableID} = req.body
+    const {quantity, productID, tableID, transactionID} = req.body
     console.log("request body: ", req.body)
-    const [transactionID]= await selectFromWhereBuilder('transactionID','transactions',['tableID', tableID],'=', ' AND paymentMethod IS NULL')//null payment method is a proxy for open tabs
+    //const [transactionID]= await selectFromWhereBuilder('transactionID','transactions',['tableID', tableID],'=', ' AND paymentMethod IS NULL')//null payment method is a proxy for open tabs
     
     try{
-        const attempt_insert = await insertQuery('product_orders',['quantity', 'productID', 'transactionID'],[quantity, productID, transactionID[0].transactionID])
+        if(!transactionID){
+            console.log("no id")
+            throw new ReferenceError("invalid or missing transactionID")
+            
+        }
+        const attempt_insert = await insertQuery('product_orders',['quantity', 'productID', 'transactionID'],[quantity, productID, transactionID])
         console.log("insert successful")
         res.status(201).json({
             message : "insert successful"
@@ -84,8 +87,8 @@ autoRouter.post("/addToOrder", async (req, res)=>{//will either insert a new row
             console.log("entry exists. start update operation")
             const attempt_update = await oneOffQuery(//ugly ugly ugly
                 `UPDATE product_orders SET quantity = quantity + ? WHERE productID = ? AND transactionID = ?`,
-                [quantity, productID, transactionID[0].transactionID]//just pulling first ID for rn, client should be sending a specific ID to add to
-            )
+                [quantity, productID, transactionID]
+                        )
             console.log("update attempt", attempt_update)
             res.status(200).json({
                 message : "successfully updated quantity"
