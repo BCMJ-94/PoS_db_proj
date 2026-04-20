@@ -732,7 +732,7 @@ export async function getRevenueBy_Employee(startDate, endDate){
     return rows
 }
 
-export async function getTopSpenders(startDate, endDate) {
+export async function getTopSpenders(startDate, endDate, limit=10) {
     const [result] = await pool.query(
         `SELECT
             c.customerID, c.firstName, c.lastName, c.rewardPoints,
@@ -744,12 +744,12 @@ export async function getTopSpenders(startDate, endDate) {
         AND t.timePlaced BETWEEN ? AND ?
         GROUP BY c.customerID
         ORDER BY totalSpent DESC
-        LIMIT 10`,
-        [startDate, endDate])
+        LIMIT ?`,
+        [startDate, endDate, limit])
     return result ?? []
 }
 
-export async function getTopVisitors(startDate, endDate) {
+export async function getTopVisitors(startDate, endDate, limit=10) {
     const [result] = await pool.query(
         `SELECT
             c.customerID, c.firstName, c.lastName, c.rewardPoints,
@@ -761,8 +761,8 @@ export async function getTopVisitors(startDate, endDate) {
         AND t.timePlaced BETWEEN ? AND ?
         GROUP BY c.customerID
         ORDER BY totalVisits DESC
-        LIMIT 10`,
-        [startDate, endDate]
+        LIMIT ?`,
+        [startDate, endDate, limit]
     )
     return result ?? []
 }
