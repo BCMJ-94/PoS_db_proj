@@ -36,8 +36,11 @@ dataReportsRouter.get('/items-sold', async (req, res) => {
 
 dataReportsRouter.get('/top-spenders', async (req, res) => {
     try {
-        const { startDate, endDate } = req.query;
-        const result = await getTopSpenders(startDate, endDate);
+        const { startDate, endDate, limit } = req.query;
+        const parsedLimit = parseInt(limit, 10); // turns query string into base-10 integer
+        const finalLimit = Number.isInteger(parsedLimit) && parsedLimit > 0 // checks to see if its a whole number and above 0
+            ? Math.min(parsedLimit, 100) : 10; // caps entries returned to 100 (if user enters 500, only top 100 will be showm)
+        const result = await getTopSpenders(startDate, endDate, finalLimit);
         res.json(result);
     } catch (err) {
         console.error(err);
@@ -47,8 +50,12 @@ dataReportsRouter.get('/top-spenders', async (req, res) => {
 
 dataReportsRouter.get('/top-visitors', async (req, res) => {
     try {
-        const { startDate, endDate } = req.query;
-        const result = await getTopVisitors(startDate, endDate);
+        const { startDate, endDate, limit } = req.query;
+        const parsedLimit = parseInt(limit, 10); 
+        const finalLimit = Number.isInteger(parsedLimit) && parsedLimit > 0 
+            ? Math.min(parsedLimit, 100) : 10;
+        const result = await getTopVisitors(startDate, endDate, finalLimit);
+        res.json(result);
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Failed to get top visitors' });
