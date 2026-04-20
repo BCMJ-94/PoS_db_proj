@@ -78,6 +78,7 @@ authRouter.post('/logout', (req, res) => {
             message: "Logout successful"
         })
     })
+
 })
 
 authRouter.get('/dashboard', isAuthorized, (req, res) => {
