@@ -34,7 +34,7 @@ const allowedOrigins = [
   "http://localhost:5173",
   "https://po-s-db-proj.vercel.app",
   "https://po-s-db-proj-git-dev-bcmj-94s-projects.vercel.app/",
-  "lively-possibility-production-5899.up.railway.app/",
+  "lively-possibility-production-5899.up.railway.app",
   "lively-possibility-production-c4ae.up.railway.app/"
 ];
 
